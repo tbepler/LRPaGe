@@ -1,6 +1,6 @@
 package bepler.lrpage;
 
-import bepler.lrpage.grammar.Token;
+import bepler.lrpage.grammar.Terminal;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -35,7 +35,7 @@ public class CodeGenerator {
 		}
 	}
 	
-	public void addToken(Token t){
+	public void addToken(Terminal t){
 		
 	}
 

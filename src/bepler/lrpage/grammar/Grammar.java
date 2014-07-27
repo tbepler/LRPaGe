@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface Grammar{
 	
-	public List<AbstractSyntaxNode> getRules();
+	public List<Rule> getRules();
 	
-	public List<Token> getTokens();
+	public List<Terminal> getTokens();
 
 	
 	

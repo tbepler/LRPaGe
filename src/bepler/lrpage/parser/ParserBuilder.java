@@ -14,16 +14,16 @@ import bepler.lrpage.ListUtil;
 import bepler.lrpage.grammar.Assoc;
 import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Production;
-import bepler.lrpage.grammar.Token;
+import bepler.lrpage.grammar.Terminal;
 
 public class ParserBuilder<V> {
 	
 	private final Grammar<V> m_Grammar;
-	private Set<Class<? extends Token<V>>> m_Nullable;
-	private Map<Class<? extends Token<V>>,Set<Class<? extends Token<V>>>> m_First;
+	private Set<Class<? extends Terminal<V>>> m_Nullable;
+	private Map<Class<? extends Terminal<V>>,Set<Class<? extends Terminal<V>>>> m_First;
 	//private final Map<Class<? extends Symbol<V>>,Set<Class<? extends Symbol<V>>>> m_Follow;
 	private final State<V> m_Start;
-	private final Map<State<V>, Map<Class<? extends Token<V>>, Action<V>>> m_Actions;
+	private final Map<State<V>, Map<Class<? extends Terminal<V>>, Action<V>>> m_Actions;
 	
 	public ParserBuilder(Grammar<V> g){
 		m_Grammar = g;
@@ -44,13 +44,13 @@ public class ParserBuilder<V> {
 	
 	private State<V> computeStartState(Factory f){
 		Set<Item<V>> start = new HashSet<Item<V>>();
-		start.add(f.newItem(m_Grammar.getStartProduction(), new ArrayList<Class<? extends Token<V>>>()));
+		start.add(f.newItem(m_Grammar.getStartProduction(), new ArrayList<Class<? extends Terminal<V>>>()));
 		return this.closure(f, start);
 	}
 	
-	private Map<State<V>,Map<Class<? extends Token<V>>,Action<V>>> constructActionTable(Factory fac){
+	private Map<State<V>,Map<Class<? extends Terminal<V>>,Action<V>>> constructActionTable(Factory fac){
 		Set<State<V>> states = initializeStatesSet();
-		Map<State<V>, Map<Class<? extends Token<V>>,Action<V>>> actionTable = new HashMap<State<V>, Map<Class<? extends Token<V>>, Action<V>>>();
+		Map<State<V>, Map<Class<? extends Terminal<V>>,Action<V>>> actionTable = new HashMap<State<V>, Map<Class<? extends Terminal<V>>, Action<V>>>();
 		
 		Queue<State<V>> stateQ = new LinkedList<State<V>>();
 		stateQ.addAll(states);
@@ -61,7 +61,7 @@ public class ParserBuilder<V> {
 			for(Item<V> item : cur){
 				
 				if(item.hasNext()){
-					Class<? extends Token<V>> next = item.next();
+					Class<? extends Terminal<V>> next = item.next();
 					if(m_Grammar.isEOFSymbol(next)){
 						//accept action
 						Action<V> a = fac.newAcceptAction();
@@ -89,7 +89,7 @@ public class ParserBuilder<V> {
 					//reduce action
 					Action<V> action = fac.newReduceAction(item.getProduction());
 					if(item.lookaheadLength() > 0){
-						Class<? extends Token<V>> lookahead = item.lookahead(0);
+						Class<? extends Terminal<V>> lookahead = item.lookahead(0);
 						if(containsKeys(actionTable, cur, lookahead)){
 							action = resolveConflict(action, get(actionTable, cur, lookahead));
 						}
@@ -99,7 +99,7 @@ public class ParserBuilder<V> {
 						}
 						add(actionTable, cur, lookahead, action);
 					}else{
-						for(Class<? extends Token<V>> terminal : m_Grammar.getTerminalSymbolTypes()){
+						for(Class<? extends Terminal<V>> terminal : m_Grammar.getTerminalSymbolTypes()){
 							if(containsKeys(actionTable, cur, terminal)){
 								action = resolveConflict(action, get(actionTable, cur, terminal));
 							}
@@ -188,30 +188,30 @@ public class ParserBuilder<V> {
 		return states;
 	}
 	
-	private Set<Class<? extends Token<V>>> first(
-			List<Class<? extends Token<V>>> symbols
+	private Set<Class<? extends Terminal<V>>> first(
+			List<Class<? extends Terminal<V>>> symbols
 			){
 		
 		return this.first(0, symbols);
 	}
 	
-	private Set<Class<? extends Token<V>>> first(
+	private Set<Class<? extends Terminal<V>>> first(
 			int index,
-			List<Class<? extends Token<V>>> symbols
+			List<Class<? extends Terminal<V>>> symbols
 			){
 		
 		if(index >= symbols.size()){
-			return new HashSet<Class<? extends Token<V>>>();
+			return new HashSet<Class<? extends Terminal<V>>>();
 		}
 		if(!m_Nullable.contains(symbols.get(index))){
 			return m_First.get(symbols.get(index));
 		}
-		Set<Class<? extends Token<V>>> set = m_First.get(symbols.get(index));
+		Set<Class<? extends Terminal<V>>> set = m_First.get(symbols.get(index));
 		set.addAll(this.first(index+1, symbols));
 		return set;
 	}
 	
-	private State<V> gotoo(Factory fac, State<V> state, Class<? extends Token<V>> symbol){
+	private State<V> gotoo(Factory fac, State<V> state, Class<? extends Terminal<V>> symbol){
 		Set<Item<V>> shifted = new HashSet<Item<V>>();
 		for(Item<V> item : state){
 			if(item.hasNext() && symbol.equals(item.next())){
@@ -230,13 +230,13 @@ public class ParserBuilder<V> {
 		while(!itemQ.isEmpty()){
 			Item<V> item = itemQ.poll();
 			if(item.hasNext()){
-				Class<? extends Token<V>> next = item.next();
-				List<Class<? extends Token<V>>> symbols = item.beta();
+				Class<? extends Terminal<V>> next = item.next();
+				List<Class<? extends Terminal<V>>> symbols = item.beta();
 				symbols.addAll(item.lookahead());
-				Set<Class<? extends Token<V>>> firstSet = this.first(symbols);
+				Set<Class<? extends Terminal<V>>> firstSet = this.first(symbols);
 				for(Production<V> p : m_Grammar.getProductions(next)){
-					for(Class<? extends Token<V>> symbol : firstSet){
-						Item<V> newItem = fac.newItem(p, ListUtil.<Class<? extends Token<V>>>asList(symbol));
+					for(Class<? extends Terminal<V>> symbol : firstSet){
+						Item<V> newItem = fac.newItem(p, ListUtil.<Class<? extends Terminal<V>>>asList(symbol));
 						if(items.add(newItem)){
 							itemQ.add(newItem);
 						}
@@ -281,24 +281,24 @@ public class ParserBuilder<V> {
 	}
 	*/
 	
-	private Map<Class<? extends Token<V>>,Set<Class<? extends Token<V>>>> computeFirstSets(){
+	private Map<Class<? extends Terminal<V>>,Set<Class<? extends Terminal<V>>>> computeFirstSets(){
 		
-		Map<Class<? extends Token<V>>,Set<Class<? extends Token<V>>>> firstSets = new HashSetHashMap<Class<? extends Token<V>>,Class<? extends Token<V>>>();
-		for(Class<? extends Token<V>> terminal : m_Grammar.getTerminalSymbolTypes()){
-			Set<Class<? extends Token<V>>> set = firstSets.get(terminal);
+		Map<Class<? extends Terminal<V>>,Set<Class<? extends Terminal<V>>>> firstSets = new HashSetHashMap<Class<? extends Terminal<V>>,Class<? extends Terminal<V>>>();
+		for(Class<? extends Terminal<V>> terminal : m_Grammar.getTerminalSymbolTypes()){
+			Set<Class<? extends Terminal<V>>> set = firstSets.get(terminal);
 			set.add(terminal);
 			firstSets.put(terminal, set);
 		}
 		boolean changed;
-		Class<? extends Token<V>> lhs;
-		List<Class<? extends Token<V>>> rhs;
+		Class<? extends Terminal<V>> lhs;
+		List<Class<? extends Terminal<V>>> rhs;
 		do{
 			changed = false;
 			for(Production<V> p : m_Grammar){
 				lhs = p.leftHandSide();
 				rhs = p.rightHandSide();
 				if(rhs.size() > 0){
-					Set<Class<? extends Token<V>>> first = firstSets.get(lhs);
+					Set<Class<? extends Terminal<V>>> first = firstSets.get(lhs);
 					changed = first.addAll(firstSets.get(rhs.get(0))) || changed;
 					for(int i=1; i<rhs.size(); ++i){
 						if(nullable(rhs, 0, i, m_Nullable)){
@@ -312,11 +312,11 @@ public class ParserBuilder<V> {
 		return firstSets;
 	}
 	
-	private Set<Class<? extends Token<V>>> computeNullables(){
-		Set<Class<? extends Token<V>>> nullables = new HashSet<Class<? extends Token<V>>>();
+	private Set<Class<? extends Terminal<V>>> computeNullables(){
+		Set<Class<? extends Terminal<V>>> nullables = new HashSet<Class<? extends Terminal<V>>>();
 		boolean changed;
-		Class<? extends Token<V>> lhs;
-		List<Class<? extends Token<V>>> rhs;
+		Class<? extends Terminal<V>> lhs;
+		List<Class<? extends Terminal<V>>> rhs;
 		do{
 			changed = false;
 			for(Production<V> p : m_Grammar){

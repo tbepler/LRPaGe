@@ -3,7 +3,7 @@ package bepler.lrpage.parser;
 import java.util.Arrays;
 
 import bepler.lrpage.grammar.Production;
-import bepler.lrpage.grammar.Token;
+import bepler.lrpage.grammar.Terminal;
 
 public class Action<S> {
 	
@@ -15,7 +15,7 @@ public class Action<S> {
 		return new Action<S>(Actions.REDUCE, prod);
 	}
 	
-	public static <S> Action<S> newShiftAction(State<S> next, Class<? extends Token<S>> symbol){
+	public static <S> Action<S> newShiftAction(State<S> next, Class<? extends Terminal<S>> symbol){
 		return new Action<S>(Actions.SHIFT, next, symbol);
 	}
 	
@@ -25,7 +25,7 @@ public class Action<S> {
 	
 	private final State<S> m_Next;
 	private final Production<S> m_Prod;
-	private final Class<? extends Token<S>> m_Shift;
+	private final Class<? extends Terminal<S>> m_Shift;
 	private final Actions m_Id;
 	private final int m_Hash;
 	
@@ -45,7 +45,7 @@ public class Action<S> {
 		m_Hash = this.computeHash();
 	}
 	
-	private Action(Actions id, State<S> next, Class<? extends Token<S>> symbolType){
+	private Action(Actions id, State<S> next, Class<? extends Terminal<S>> symbolType){
 		m_Id = id;
 		m_Next = next;
 		m_Prod = null;
@@ -73,7 +73,7 @@ public class Action<S> {
 		return m_Next;
 	}
 	
-	public Class<? extends Token<S>> shiftToken(){
+	public Class<? extends Terminal<S>> shiftToken(){
 		return m_Shift;
 	}
 	

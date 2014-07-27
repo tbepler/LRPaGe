@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import bepler.lrpage.grammar.Grammar;
-import bepler.lrpage.grammar.Token;
+import bepler.lrpage.grammar.Terminal;
 
 public class Lexer<T> {
 	
@@ -34,24 +34,24 @@ public class Lexer<T> {
 		return m_Next;
 	}
 	
-	public Token<T> nextToken(){
+	public Terminal<T> nextToken(){
 		String match = m_Scanner.findWithinHorizon(m_TokenPattern, 0);
 		if(match == null){
 			m_Next = false;
 			return m_Grammar.getEOFSymbol();
 		}
-		Token<T> token = this.tokenize(match);
+		Terminal<T> token = this.tokenize(match);
 		if(token == null){
 			return this.nextToken();
 		}
 		return token;
 	}
 	
-	public List<Token<T>> lexAllTokens(){
-		List<Token<T>> tokens = new ArrayList<Token<T>>();
+	public List<Terminal<T>> lexAllTokens(){
+		List<Terminal<T>> tokens = new ArrayList<Terminal<T>>();
 		String match;
 		while((match = m_Scanner.findWithinHorizon(m_TokenPattern, 0)) != null){
-			Token<T> token = this.tokenize(match);
+			Terminal<T> token = this.tokenize(match);
 			//if token is null, then it is an ignored type
 			if(token != null){
 				tokens.add(token);
@@ -62,7 +62,7 @@ public class Lexer<T> {
 		return tokens;
 	}
 	
-	private Token<T> tokenize(String s){
+	private Terminal<T> tokenize(String s){
 		try{
 			return m_Grammar.tokenize(s);
 		}catch(RuntimeException e){

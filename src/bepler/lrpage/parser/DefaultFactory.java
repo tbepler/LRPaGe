@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import bepler.lrpage.grammar.Production;
-import bepler.lrpage.grammar.Token;
+import bepler.lrpage.grammar.Terminal;
 
 public class DefaultFactory implements Factory {
 
@@ -19,7 +19,7 @@ public class DefaultFactory implements Factory {
 	}
 
 	@Override
-	public <V> Action<V> newShiftAction(State<V> next, Class<? extends Token<V>> nextToken) {
+	public <V> Action<V> newShiftAction(State<V> next, Class<? extends Terminal<V>> nextToken) {
 		return Action.newShiftAction(next, nextToken);
 	}
 
@@ -30,7 +30,7 @@ public class DefaultFactory implements Factory {
 
 	@Override
 	public <V> Item<V> newItem(Production<V> production,
-			List<Class<? extends Token<V>>> lookahead) {
+			List<Class<? extends Terminal<V>>> lookahead) {
 		return new Item<V>(production, lookahead);
 	}
 

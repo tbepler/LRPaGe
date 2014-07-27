@@ -15,7 +15,7 @@ public class TestLexer extends junit.framework.TestCase{
 	private final Lexer<TokenTypes> lexer = new Lexer<TokenTypes>(TokenTypes.values());
 	
 	public void testLexerString(){
-		List<Token<TokenTypes>> tokens = lexer.lex(s);
+		List<Terminal<TokenTypes>> tokens = lexer.lex(s);
 		
 		checkTokens(tokens);
 		
@@ -23,38 +23,38 @@ public class TestLexer extends junit.framework.TestCase{
 	
 	public void testLexerScanner(){
 
-		List<Token<TokenTypes>> tokens = lexer.lex(new Scanner(s));
+		List<Terminal<TokenTypes>> tokens = lexer.lex(new Scanner(s));
 		
 		checkTokens(tokens);
 	}
 	
 	public void testLexerInputStream() throws UnsupportedEncodingException{
 		
-		List<Token<TokenTypes>> tokens = lexer.lex(new ByteArrayInputStream(s.getBytes("UTF-8")));
+		List<Terminal<TokenTypes>> tokens = lexer.lex(new ByteArrayInputStream(s.getBytes("UTF-8")));
 		
 		checkTokens(tokens);
 	}
 
-	private void checkTokens(List<Token<TokenTypes>> tokens) {
+	private void checkTokens(List<Terminal<TokenTypes>> tokens) {
 		assertEquals(11, tokens.size());
 		
-		Token<TokenTypes> token0 = tokens.get(0);
+		Terminal<TokenTypes> token0 = tokens.get(0);
 		assertEquals(TokenTypes.ID, token0.id());
 		assertEquals("_identifier", token0.text());
 		
-		Token<TokenTypes> token1 = tokens.get(1);
+		Terminal<TokenTypes> token1 = tokens.get(1);
 		assertEquals(TokenTypes.NUM, token1.id());
 		assertEquals("0.0001", token1.text());
 		
-		Token<TokenTypes> token2 = tokens.get(2);
+		Terminal<TokenTypes> token2 = tokens.get(2);
 		assertEquals(TokenTypes.STR, token2.id());
 		assertEquals("\" a string\\\" 56 literal\"", token2.text());
 		
-		Token<TokenTypes> token3 = tokens.get(3);
+		Terminal<TokenTypes> token3 = tokens.get(3);
 		assertEquals(TokenTypes.NUM, token3.id());
 		assertEquals("-5", token3.text());
 		
-		Token<TokenTypes> token = tokens.get(4);
+		Terminal<TokenTypes> token = tokens.get(4);
 		assertEquals(TokenTypes.L_PAREN, token.id());
 		assertEquals("(", token.text());
 		
