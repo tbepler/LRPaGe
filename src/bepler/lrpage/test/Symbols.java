@@ -1,6 +1,10 @@
+package bepler.lrpage.test;
 
 public enum Symbols {
 
-    EOF;
+    EOF,
+    TRUE,
+    ID,
+    Test;
 
 }

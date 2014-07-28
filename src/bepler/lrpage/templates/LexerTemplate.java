@@ -54,7 +54,7 @@ public class LexerTemplate {
 			return eofToken();
 		}
 		//find the longest match
-		for( int end = cur.length() ; end >= 0 ; ++end ){
+		for( int end = cur.length() ; end >= 0 ; --end ){
 			String sub = cur.substring(0, end);
 			for( int i = 0 ; i < ms.size() ; ++i ){
 				java.util.regex.Matcher m = ms.get(i);

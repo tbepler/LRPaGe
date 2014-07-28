@@ -1,3 +1,4 @@
+package bepler.lrpage.test;
 import java.io.IOException;
 
 public interface Lexer {

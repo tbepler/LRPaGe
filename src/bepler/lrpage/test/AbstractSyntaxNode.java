@@ -1,6 +1,5 @@
 package bepler.lrpage.test;
 
-
 public interface AbstractSyntaxNode {
 
 

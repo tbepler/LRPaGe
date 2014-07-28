@@ -1,3 +1,4 @@
+package bepler.lrpage.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -34,6 +35,10 @@ public class TestLexer
 
     private static List<Pattern> buildPatternList() {
         List<Pattern> list = new ArrayList<Pattern>();
+        list.add(Pattern.compile("true"));
+        list.add(Pattern.compile("[A-Za-z_]+[A-Za-z0-9_]*"));
+        list.add(Pattern.compile("\\s+"));
+        list.add(Pattern.compile("."));
         return list;
     }
 
@@ -42,8 +47,18 @@ public class TestLexer
         return next;
     }
 
-    private AbstractSyntaxNode createToken(int tokenIndex, int line, int pos, String text) {
+    private AbstractSyntaxNode createToken(int tokenIndex, int line, int pos, String text)
+        throws IOException
+    {
         switch (tokenIndex) {
+            case  0 :
+                return new TRUEToken(text, line, pos);
+            case  1 :
+                return new IDToken(text, line, pos);
+            case  2 :
+                return this.nextToken();
+            case  3 :
+                return new TestToken(text, line, pos);
             default:
                 throw new RuntimeException("Unrecognized token index.");
         }
@@ -95,7 +110,7 @@ if(cur.length() == 0){
 	return EOF;
 }
 //find the longest match
-for( int end = cur.length() ; end >= 0 ; ++end ){
+for( int end = cur.length() ; end >= 0 ; --end ){
 	String sub = cur.substring(0, end);
 	for( int i = 0 ; i < ms.size() ; ++i ){
 		java.util.regex.Matcher m = ms.get(i);

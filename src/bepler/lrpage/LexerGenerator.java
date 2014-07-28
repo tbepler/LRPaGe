@@ -7,23 +7,17 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bepler.lrpage.grammar.Terminal;
-
 import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JForEach;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JSwitch;
@@ -82,11 +76,20 @@ public class LexerGenerator {
 		}
 	}
 	
+	public JDefinedClass getLexerClass(){
+		return lexer;
+	}
+	
 	public void addTerminal(String regex, JDefinedClass nodeClass){
-		buildPatternListMethod.body().invoke(patternList, "add").arg(JExpr.lit(regex));
-		//token constructor takes (String text, int line, int c)
+		buildPatternListMethod.body().invoke(patternList, "add").arg(model.ref(Pattern.class).staticInvoke("compile").arg(JExpr.lit(regex)));
 		JCase c = createTokenSwitch._case(JExpr.lit(tokenIndex++));
-		c.body()._return(JExpr._new(nodeClass).arg(createTokenText).arg(createTokenLine).arg(createTokenChar));
+		//if nodeClass is null, then this token regex is to be ignored
+		if(nodeClass == null){
+			c.body()._return(JExpr.invoke(JExpr._this(), NEXT_TOKEN));
+		}else{
+			//token constructor takes (String text, int line, int c)
+			c.body()._return(JExpr._new(nodeClass).arg(createTokenText).arg(createTokenLine).arg(createTokenChar));
+		}
 	}
 	
 	private JDefinedClass initializeLexer(String lexerName) throws JClassAlreadyExistsException{
@@ -159,6 +162,7 @@ public class LexerGenerator {
 		
 		//init the createToken(int tokenIndex, int line, int pos, String text) method
 		JMethod createTokenMethod = lexer.method(JMod.PRIVATE, syntaxNodeClass, CREATE_TOKEN);
+		createTokenMethod._throws(IOException.class);
 		JVar index = createTokenMethod.param(int.class, "tokenIndex");
 		createTokenLine = createTokenMethod.param(int.class, "line");
 		createTokenChar = createTokenMethod.param(int.class, "pos");
@@ -222,7 +226,7 @@ public class LexerGenerator {
 				"	return "+eofToken.name()+";"+"\n" +
 				"}"+"\n" +
 				"//find the longest match"+"\n" +
-				"for( int end = cur.length() ; end >= 0 ; ++end ){"+"\n" +
+				"for( int end = cur.length() ; end >= 0 ; --end ){"+"\n" +
 				"	String sub = cur.substring(0, end);"+"\n" +
 				"	for( int i = 0 ; i < ms.size() ; ++i ){"+"\n" +
 				"		java.util.regex.Matcher m = ms.get(i);"+"\n" +
