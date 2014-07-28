@@ -193,7 +193,8 @@ public final class JCodeModel {
      */
     public JDefinedClass _class(int mods, String fullyqualifiedName,ClassType t) throws JClassAlreadyExistsException {
         int idx = fullyqualifiedName.lastIndexOf('.');
-        if( idx<0 )     return rootPackage()._class(fullyqualifiedName);
+        //changed the rootPackage()._class(fullyqualifiedName) method to use the mods and class type -- Tristan Bepler
+        if( idx<0 )     return rootPackage()._class(mods, fullyqualifiedName, t);
         else
             return _package(fullyqualifiedName.substring(0,idx))
                 ._class(mods, fullyqualifiedName.substring(idx+1), t );

@@ -1,88 +1,128 @@
-package bepler.lrpage.test;
-
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import bepler.lrpage.lexer.Lexer;
-import bepler.lrpage.lexer.Token;
-import bepler.lrpage.lexer.TokenTypes;
+public class TestLexer
+    implements Lexer
+{
 
-public class TestLexer extends junit.framework.TestCase{
-	
-	private final String s = "_identifier 0.0001 \" a string\\\" 56 literal\"  -5  (a,b) ;   \"  ";
-	private final Lexer<TokenTypes> lexer = new Lexer<TokenTypes>(TokenTypes.values());
-	
-	public void testLexerString(){
-		List<Terminal<TokenTypes>> tokens = lexer.lex(s);
-		
-		checkTokens(tokens);
-		
-	}
-	
-	public void testLexerScanner(){
+    private final static List<Pattern> TOKEN_PATTERNS = buildPatternList();
+    private final static AbstractSyntaxNode EOF = new EOFToken();
+    private final Reader r;
+    private boolean next = true;
+    private int lineNum = 1;
+    private int charNum = 1;
+    private final Deque<Character> buffer = new LinkedList<Character>();
 
-		List<Terminal<TokenTypes>> tokens = lexer.lex(new Scanner(s));
-		
-		checkTokens(tokens);
-	}
-	
-	public void testLexerInputStream() throws UnsupportedEncodingException{
-		
-		List<Terminal<TokenTypes>> tokens = lexer.lex(new ByteArrayInputStream(s.getBytes("UTF-8")));
-		
-		checkTokens(tokens);
-	}
+    public TestLexer(Reader r) {
+        this.r = r;
+    }
 
-	private void checkTokens(List<Terminal<TokenTypes>> tokens) {
-		assertEquals(11, tokens.size());
-		
-		Terminal<TokenTypes> token0 = tokens.get(0);
-		assertEquals(TokenTypes.ID, token0.id());
-		assertEquals("_identifier", token0.text());
-		
-		Terminal<TokenTypes> token1 = tokens.get(1);
-		assertEquals(TokenTypes.NUM, token1.id());
-		assertEquals("0.0001", token1.text());
-		
-		Terminal<TokenTypes> token2 = tokens.get(2);
-		assertEquals(TokenTypes.STR, token2.id());
-		assertEquals("\" a string\\\" 56 literal\"", token2.text());
-		
-		Terminal<TokenTypes> token3 = tokens.get(3);
-		assertEquals(TokenTypes.NUM, token3.id());
-		assertEquals("-5", token3.text());
-		
-		Terminal<TokenTypes> token = tokens.get(4);
-		assertEquals(TokenTypes.L_PAREN, token.id());
-		assertEquals("(", token.text());
-		
-		token = tokens.get(5);
-		assertEquals(TokenTypes.ID, token.id());
-		assertEquals("a", token.text());
-		
-		token = tokens.get(6);
-		assertEquals(TokenTypes.COMMA, token.id());
-		assertEquals(",", token.text());
-		
-		token = tokens.get(7);
-		assertEquals(TokenTypes.ID, token.id());
-		assertEquals("b", token.text());
-		
-		token = tokens.get(8);
-		assertEquals(TokenTypes.R_PAREN, token.id());
-		assertEquals(")", token.text());
-		
-		token = tokens.get(9);
-		assertEquals(TokenTypes.SEMICOLON, token.id());
-		assertEquals(";", token.text());
-		
-		token = tokens.get(10);
-		assertEquals(TokenTypes.ERROR, token.id());
-		assertEquals("\"", token.text());
+    public TestLexer(InputStream in) {
+        this(new java.io.InputStreamReader(in));
+    }
+
+    public TestLexer(String str) {
+        this(new java.io.StringReader(str));
+    }
+
+    private static List<Pattern> buildPatternList() {
+        List<Pattern> list = new ArrayList<Pattern>();
+        return list;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return next;
+    }
+
+    private AbstractSyntaxNode createToken(int tokenIndex, int line, int pos, String text) {
+        switch (tokenIndex) {
+            default:
+                throw new RuntimeException("Unrecognized token index.");
+        }
+    }
+
+    private boolean hasMatch(String s, List<Matcher> ms) {
+        for(java.util.regex.Matcher m : ms){
+	m.reset(s);
+	if(m.matches() || m.hitEnd()){
+		return true;
 	}
-	
-	
-	
+}
+return false;
+
+    }
+
+    @Override
+    public AbstractSyntaxNode nextToken()
+        throws IOException
+    {
+        if(!next){
+	throw new RuntimeException("No tokens remaining."); 
+}
+java.util.List<java.util.regex.Matcher> ms = new java.util.ArrayList<java.util.regex.Matcher>();
+for(java.util.regex.Pattern p : TOKEN_PATTERNS){
+	ms.add(p.matcher(""));
+}
+String cur = "";
+boolean fin = false;
+while(!fin){
+	if(!buffer.isEmpty()){
+		//read from the buffer before reading more chars
+		//from the reader
+		cur = cur + buffer.pop();
+	}else{
+		int read = r.read();
+		if(read == -1){
+			//the reader is expired, so set fin to true
+			fin = true;
+		}else{
+			cur = cur + (char) read;
+		}
+	}
+	fin = fin || !hasMatch(cur, ms);
+}
+//if cur is empty, then return eof and mark lexing done
+if(cur.length() == 0){
+	next = false;
+	return EOF;
+}
+//find the longest match
+for( int end = cur.length() ; end >= 0 ; ++end ){
+	String sub = cur.substring(0, end);
+	for( int i = 0 ; i < ms.size() ; ++i ){
+		java.util.regex.Matcher m = ms.get(i);
+		m.reset(sub);
+		if(m.matches()){
+			//push the end of cur into the buffer
+			for( int j = end ; j < cur.length() ; ++j ){
+				buffer.add(cur.charAt(j));
+			}
+			int line = lineNum;
+			int cNum = charNum;
+			//update line and char count
+			for( int j = 0 ; j < sub.length() ; ++j ){
+				if(sub.charAt(j) == '\n'){
+					++lineNum;
+					charNum = 0;
+				}
+				++charNum;
+			}
+			//return the token
+			return createToken(i, line, cNum, sub);
+		}
+	}
+}
+//an error occurred, the string is unmatched
+throw new RuntimeException("Unmatched token: "+cur);
+
+    }
+
 }
