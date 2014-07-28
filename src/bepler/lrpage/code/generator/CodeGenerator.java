@@ -1,8 +1,9 @@
-package bepler.lrpage;
+package bepler.lrpage.code.generator;
 
 import java.io.File;
 import java.io.IOException;
 
+import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Terminal;
 
 import com.sun.codemodel.ClassType;
@@ -16,6 +17,7 @@ import com.sun.codemodel.JVar;
 
 public class CodeGenerator {
 	
+	private static final String REPLACE = "replace";
 	private static final String TYPE = "type";
 	private static final String ACCEPT = "accept";
 	private static final String VISITOR = "Visitor";
@@ -32,7 +34,7 @@ public class CodeGenerator {
 	
 	private final LexerGenerator lexerGen;
 	
-	public CodeGenerator(String name){
+	public CodeGenerator(String name, Grammar g){
 		try {
 			iVisitor = model._class(VISITOR, ClassType.INTERFACE);
 			symbolsEnum = model._class(SYMBOLS, ClassType.ENUM);
@@ -40,10 +42,16 @@ public class CodeGenerator {
 			JMethod accept = syntaxNode.method(JMod.PUBLIC, void.class , ACCEPT);
 			accept.param(iVisitor, "visitor");
 			syntaxNode.method(JMod.PUBLIC, symbolsEnum, TYPE);
+			syntaxNode.method(JMod.PUBLIC, syntaxNode, REPLACE);
 			eofToken = this.initEOFToken();
 			
 			lexerGen = new LexerGenerator(name, model, syntaxNode, eofToken);
 			MainGenerator.generateMain(null, model, lexerGen.getLexerClass());
+			
+			for(Terminal t : g.getTokens()){
+				this.addToken(t);
+			}
+			
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);
 		}
@@ -75,7 +83,7 @@ public class CodeGenerator {
 		model.build(dir);
 	}
 	
-	public void addToken(Terminal t) throws JClassAlreadyExistsException{
+	private void addToken(Terminal t) throws JClassAlreadyExistsException{
 		JDefinedClass node;
 		if(t.getSymbol() != null){
 			node = model._class(t.getSymbol()+"Token")._implements(syntaxNode);

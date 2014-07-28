@@ -1,47 +1,50 @@
 package bepler.lrpage.parser;
 
-import java.util.List;
 import java.util.Set;
 
-import bepler.lrpage.grammar.Production;
-import bepler.lrpage.grammar.Terminal;
+import bepler.lrpage.grammar.Rule;
 
 public class DefaultFactory implements Factory {
-
-	@Override
-	public <V> Action<V> newReduceAction(Production<V> prod) {
-		return Action.newReduceAction(prod);
+	
+	private final Symbols symbols;
+	
+	public DefaultFactory(Symbols symbols){
+		this.symbols = symbols;
 	}
 
 	@Override
-	public <V> Action<V> newGotoAction(State<V> next) {
-		return Action.newGotoAction(next);
+	public  Action newReduceAction(Rule prod) {
+		return Action.newReduceAction(symbols, prod);
 	}
 
 	@Override
-	public <V> Action<V> newShiftAction(State<V> next, Class<? extends Terminal<V>> nextToken) {
-		return Action.newShiftAction(next, nextToken);
+	public  Action newGotoAction(State next) {
+		return Action.newGotoAction(symbols, next);
 	}
 
 	@Override
-	public <V> Action<V> newAcceptAction() {
-		return Action.newAcceptAction();
+	public  Action newShiftAction(State next, String nextToken) {
+		return Action.newShiftAction(symbols, next, nextToken);
 	}
 
 	@Override
-	public <V> Item<V> newItem(Production<V> production,
-			List<Class<? extends Terminal<V>>> lookahead) {
-		return new Item<V>(production, lookahead);
+	public  Action newAcceptAction() {
+		return Action.newAcceptAction(symbols);
 	}
 
 	@Override
-	public <V> Item<V> incrementItem(Item<V> item) {
+	public  Item newItem(Rule production, String lookahead) {
+		return new Item(production, lookahead);
+	}
+
+	@Override
+	public  Item incrementItem(Item item) {
 		return item.increment();
 	}
 
 	@Override
-	public <V> State<V> newState(Set<Item<V>> items) {
-		return new State<V>(items);
+	public  State newState(Set<Item> items) {
+		return new State(items);
 	}
 
 	

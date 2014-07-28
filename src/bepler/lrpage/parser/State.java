@@ -6,27 +6,27 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class State<S> implements Iterable<Item<S>> {
+public class State implements Iterable<Item> {
 	
-	private final Set<Item<S>> m_Items;
-	private final int m_Hash;
+	private final Set<Item> items;
+	private final int hash;
 	
-	public State(Set<Item<S>> items){
-		m_Items = new HashSet<Item<S>>(items);
-		m_Hash = Arrays.hashCode(items.toArray());
+	public State(Set<Item> items){
+		this.items = new HashSet<Item>(items);
+		hash = Arrays.hashCode(items.toArray());
 	}
 	
 	public boolean isEmpty(){
-		return m_Items.isEmpty();
+		return items.isEmpty();
 	}
 	
-	public Set<Item<S>> asSet(){
-		return Collections.unmodifiableSet(m_Items);
+	public Set<Item> asSet(){
+		return Collections.unmodifiableSet(items);
 	}
 	
 	@Override
-	public Iterator<Item<S>> iterator() {
-		return this.asSet().iterator();
+	public Iterator<Item> iterator() {
+		return Collections.unmodifiableSet(items).iterator();
 	}
 	
 	@Override
@@ -34,7 +34,7 @@ public class State<S> implements Iterable<Item<S>> {
 		StringBuilder b = new StringBuilder();
 		b.append("{\n  ");
 		boolean first = true;
-		for(Item<S> item : m_Items){
+		for(Item item : items){
 			if(first){
 				first = false;
 			}else{
@@ -48,7 +48,7 @@ public class State<S> implements Iterable<Item<S>> {
 	
 	@Override
 	public int hashCode(){
-		return m_Hash;
+		return hash;
 	}
 	
 	@Override
@@ -56,10 +56,10 @@ public class State<S> implements Iterable<Item<S>> {
 		if(o == null) return false;
 		if(o == this) return true;
 		if(o instanceof State){
-			State<?> s = (State<?>) o;
-			if(m_Items.size() == s.m_Items.size()){
-				for(Object item : s.m_Items){
-					if(!m_Items.contains(item)){
+			State that = (State) o;
+			if(items.size() == that.items.size()){
+				for(Object item : that.items){
+					if(!items.contains(item)){
 						return false;
 					}
 				}

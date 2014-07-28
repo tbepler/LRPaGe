@@ -1,132 +1,95 @@
 package bepler.lrpage.parser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import bepler.lrpage.grammar.Rule;
 
-import bepler.lrpage.grammar.Production;
-import bepler.lrpage.grammar.Terminal;
-
-public class Item<V> {
+public class Item {
 	
-	private final Production<V> m_Prod;
-	private final List<Class<? extends Terminal<V>>> m_RHS;
-	private final Class<? extends Terminal<V>> m_LHS;
-	private final List<Class<? extends Terminal<V>>> m_Lookahead;
-	private final int m_Index;
-	private final int m_Hash;
+	private final Rule rule;
+	private final String lookahead;
+	private final int index;
 	
-	public Item(Production<V> prod, List<Class<? extends Terminal<V>>> lookahead){
-		this(0, prod, lookahead);
+	public Item(Rule rule, String lookahead){
+		this(0, rule, lookahead);
 	}
 	
-	public Item(int index, Production<V> prod, List<Class<? extends Terminal<V>>> lookahead){
-		this(index, lookahead, prod, prod.leftHandSide(), prod.rightHandSide());
+	public Item(int index, Rule rule, String lookahead){
+		this.rule = rule;
+		this.lookahead = lookahead;
+		this.index = index;
 	}
 	
-	protected Item(int index, List<Class<? extends Terminal<V>>> lookahead, Production<V> prod, Class<? extends Terminal<V>> lhs, List<Class<? extends Terminal<V>>> rhs){
-		m_Index = index;
-		m_Lookahead = new ArrayList<Class<? extends Terminal<V>>>(lookahead);
-		m_Prod = prod;
-		m_RHS = rhs;
-		m_LHS = lhs;
-		m_Hash = Arrays.deepHashCode(new Object[]{m_Index, m_Prod, m_Lookahead.toArray()});
+	public Rule getRule(){
+		return rule;
 	}
 	
-	public Production<V> getProduction(){
-		return m_Prod;
+	public Item increment(){
+		return new Item(index+1, rule, lookahead);
 	}
 	
-	public Item<V> increment(){
-		return new Item<V>(m_Index+1, m_Lookahead, m_Prod, m_LHS, m_RHS);
-	}
-	
-	public List<Class<? extends Terminal<V>>> alpha(){
-		List<Class<? extends Terminal<V>>> alpha = new ArrayList<Class<? extends Terminal<V>>>();
-		for(int i=0; i<m_Index; ++i){
-			alpha.add(m_RHS.get(i));
+	public String[] alpha(){
+		String[] alpha = new String[index];
+		for( int i = 0 ; i < index ; ++i ){
+			alpha[i] = rule.rightHandSide()[i];
 		}
 		return alpha;
 	}
 	
-	public List<Class<? extends Terminal<V>>> beta(){
-		List<Class<? extends Terminal<V>>> beta = new ArrayList<Class<? extends Terminal<V>>>();
-		for(int i=m_Index+1; i<m_RHS.size(); ++i){
-			beta.add(m_RHS.get(i));
+	public String[] beta(){
+		String[] rhs = rule.rightHandSide();
+		String[] beta = new String[rhs.length - index - 1];
+		for( int i = index + 1 ; i < rhs.length ; ++i ){
+			beta[i-index-1] = rhs[i];
 		}
 		return beta;
 	}
 	
-	public boolean hasNext(){
-		return m_Index < m_RHS.size();
+	public boolean hasNextSymbol(){
+		return index < rule.rightHandSide().length;
 	}
 	
-	public Class<? extends Terminal<V>> next(){
-		return m_RHS.get(m_Index);
+	public String nextSymbol(){
+		return rule.rightHandSide()[index];
 	}
 	
-	public boolean hasPrev(){
-		return m_Index > 0;
+	public boolean hasPrevSymbol(){
+		return index > 0;
 	}
 	
-	public Class<? extends Terminal<V>> prev(){
-		return m_RHS.get(m_Index-1);
+	public String prevSymbol(){
+		return rule.rightHandSide()[index-1];
 	}
 	
-	public int lookaheadLength(){
-		return m_Lookahead.size();
-	}
-	
-	public Class<? extends Terminal<V>> lookahead(int index){
-		return m_Lookahead.get(index);
-	}
-	
-	public List<Class<? extends Terminal<V>>> lookahead(){
-		return Collections.unmodifiableList(m_Lookahead);
+	public String lookahead(){
+		return lookahead;
 	}
 	
 	@Override
 	public String toString(){
-		return m_LHS.getSimpleName() + " -> (" + this.rhsToString() + "), "+this.lookaheadToString();
+		return rule.leftHandSide() + " -> (" + this.rhsToString() + "), ["+lookahead+"]";
 	}
 	
 	private String rhsToString(){
+		String[] rhs = rule.rightHandSide();
 		StringBuilder builder = new StringBuilder();
-		for( int i = 0; i < m_RHS.size() ; ++i ){
+		for( int i = 0; i < rhs.length ; ++i ){
 			if(i != 0){
 				builder.append(" ");
 			}
-			if(i == m_Index){
+			if(i == index){
 				builder.append(". ");
 			}
-			builder.append(m_RHS.get(i).getSimpleName());
+			builder.append(rhs[i]);
 		}
-		if(m_Index == m_RHS.size()){
+		if(index == rhs.length){
 			builder.append(" .");
 		}
 		return builder.toString();
 	}
 	
-	private String lookaheadToString(){
-		StringBuilder builder = new StringBuilder();
-		boolean first = true;
-		builder.append("[");
-		for(Class<? extends Terminal<V>> c : m_Lookahead){
-			if(first){
-				first = false;
-			}else{
-				builder.append(", ");
-			}
-			builder.append(c.getSimpleName());
-		}
-		builder.append("]");
-		return builder.toString();
-	}
-	
 	@Override
 	public int hashCode(){
-		return m_Hash;
+		return Arrays.deepHashCode(new Object[]{rule, lookahead, index});
 	}
 	
 	@Override
@@ -134,22 +97,16 @@ public class Item<V> {
 		if(o == null) return false;
 		if(o == this) return true;
 		if(o instanceof Item){
-			Item<?> i = (Item<?>) o;
-			return m_Index == i.m_Index && m_Prod.equals(i.m_Prod) && listEquals(m_Lookahead, i.m_Lookahead);
+			Item that = (Item) o;
+			return equals(this.rule, that.rule) && this.index == that.index && equals(this.lookahead, that.lookahead);
 		}
 		return false;
 	}
 	
-	private static boolean listEquals(List<?> l1, List<?> l2){
-		if(l1.size() == l2.size()){
-			for(int i=0; i<l1.size(); ++i){
-				if(!l1.get(i).equals(l2.get(i))){
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
+	private static boolean equals(Object o1, Object o2){
+		if(o1 == o2) return true;
+		if(o1 == null || o2 == null) return false;
+		return o1.equals(o2);
 	}
 	
 }

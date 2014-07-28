@@ -1,4 +1,4 @@
-package bepler.lrpage;
+package bepler.lrpage.code.generator;
 
 import java.io.BufferedReader;
 import java.io.IOException;

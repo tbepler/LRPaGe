@@ -2,9 +2,14 @@ package bepler.lrpage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.sun.codemodel.JClassAlreadyExistsException;
 
+import bepler.lrpage.code.generator.CodeGenerator;
+import bepler.lrpage.grammar.Grammar;
+import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.grammar.Terminal;
 
 public class Main {
@@ -83,12 +88,23 @@ public class Main {
 		}
 	}
 	
+	public static class TestGrammar implements Grammar {
+
+		@Override
+		public List<Rule> getRules() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<Terminal> getTokens() {
+			return Arrays.asList(new True(), new Id(), new IgnoreTest(), new TerminalTest());
+		}
+		
+	}
+	
 	public static void main(String[] args) throws IOException, JClassAlreadyExistsException{
-		CodeGenerator gen = new CodeGenerator("Test");
-		gen.addToken(new True());
-		gen.addToken(new Id());
-		gen.addToken(new IgnoreTest());
-		gen.addToken(new TerminalTest());
+		CodeGenerator gen = new CodeGenerator("Test", new TestGrammar());
 		if(args.length > 0){
 			gen.write(new File(args[0]));
 		}else{

@@ -2,93 +2,113 @@ package bepler.lrpage.parser;
 
 import java.util.Arrays;
 
-import bepler.lrpage.grammar.Production;
-import bepler.lrpage.grammar.Terminal;
+import bepler.lrpage.grammar.Rule;
 
-public class Action<S> {
+public class Action {
 	
-	public static <S> Action<S> newAcceptAction(){
-		return new Action<S>(Actions.ACCEPT);
+	public static  Action newAcceptAction(Symbols s){
+		return new Action(s, Actions.ACCEPT);
 	}
 	
-	public static <S> Action<S> newReduceAction(Production<S> prod){
-		return new Action<S>(Actions.REDUCE, prod);
+	public static  Action newReduceAction(Symbols s, Rule rule){
+		return new Action(s, Actions.REDUCE, rule);
 	}
 	
-	public static <S> Action<S> newShiftAction(State<S> next, Class<? extends Terminal<S>> symbol){
-		return new Action<S>(Actions.SHIFT, next, symbol);
+	public static  Action newShiftAction(Symbols s, State next, String shift){
+		return new Action(s, Actions.SHIFT, next, shift);
 	}
 	
-	public static <S> Action<S> newGotoAction(State<S> next){
-		return new Action<S>(Actions.GOTO, next);
+	public static  Action newGotoAction(Symbols s, State next){
+		return new Action(s, Actions.GOTO, next);
 	}
 	
-	private final State<S> m_Next;
-	private final Production<S> m_Prod;
-	private final Class<? extends Terminal<S>> m_Shift;
-	private final Actions m_Id;
-	private final int m_Hash;
+	private final Symbols symbols;
+	private final State next;
+	private final Rule rule;
+	private final String shift;
+	private final Actions id;
+	private final int hash;
 	
-	private Action(Actions id){
-		m_Id = id;
-		m_Next = null;
-		m_Prod = null;
-		m_Shift = null;
-		m_Hash = this.computeHash();
+	private Action(Symbols symbols, State next, Rule rule, String shift, Actions id){
+		this.symbols = symbols;
+		this.next = next;
+		this.rule = rule;
+		this.shift = shift;
+		this.id = id;
+		this.hash = Arrays.hashCode(new Object[]{symbols, next, rule, shift, id});
 	}
 	
-	private Action(Actions id, State<S> next){
-		m_Id = id;
-		m_Next = next;
-		m_Prod = null;
-		m_Shift = null;
-		m_Hash = this.computeHash();
+	private Action(Symbols symbols, Actions id){
+		this(symbols, null, null, null, id);
 	}
 	
-	private Action(Actions id, State<S> next, Class<? extends Terminal<S>> symbolType){
-		m_Id = id;
-		m_Next = next;
-		m_Prod = null;
-		m_Shift = symbolType;
-		m_Hash = this.computeHash();
+	private Action(Symbols symbols, Actions id, State next){
+		this(symbols, next, null, null, id);
 	}
 	
-	private Action(Actions id, Production<S> prod){
-		m_Id = id;
-		m_Next = null;
-		m_Prod = prod;
-		m_Shift = null;
-		m_Hash = this.computeHash();
+	private Action(Symbols symbols, Actions id, State next, String shift){
+		this(symbols, next, null, shift, id);
 	}
 	
-	private int computeHash(){
-		return Arrays.hashCode(new Object[]{m_Id, m_Next, m_Prod, m_Shift});
+	private Action(Symbols symbols, Actions id, Rule rule){
+		this(symbols, null, rule, null, id);
+	}
+	
+	public int priority(){
+		if(rule != null){
+			Integer p = rule.getPriority();
+			if(p == null){
+				//assign the rule's priority according to the priority
+				//of its last terminal symbol
+				String[] rhs = rule.rightHandSide();
+				for( int i = rhs.length - 1 ; i >= 0 ; --i ){
+					String symbol = rhs[i];
+					if(symbols.isTerminal(symbol)){
+						p = symbols.getPriority(symbol);
+						break;
+					}
+				}
+			}
+			//this means that there were no terminal symbols
+			//in the rhs of this rule, so assign it the default
+			//priority
+			if(p == null){
+				p = symbols.getDefaultPriority();
+			}
+			return p;
+		}
+		//rule is null so check shift symbol
+		if(shift != null){
+			return symbols.getPriority(shift);
+		}
+		//this is neither a reduce nor shift rule, return the default priority
+		return symbols.getDefaultPriority();
 	}
 	
 	public Actions id(){
-		return m_Id;
+		return id;
 	}
 	
-	public State<S> nextState(){
-		return m_Next;
+	public State nextState(){
+		return next;
 	}
 	
-	public Class<? extends Terminal<S>> shiftToken(){
-		return m_Shift;
+	public String shiftToken(){
+		return shift;
 	}
 	
-	public Production<S> production(){
-		return m_Prod;
+	public Rule production(){
+		return rule;
 	}
 	
 	@Override
 	public String toString(){
-		return m_Id.toString();
+		return id.toString();
 	}
 	
 	@Override
 	public int hashCode(){
-		return m_Hash;
+		return hash;
 	}
 	
 	@Override
@@ -96,16 +116,20 @@ public class Action<S> {
 		if(o == null) return false;
 		if(o == this) return true;
 		if(o instanceof Action){
-			Action<?> a = (Action<?>) o;
-			if(m_Next == null){
-				return m_Id.equals(a.m_Id) && m_Prod.equals(a.m_Prod);
-			}else if(m_Shift == null){
-				return m_Id.equals(a.m_Id) && m_Next.equals(a.m_Next);
-			}else{
-				return m_Id.equals(a.m_Id) && m_Next.equals(a.m_Next) && m_Shift.equals(a.m_Shift);
-			}
+			Action that = (Action) o;
+			return equals(this.symbols, that.symbols) &&
+					equals(this.next, that.next) &&
+					equals(this.rule, that.rule) &&
+					equals(this.shift, that.shift) &&
+					equals(this.id, that.id);
 		}
 		return false;
+	}
+	
+	private static boolean equals(Object o1, Object o2){
+		if(o1 == o2) return true;
+		if(o1 == null || o2 == null) return false;
+		return o1.equals(o2);
 	}
 	
 }

@@ -7,7 +7,8 @@ public interface Grammar{
 	public List<Rule> getRules();
 	
 	public List<Terminal> getTokens();
-
+	
+	public int defaultPriority();
 	
 	
 }
