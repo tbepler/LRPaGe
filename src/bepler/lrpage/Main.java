@@ -9,6 +9,7 @@ import java.util.List;
 import com.sun.codemodel.JClassAlreadyExistsException;
 
 import bepler.lrpage.code.generator.CodeGenerator;
+import bepler.lrpage.grammar.Assoc;
 import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.grammar.Terminal;
@@ -87,6 +88,45 @@ public class Main {
 		public int getPriority() {
 			return 0;
 		}
+	}
+	
+	public static class IdExpRule implements Rule{
+
+		@Override
+		public String leftHandSide() {
+			return "E";
+		}
+
+		@Override
+		public String[] rightHandSide() {
+			return new String[]{"ID"};
+		}
+
+		@Override
+		public Integer getPriority() {
+			return null;
+		}
+
+		@Override
+		public Assoc getAssoc() {
+			return Assoc.NON;
+		}
+
+		@Override
+		public String getName() {
+			return "IdExp";
+		}
+
+		@Override
+		public int[] ignoreSymbols() {
+			return new int[]{};
+		}
+
+		@Override
+		public int replace() {
+			return -1;
+		}
+		
 	}
 	
 	public static class TestGrammar implements Grammar {

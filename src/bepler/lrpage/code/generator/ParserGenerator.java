@@ -194,7 +194,7 @@ public class ParserGenerator {
 		for(JVar field : fields){
 			newNodeClass = newNodeClass.arg(field);
 		}
-		body.invoke(lookaheadStack, "push").arg(newNodeClass);
+		body.invoke(lookaheadStack, "push").arg(JExpr.invoke(newNodeClass, "replace"));
 		body._break();
 	}
 
