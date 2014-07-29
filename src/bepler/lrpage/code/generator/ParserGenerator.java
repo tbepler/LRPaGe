@@ -187,6 +187,7 @@ public class ParserGenerator {
 		for( int i = fields.length - 1 ; i >= 0 ; --i ){
 			JDefinedClass type = nodes.getAbstractNode(rhs[i]);
 			fields[i] = body.decl(type, "field"+i, JExpr.cast(type, JExpr.invoke(nodeStack, "pop")));
+			body.invoke(statesStack, "pop");
 		}
 		JInvocation newNodeClass = JExpr._new(nodeClass);
 		for(JVar field : fields){
