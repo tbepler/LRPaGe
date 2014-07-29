@@ -1,6 +1,9 @@
 package bepler.lrpage.code.generator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +36,8 @@ public class NodeGenerator {
 	private final JDefinedClass nodeInterface;
 	private final JDefinedClass eofTokenClass;
 	private final Map<String, JDefinedClass> tokens;
+	private final Map<String, JDefinedClass> abstractNodes;
+	private final Map<Rule, JDefinedClass> concreteNodes;
 	
 	public NodeGenerator(Symbols symbols, JCodeModel model) throws JClassAlreadyExistsException{
 		this.symbols = symbols;
@@ -42,16 +47,17 @@ public class NodeGenerator {
 		this.nodeInterface = this.defineNodeInterface();
 		this.eofTokenClass = this.defineEOFToken();
 		this.tokens = this.defineTokenNodes();
+		this.abstractNodes= this.defineAbstractNodes();
+		this.concreteNodes= this.defineConcreteNodes();
+		
 	}
 	
 	public JDefinedClass getAbstractNode(String symbol){
-		//TODO
-		return null;
+		return abstractNodes.get(symbol);
 	}
 	
 	public JDefinedClass getConcreteNode(Rule rule){
-		//TODO
-		return null;
+		return concreteNodes.get(rule);
 	}
 	
 	public JDefinedClass getTokenNode(String terminalSymbol){
@@ -195,5 +201,138 @@ public class NodeGenerator {
 		return visit;
 	}
 
+	/**
+	 * @author Jennifer Zou
+	 * @return
+	 * @throws JClassAlreadyExistsException
+	 */
+	private Map<String, JDefinedClass> defineAbstractNodes() throws JClassAlreadyExistsException{
+		Map<String, JDefinedClass> nodes = new HashMap<String, JDefinedClass>();
+		Set<String> sym= new HashSet<String>(symbols.getAllSymbols());
+		sym.removeAll(symbols.getTerminals());
+		sym.remove(symbols.getEOF());
+		for(String symbol : sym){
+			nodes.put(symbol, defineAbstractNode(symbol));
+		}
+		return nodes;
+	}
 	
+	/**
+	 * @author Jennifer Zou
+	 * @param s
+	 * @return
+	 * @throws JClassAlreadyExistsException
+	 */
+	private JDefinedClass defineAbstractNode(String s) throws JClassAlreadyExistsException{
+		JDefinedClass asn= model._class(JMod.PUBLIC+JMod.ABSTRACT, s+"AbstractNode", ClassType.CLASS);
+		asn._implements(nodeInterface);
+		//declare the type method
+		JMethod type= asn.method(JMod.PUBLIC, symbolsEnumeration, TYPE);
+		type.annotate(Override.class);
+		type.body()._return(symbolsEnumeration.enumConstant(s));
+		//define replace method
+		JMethod replace= asn.method(JMod.PUBLIC, nodeInterface, REPLACE);
+		replace.annotate(Override.class);
+		replace.body()._return(JExpr._this());
+		//define toString()
+		JMethod toString= asn.method(JMod.PUBLIC, String.class, "toString");
+		toString.annotate(Override.class);
+		toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
+		return asn;
+	}
+	
+	/**
+	 * @author Jennifer Zou
+	 * @return
+	 * @throws JClassAlreadyExistsException
+	 */
+	private Map<Rule, JDefinedClass> defineConcreteNodes() throws JClassAlreadyExistsException{
+		Map<Rule, JDefinedClass> ret= new HashMap<Rule, JDefinedClass>();
+		for(Rule r:symbols.getRules()){
+			ret.put(r, defineConcreteNode(r));
+		}
+		return ret;
+	}
+	
+	/**
+	 * @author Jennifer Zou
+	 * @param r
+	 * @return
+	 * @throws JClassAlreadyExistsException
+	 */
+	private JDefinedClass defineConcreteNode(Rule r) throws JClassAlreadyExistsException{
+		String lhs= r.leftHandSide();
+		JDefinedClass asn= abstractNodes.get(lhs);
+		JDefinedClass concreteNode= model._class(r.getName());
+		concreteNode._extends(asn);
+		
+		//define constructor and fields
+		JMethod cons= concreteNode.constructor(JMod.PUBLIC);
+		String[] rhs= r.rightHandSide();
+		Map<Integer, JVar> fieldInd= new HashMap<Integer, JVar>();
+		int[] ignore= r.ignoreSymbols();
+		for(int i=0;i<rhs.length;i++){
+			JDefinedClass clazz= lookupNodeClass(rhs[i]);
+			JVar param= cons.param(clazz, "node"+i);
+			if(!contains(ignore, i)){
+				JVar field= concreteNode.field(JMod.PUBLIC+JMod.FINAL, clazz, "f"+i);
+				fieldInd.put(i, field);
+				cons.body().assign(JExpr._this().ref(field), param);
+			}
+		}
+		
+		//define accept method
+		JMethod accept= concreteNode.method(JMod.PUBLIC, void.class, ACCEPT);
+		accept.annotate(Override.class);
+		JVar visitor= accept.param(visitorInterface, "visitor");
+		JMethod visit= addVisitableNode(concreteNode);
+		accept.body().invoke(visitor, visit).arg(JExpr._this());
+		
+		//if replace is specified, define replace method
+		if(r.replace()>=0){
+			JMethod replace= concreteNode.method(JMod.PUBLIC, nodeInterface, REPLACE);
+			replace.annotate(Override.class);
+			JVar field= fieldInd.get(r.replace());
+			if(field==null){
+				throw new NullPointerException("Replace index not found: "+r.replace()+", "+r);
+			}
+			replace.body()._return(field);
+		}
+		
+		return concreteNode;
+		
+	}
+	
+	/**
+	 * @author Jennifer Zou
+	 * @param symbol
+	 * @return
+	 */
+	private JDefinedClass lookupNodeClass(String symbol){
+		JDefinedClass clazz= tokens.get(symbol);
+		if(clazz==null){
+			clazz= abstractNodes.get(symbol);
+		}
+		if(clazz==null){
+			throw new RuntimeException("No class for symbol: "+symbol);
+		}
+		return clazz;
+	}
+
+
+	/**
+	 * @author Jennifer Zou
+	 * @param array
+	 * @param i
+	 * @return
+	 */
+	private boolean contains(int[] array, int i){
+		for(int a:array){
+			if(a==i){
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
