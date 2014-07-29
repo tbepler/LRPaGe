@@ -16,6 +16,11 @@ public class EOFToken
     }
 
     @Override
+    public AbstractSyntaxNode replace() {
+        return this;
+    }
+
+    @Override
     public String toString() {
         return this.type().toString();
     }

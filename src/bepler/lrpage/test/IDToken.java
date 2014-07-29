@@ -25,6 +25,11 @@ public class IDToken
     }
 
     @Override
+    public AbstractSyntaxNode replace() {
+        return this;
+    }
+
+    @Override
     public String toString() {
         return (((((((this.type()+"(")+ text)+", ")+ line)+":")+ pos)+")");
     }

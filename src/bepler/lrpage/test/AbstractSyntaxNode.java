@@ -7,4 +7,6 @@ public interface AbstractSyntaxNode {
 
     public Symbols type();
 
+    public AbstractSyntaxNode replace();
+
 }

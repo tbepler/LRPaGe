@@ -2,6 +2,7 @@ package bepler.lrpage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -92,13 +93,17 @@ public class Main {
 
 		@Override
 		public List<Rule> getRules() {
-			// TODO Auto-generated method stub
-			return null;
+			return new ArrayList<Rule>();
 		}
 
 		@Override
 		public List<Terminal> getTokens() {
 			return Arrays.asList(new True(), new Id(), new IgnoreTest(), new TerminalTest());
+		}
+
+		@Override
+		public int defaultPriority() {
+			return 0;
 		}
 		
 	}

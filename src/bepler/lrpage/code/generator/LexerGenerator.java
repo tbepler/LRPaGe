@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bepler.lrpage.grammar.Terminal;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
@@ -45,7 +47,7 @@ public class LexerGenerator {
 	private static final String BUFFER = "buffer";
 	
 	private final JCodeModel model;
-	private final JDefinedClass syntaxNodeClass;
+	private final NodeGenerator nodeGen;
 	
 	private JMethod buildPatternListMethod;
 	private JVar patternList;
@@ -61,26 +63,37 @@ public class LexerGenerator {
 	private int tokenIndex = 0;
 	
 	private final JDefinedClass lexer;
-	private final JDefinedClass eofTokenClass;
 	private JFieldVar readerField;
 	private JFieldVar nextField;
 	
-	public LexerGenerator(String lexerName, JCodeModel model, JDefinedClass syntaxNodeClass, JDefinedClass eofTokenClass){
+	public LexerGenerator(String lexerName, JCodeModel model, NodeGenerator nodeGen){
 		this.model = model;
-		this.syntaxNodeClass = syntaxNodeClass;
-		this.eofTokenClass = eofTokenClass;
+		this.nodeGen = nodeGen;
 		try {
 			lexer = this.initializeLexer(lexerName);
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);
 		}
+		
 	}
 	
 	public JDefinedClass getLexerClass(){
 		return lexer;
 	}
 	
-	public void addTerminal(String regex, JDefinedClass nodeClass){
+	public void generate(List<Terminal> terminals){
+		for(Terminal t : terminals){
+			String regex = t.getRegex();
+			String symbol = t.getSymbol();
+			if(symbol != null){
+				this.addTerminal(regex, nodeGen.getTokenNode(symbol));
+			}else{
+				this.addTerminal(regex, null);
+			}
+		}
+	}
+	
+	private void addTerminal(String regex, JDefinedClass nodeClass){
 		buildPatternListMethod.body().invoke(patternList, "add").arg(model.ref(Pattern.class).staticInvoke("compile").arg(JExpr.lit(regex)));
 		JCase c = createTokenSwitch._case(JExpr.lit(tokenIndex++));
 		//if nodeClass is null, then this token regex is to be ignored
@@ -111,14 +124,14 @@ public class LexerGenerator {
 	private JDefinedClass createLexerInterface() throws JClassAlreadyExistsException{
 		JDefinedClass iLexer = model._class(LEXER, ClassType.INTERFACE);
 		iLexer.method(JMod.PUBLIC, boolean.class, HAS_NEXT);
-		iLexer.method(JMod.PUBLIC, syntaxNodeClass, NEXT_TOKEN)._throws(IOException.class);
+		iLexer.method(JMod.PUBLIC, nodeGen.getNodeInterface(), NEXT_TOKEN)._throws(IOException.class);
 		return iLexer;
 	}
 	
 	private void initializeFields(JDefinedClass lexer){
 		this.initializePatternListField(lexer);
 		//eofTokenClass should take no args on the constructor
-		eofToken = lexer.field(PRIVATE_FINAL+JMod.STATIC, syntaxNodeClass, EOF, JExpr._new(eofTokenClass));
+		eofToken = lexer.field(PRIVATE_FINAL+JMod.STATIC, nodeGen.getNodeInterface(), EOF, JExpr._new(nodeGen.getEOFTokenNode()));
 		readerField = lexer.field(PRIVATE_FINAL, Reader.class, READER);
 		nextField = lexer.field(JMod.PRIVATE, boolean.class, NEXT, JExpr.TRUE);
 		lexer.field(JMod.PRIVATE, int.class, LINE, JExpr.lit(1));
@@ -161,7 +174,7 @@ public class LexerGenerator {
 		hasNextImpl.body()._return(nextField);
 		
 		//init the createToken(int tokenIndex, int line, int pos, String text) method
-		JMethod createTokenMethod = lexer.method(JMod.PRIVATE, syntaxNodeClass, CREATE_TOKEN);
+		JMethod createTokenMethod = lexer.method(JMod.PRIVATE, nodeGen.getNodeInterface(), CREATE_TOKEN);
 		createTokenMethod._throws(IOException.class);
 		JVar index = createTokenMethod.param(int.class, "tokenIndex");
 		createTokenLine = createTokenMethod.param(int.class, "line");
@@ -185,7 +198,7 @@ public class LexerGenerator {
 				);
 		
 		//implement the nextToken() method using direct statement, as it is rather complicated
-		JMethod nextTokenImpl = lexer.method(JMod.PUBLIC, syntaxNodeClass, NEXT_TOKEN);
+		JMethod nextTokenImpl = lexer.method(JMod.PUBLIC, nodeGen.getNodeInterface(), NEXT_TOKEN);
 		nextTokenImpl.annotate(model.ref(Override.class));
 		nextTokenImpl._throws(IOException.class);
 		//JBlock body = nextTokenImpl.body();
