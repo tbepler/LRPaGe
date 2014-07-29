@@ -63,7 +63,7 @@ public class ParserGenerator {
 	 * @param syntaxNode
 	 * @throws JClassAlreadyExistsException
 	 */
-	public void generate(String prefix, JCodeModel model,
+	public JDefinedClass generate(String prefix, JCodeModel model,
 			JDefinedClass lexer, NodeGenerator nodes)
 			throws JClassAlreadyExistsException{
 		this.model = model;
@@ -74,6 +74,7 @@ public class ParserGenerator {
 		this.createParseMethod(lexer, getActionMethod);
 		this.initRuleIndices();
 		this.addActions();
+		return parserClass;
 	}
 	
 	private void initRuleIndices(){
@@ -187,6 +188,7 @@ public class ParserGenerator {
 		for( int i = fields.length - 1 ; i >= 0 ; --i ){
 			JDefinedClass type = nodes.getAbstractNode(rhs[i]);
 			fields[i] = body.decl(type, "field"+i, JExpr.cast(type, JExpr.invoke(nodeStack, "pop")));
+			body.invoke(statesStack, "pop");
 		}
 		JInvocation newNodeClass = JExpr._new(nodeClass);
 		for(JVar field : fields){

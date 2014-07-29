@@ -64,6 +64,12 @@ public class NodeGenerator {
 		return tokens.get(terminalSymbol);
 	}
 	
+	public Set<JDefinedClass> getTokenNodeClasses(){
+		Set<JDefinedClass> nodes = new HashSet<JDefinedClass>(tokens.values());
+		nodes.remove(this.getEOFTokenNode());
+		return nodes;
+	}
+	
 	public JDefinedClass getEOFTokenNode(){
 		return eofTokenClass;
 	}
