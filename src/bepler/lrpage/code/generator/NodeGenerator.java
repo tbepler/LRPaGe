@@ -1,6 +1,7 @@
 package bepler.lrpage.code.generator;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,12 @@ public class NodeGenerator {
 	
 	public JDefinedClass getTokenNode(String terminalSymbol){
 		return tokens.get(terminalSymbol);
+	}
+	
+	public Set<JDefinedClass> getTokenNodeClasses(){
+		Set<JDefinedClass> nodes = new HashSet<JDefinedClass>(tokens.values());
+		nodes.remove(this.getEOFTokenNode());
+		return nodes;
 	}
 	
 	public JDefinedClass getEOFTokenNode(){

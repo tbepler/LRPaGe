@@ -63,7 +63,7 @@ public class ParserGenerator {
 	 * @param syntaxNode
 	 * @throws JClassAlreadyExistsException
 	 */
-	public void generate(String prefix, JCodeModel model,
+	public JDefinedClass generate(String prefix, JCodeModel model,
 			JDefinedClass lexer, NodeGenerator nodes)
 			throws JClassAlreadyExistsException{
 		this.model = model;
@@ -74,6 +74,7 @@ public class ParserGenerator {
 		this.createParseMethod(lexer, getActionMethod);
 		this.initRuleIndices();
 		this.addActions();
+		return parserClass;
 	}
 	
 	private void initRuleIndices(){

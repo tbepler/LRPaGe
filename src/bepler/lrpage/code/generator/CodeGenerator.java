@@ -8,6 +8,7 @@ import bepler.lrpage.parser.Symbols;
 
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 
 public class CodeGenerator {
 	
@@ -23,9 +24,15 @@ public class CodeGenerator {
 			nodeGen = new NodeGenerator(symbols, model);
 			lexerGen = new LexerGenerator(name, model, nodeGen);
 			lexerGen.generate(g.getTokens());
-			MainGenerator.generateMain(null, model, lexerGen.getLexerClass());
 			parserGen = new ParserGenerator(symbols);
-			parserGen.generate(name, model, lexerGen.getLexerClass(), nodeGen);
+			JDefinedClass parser = parserGen.generate(name, model,
+					lexerGen.getLexerClass(), nodeGen);
+			
+			JDefinedClass printVisitor = MainGenerator.generatePrintVisitor(
+					null, model, nodeGen.getVisitorInterface(),
+					nodeGen.getTokenNodeClasses());
+			MainGenerator.generateMain(null, model, lexerGen.getLexerClass(),
+					parser, printVisitor,nodeGen.getNodeInterface());
 			
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);
