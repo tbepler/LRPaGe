@@ -20,6 +20,16 @@ public class PrintVisitor
     }
 
     @Override
+    public void visit(LParenToken node) {
+        this.print(node);
+    }
+
+    @Override
+    public void visit(RParenToken node) {
+        this.print(node);
+    }
+
+    @Override
     public void visit(IDToken node) {
         this.print(node);
     }

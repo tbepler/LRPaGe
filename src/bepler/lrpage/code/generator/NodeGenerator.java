@@ -387,8 +387,12 @@ public class NodeGenerator {
 		JMethod accept= concreteNode.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.annotate(Override.class);
 		JVar visitor= accept.param(visitorInterface, "visitor");
-		JMethod visit= addVisitableNode(concreteNode);
-		accept.body().invoke(visitor, visit).arg(JExpr._this());
+		if(r.replace() < 0){ //if not replaced, define visit method on visitor and accept to call that method
+			JMethod visit= addVisitableNode(concreteNode);
+			accept.body().invoke(visitor, visit).arg(JExpr._this());
+		}else{ //if replaced, make accept do nothing
+			accept.body().directStatement("//do nothing");
+		}
 		
 		//if replace is specified, define replace method
 		if(r.replace()>=0){

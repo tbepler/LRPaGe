@@ -40,6 +40,18 @@ public class Main {
 		@Override public int getPriority(){ return 0; }
 	}
 	
+	public static class LParen implements Terminal{
+		@Override public String getRegex(){ return "\\("; }
+		@Override public String getSymbol(){ return "LParen"; }
+		@Override public int getPriority(){ return 0; }
+	}
+	
+	public static class RParen implements Terminal{
+		@Override public String getRegex(){ return "\\)"; }
+		@Override public String getSymbol(){ return "RParen"; }
+		@Override public int getPriority(){ return 0; }
+	}
+	
 	public static class Id implements Terminal{
 
 		@Override
@@ -144,16 +156,26 @@ public class Main {
 		@Override public int replace(){ return -1; }
 	}
 	
+	public static class ParenExpRule implements Rule{
+		@Override public String leftHandSide(){ return "Exp"; }
+		@Override public String[] rightHandSide(){ return new String[]{"LParen", "Exp", "RParen"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.NON; }
+		@Override public String getName(){ return "ParenExp"; }
+		@Override public int[] ignoreSymbols(){ return new int[]{}; }
+		@Override public int replace(){ return 1; }
+	}
+	
 	public static class TestGrammar implements Grammar {
 
 		@Override
 		public List<Rule> getRules() {
-			return Arrays.asList(new PlusExpRule(), new IdExpRule());
+			return Arrays.asList(new PlusExpRule(), new IdExpRule(), new ParenExpRule());
 		}
 
 		@Override
 		public List<Terminal> getTokens() {
-			return Arrays.asList(new True(), new Id(), new Plus(), new IgnoreTest(), new TerminalTest());
+			return Arrays.asList(new True(), new LParen(), new RParen(), new Id(), new Plus(), new IgnoreTest(), new TerminalTest());
 		}
 
 		@Override

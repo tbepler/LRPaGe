@@ -5,6 +5,10 @@ public interface Visitor {
 
     public void visit(TRUEToken node);
 
+    public void visit(LParenToken node);
+
+    public void visit(RParenToken node);
+
     public void visit(IDToken node);
 
     public void visit(PlusToken node);
