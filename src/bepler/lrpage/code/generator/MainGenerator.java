@@ -43,6 +43,7 @@ public class MainGenerator {
 			throws JClassAlreadyExistsException{
 		String name = pckg == null ? MAIN : pckg+"."+MAIN;
 		JDefinedClass mainClass = model._class(name);
+		CodeGenerator.appendJDocHeader(mainClass);
 		JMethod main = mainClass.method(JMod.PUBLIC + JMod.STATIC, void.class, "main");
 		main._throws(IOException.class);
 		main.param(String[].class, "args");
@@ -81,6 +82,7 @@ public class MainGenerator {
 			throws JClassAlreadyExistsException{
 		String name = pckg == null ? PRINT_VISITOR : pckg + "." + PRINT_VISITOR;
 		JDefinedClass printVisitor = model._class(name);
+		CodeGenerator.appendJDocHeader(printVisitor);
 		printVisitor._implements(iVisitor);
 		//add a field for the delimiter string
 		JVar delim = printVisitor.field(JMod.PRIVATE+JMod.STATIC+JMod.FINAL, String.class, "DELIM", JExpr.lit("  "));

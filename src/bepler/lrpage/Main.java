@@ -186,7 +186,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException, JClassAlreadyExistsException{
-		CodeGenerator gen = new CodeGenerator("Test", new TestGrammar());
+		CodeGenerator gen = new CodeGenerator("bepler.lrpage.test", new TestGrammar());
 		if(args.length > 0){
 			gen.write(new File(args[0]));
 		}else{

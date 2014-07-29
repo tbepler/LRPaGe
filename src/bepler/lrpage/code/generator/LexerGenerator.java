@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import bepler.lrpage.grammar.Terminal;
 
-import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -66,11 +65,11 @@ public class LexerGenerator {
 	private JFieldVar readerField;
 	private JFieldVar nextField;
 	
-	public LexerGenerator(String lexerName, JCodeModel model, NodeGenerator nodeGen){
+	public LexerGenerator(String pckg, JCodeModel model, NodeGenerator nodeGen){
 		this.model = model;
 		this.nodeGen = nodeGen;
 		try {
-			lexer = this.initializeLexer(lexerName);
+			lexer = this.initializeLexer(pckg);
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);
 		}
@@ -105,10 +104,10 @@ public class LexerGenerator {
 		}
 	}
 	
-	private JDefinedClass initializeLexer(String lexerName) throws JClassAlreadyExistsException{
-		JDefinedClass iLexer = this.createLexerInterface();
-		JDefinedClass lexer = model._class(lexerName + LEXER);
-		lexer._implements(iLexer);
+	private JDefinedClass initializeLexer(String pckg) throws JClassAlreadyExistsException{
+		String name = pckg == null ? LEXER : pckg+"."+LEXER;
+		JDefinedClass lexer = model._class(name);
+		CodeGenerator.appendJDocHeader(lexer);
 		//init fields
 		this.initializeFields(lexer);
 		//add constructors
@@ -119,13 +118,6 @@ public class LexerGenerator {
 		this.initializeMethods(lexer);
 		
 		return lexer;
-	}
-	
-	private JDefinedClass createLexerInterface() throws JClassAlreadyExistsException{
-		JDefinedClass iLexer = model._class(LEXER, ClassType.INTERFACE);
-		iLexer.method(JMod.PUBLIC, boolean.class, HAS_NEXT);
-		iLexer.method(JMod.PUBLIC, nodeGen.getNodeInterface(), NEXT_TOKEN)._throws(IOException.class);
-		return iLexer;
 	}
 	
 	private void initializeFields(JDefinedClass lexer){
@@ -170,7 +162,6 @@ public class LexerGenerator {
 	private void initializeMethods(JDefinedClass lexer){
 		//implement the hasNext() method
 		JMethod hasNextImpl = lexer.method(JMod.PUBLIC, boolean.class, HAS_NEXT);
-		hasNextImpl.annotate(model.ref(Override.class));
 		hasNextImpl.body()._return(nextField);
 		
 		//init the createToken(int tokenIndex, int line, int pos, String text) method
@@ -199,7 +190,6 @@ public class LexerGenerator {
 		
 		//implement the nextToken() method using direct statement, as it is rather complicated
 		JMethod nextTokenImpl = lexer.method(JMod.PUBLIC, nodeGen.getNodeInterface(), NEXT_TOKEN);
-		nextTokenImpl.annotate(model.ref(Override.class));
 		nextTokenImpl._throws(IOException.class);
 		//JBlock body = nextTokenImpl.body();
 		//JConditional cond = body._if(nextField.not());

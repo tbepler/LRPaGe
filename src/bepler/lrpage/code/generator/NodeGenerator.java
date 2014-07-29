@@ -33,8 +33,10 @@ public class NodeGenerator {
 	private static final String VISITOR = "Visitor";
 	private static final String ABSTRACT_SYNTAX_NODE = "AbstractSyntaxNode";
 	private static final String SYMBOLS = "Symbols";
+	private static final String NODES = "nodes";
 	
 	private final Symbols symbols;
+	private final String pckg;
 	private final JCodeModel model;
 	private final JDefinedClass visitorInterface;
 	private final JDefinedClass symbolsEnumeration;
@@ -44,11 +46,16 @@ public class NodeGenerator {
 	private final Map<String, JDefinedClass> abstractNodes;
 	private final Map<Rule, JDefinedClass> concreteNodes;
 	
-	public NodeGenerator(Symbols symbols, JCodeModel model) throws JClassAlreadyExistsException{
+	public NodeGenerator(Symbols symbols, String pckg, JCodeModel model) throws JClassAlreadyExistsException{
 		this.symbols = symbols;
 		this.model = model;
-		this.visitorInterface = model._class(VISITOR, ClassType.INTERFACE);
-		this.symbolsEnumeration = model._class(SYMBOLS, ClassType.ENUM);
+		this.pckg = pckg;
+		String name = pckg == null ? VISITOR : pckg + "." + VISITOR;
+		this.visitorInterface = model._class(name, ClassType.INTERFACE);
+		CodeGenerator.appendJDocHeader(visitorInterface);
+		name = pckg == null ? SYMBOLS : pckg + "." + SYMBOLS;
+		this.symbolsEnumeration = model._class(name, ClassType.ENUM);
+		CodeGenerator.appendJDocHeader(symbolsEnumeration);
 		this.nodeInterface = this.defineNodeInterface();
 		this.eofTokenClass = this.defineEOFToken();
 		this.tokens = this.defineTokenNodes();
@@ -170,7 +177,9 @@ public class NodeGenerator {
 	 * @author Tristan Bepler
 	 */
 	private JDefinedClass defineNodeInterface() throws JClassAlreadyExistsException{
-		JDefinedClass nodeInterface = model._class(ABSTRACT_SYNTAX_NODE, ClassType.INTERFACE);
+		String name = pckg == null ? ABSTRACT_SYNTAX_NODE : pckg + "." + ABSTRACT_SYNTAX_NODE;
+		JDefinedClass nodeInterface = model._class(name, ClassType.INTERFACE);
+		CodeGenerator.appendJDocHeader(nodeInterface);
 		
 		//declare the accept(Visitor) method
 		JMethod accept = nodeInterface.method(JMod.PUBLIC, void.class , ACCEPT);
@@ -192,7 +201,9 @@ public class NodeGenerator {
 	 * @author Tristan Bepler
 	 */
 	private JDefinedClass defineEOFToken() throws JClassAlreadyExistsException{
-		JDefinedClass eofToken = model._class(symbols.getEOF()+"Token")._implements(this.nodeInterface);
+		String name = pckg == null ? symbols.getEOF() + "Token" : pckg+"."+NODES+"."+symbols.getEOF()+"Token";
+		JDefinedClass eofToken = model._class(name)._implements(this.nodeInterface);
+		CodeGenerator.appendJDocHeader(eofToken);
 		
 		//override accept method
 		JMethod accept = eofToken.method(JMod.PUBLIC, void.class, ACCEPT);
@@ -244,7 +255,9 @@ public class NodeGenerator {
 	 * @author Tristan Bepler
 	 */
 	private JDefinedClass defineTokenNode(String symbol) throws JClassAlreadyExistsException{
-		JDefinedClass node = model._class(symbol+"Token")._implements(this.nodeInterface);
+		String name = pckg == null ? symbol + "Token" : pckg+"."+NODES+"."+symbol+"Token";
+		JDefinedClass node = model._class(name)._implements(this.nodeInterface);
+		CodeGenerator.appendJDocHeader(node);
 		
 		//add method to the visitor for visiting this node
 		JMethod visit = this.addVisitableNode(node);
@@ -326,7 +339,10 @@ public class NodeGenerator {
 	 * @throws JClassAlreadyExistsException
 	 */
 	private JDefinedClass defineAbstractNode(String s) throws JClassAlreadyExistsException{
-		JDefinedClass asn= model._class(JMod.PUBLIC+JMod.ABSTRACT, s+"AbstractNode", ClassType.CLASS);
+		String name = pckg == null ? s + "AbstractNode" : pckg+"."+NODES+"."+s+"AbstractNode";
+		JDefinedClass asn= model._class(JMod.PUBLIC+JMod.ABSTRACT, name, ClassType.CLASS);
+		CodeGenerator.appendJDocHeader(asn);
+		
 		asn._implements(nodeInterface);
 		//declare the type method
 		JMethod type= asn.method(JMod.PUBLIC, symbolsEnumeration, TYPE);
@@ -365,7 +381,9 @@ public class NodeGenerator {
 	private JDefinedClass defineConcreteNode(Rule r) throws JClassAlreadyExistsException{
 		String lhs= r.leftHandSide();
 		JDefinedClass asn= abstractNodes.get(lhs);
-		JDefinedClass concreteNode= model._class(r.getName());
+		String name = pckg == null ? r.getName() : pckg+"."+NODES+"."+r.getName();
+		JDefinedClass concreteNode= model._class(name);
+		CodeGenerator.appendJDocHeader(concreteNode);
 		concreteNode._extends(asn);
 		
 		//define constructor and fields

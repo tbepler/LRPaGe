@@ -59,18 +59,20 @@ public class ParserGenerator {
 	/**
 	 * Warning: this method stores temporary internal state and is
 	 * therefore not thread safe.
-	 * @param prefix
+	 * @param pckg
 	 * @param model
 	 * @param lexer
 	 * @param syntaxNode
 	 * @throws JClassAlreadyExistsException
 	 */
-	public JDefinedClass generate(String prefix, JCodeModel model,
+	public JDefinedClass generate(String pckg, JCodeModel model,
 			JDefinedClass lexer, NodeGenerator nodes)
 			throws JClassAlreadyExistsException{
 		this.model = model;
 		this.nodes = nodes;
-		parserClass = model._class(prefix + PARSER);
+		String name = pckg == null ? PARSER : pckg + "." + PARSER;
+		parserClass = model._class(name);
+		CodeGenerator.appendJDocHeader(parserClass);
 		actionsEnum = parserClass._enum(JMod.PRIVATE+JMod.STATIC, "Actions");
 		JMethod getActionMethod = this.createGetActionMethod();
 		this.createParseMethod(lexer, getActionMethod);
