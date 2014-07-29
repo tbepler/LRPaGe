@@ -5,6 +5,8 @@ public enum Symbols {
     EOF,
     TRUE,
     ID,
-    Test;
+    Plus,
+    Test,
+    Exp;
 
 }

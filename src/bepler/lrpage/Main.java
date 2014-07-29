@@ -2,7 +2,6 @@ package bepler.lrpage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +32,12 @@ public class Main {
 			return 0;
 		}
 		
+	}
+	
+	public static class Plus implements Terminal{
+		@Override public String getRegex(){ return "\\+"; }
+		@Override public String getSymbol(){ return "Plus"; }
+		@Override public int getPriority(){ return 0; }
 	}
 	
 	public static class Id implements Terminal{
@@ -94,7 +99,7 @@ public class Main {
 
 		@Override
 		public String leftHandSide() {
-			return "E";
+			return "Exp";
 		}
 
 		@Override
@@ -129,16 +134,26 @@ public class Main {
 		
 	}
 	
+	public static class PlusExpRule implements Rule{
+		@Override public String leftHandSide(){ return "Exp"; }
+		@Override public String[] rightHandSide(){ return new String[]{"Exp","Plus","Exp"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.LEFT; }
+		@Override public String getName(){ return "PlusExp"; }
+		@Override public int[] ignoreSymbols(){ return new int[]{1}; }
+		@Override public int replace(){ return -1; }
+	}
+	
 	public static class TestGrammar implements Grammar {
 
 		@Override
 		public List<Rule> getRules() {
-			return new ArrayList<Rule>();
+			return Arrays.asList(new PlusExpRule(), new IdExpRule());
 		}
 
 		@Override
 		public List<Terminal> getTokens() {
-			return Arrays.asList(new True(), new Id(), new IgnoreTest(), new TerminalTest());
+			return Arrays.asList(new True(), new Id(), new Plus(), new IgnoreTest(), new TerminalTest());
 		}
 
 		@Override

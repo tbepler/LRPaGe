@@ -30,6 +30,8 @@ import bepler.lrpage.parser.Symbols;
 
 public class ParserGenerator {
 	
+	private static final String ERROR = "ERROR";
+
 	private static final String PARSER = "Parser";
 	
 	private final ActionTable table;
@@ -97,6 +99,8 @@ public class ParserGenerator {
 		for(State s : states){
 			stateIndex.put(s, ++index);
 		}
+		//initialize the error action
+		this.defineErrorAction();
 		//generate the action code for all the states
 		states.add(start);
 		for(State s : states){
@@ -105,14 +109,14 @@ public class ParserGenerator {
 	}
 	
 	private void addActionsForState(State s){
-		JEnumConstant error = actionsEnum.enumConstant("ERROR");
-		this.defineErrorAction(error);
+		JEnumConstant error = actionsEnum.enumConstant(ERROR);
 		JMethod method = this.createStateActionMethod(s, error);
 		getActionSwitch._case(JExpr.lit(stateIndex.get(s))).body()._return(JExpr.invoke(JExpr._this(), method).arg(getActionLookaheadParam));
 	}
 	
-	private void defineErrorAction(JEnumConstant error){
-		parseActionSwitch._case(error).body()._throw(
+	private void defineErrorAction(){
+		actionsEnum.enumConstant(ERROR);
+		parseActionSwitch._case(JExpr.ref(ERROR)).body()._throw(
 				JExpr._new(model.ref(RuntimeException.class))
 						.arg(JExpr.lit("Syntax error on token: ").plus(lookaheadNode)));
 	}
@@ -126,7 +130,7 @@ public class ParserGenerator {
 			Action a = table.getAction(s, symbol);
 			if(a != null){
 				JEnumConstant actionConst = this.defineAction(a);
-				sw._case(nodes.getSymbolsEnumeration().enumConstant(symbol)).body()._return(actionConst);
+				sw._case(JExpr.ref(symbol)).body()._return(actionConst);
 			}
 		}
 		return method;
@@ -138,7 +142,7 @@ public class ParserGenerator {
 		if(definedActions.contains(a)){
 			return actionConst;
 		}
-		JBlock body = parseActionSwitch._case(actionConst).body();
+		JBlock body = parseActionSwitch._case(JExpr.ref(name)).body();
 		switch(a.id()){
 		case ACCEPT:
 			body._return(JExpr.invoke(nodeStack, "peek"));
@@ -187,6 +191,9 @@ public class ParserGenerator {
 		JVar[] fields = new JVar[rhs.length];
 		for( int i = fields.length - 1 ; i >= 0 ; --i ){
 			JDefinedClass type = nodes.getAbstractNode(rhs[i]);
+			if(type == null){
+				throw new NullPointerException("Node for: "+rhs[i]+" is null.");
+			}
 			fields[i] = body.decl(type, "field"+i, JExpr.cast(type, JExpr.invoke(nodeStack, "pop")));
 			body.invoke(statesStack, "pop");
 		}
@@ -233,7 +240,7 @@ public class ParserGenerator {
 		body._if(JExpr.invoke(lookaheadStack, "isEmpty"))
 			._then().invoke(lookaheadStack, "add").arg(JExpr.invoke(lexer, "nextToken"));		
 		//set the current state and lookahead
-		JVar state = body.decl(model.ref(int.class), "state", JExpr.invoke(statesStack, "peek"));
+		JVar state = body.decl(model.INT, "state", JExpr.invoke(statesStack, "peek"));
 		lookaheadNode = body.decl(syntaxNodeClass, "lookahead", JExpr.invoke(lookaheadStack, "peek"));
 		//lookup the action corresponding to this state, lookahead pair
 		JVar action = body.decl(actionsEnum, "action", JExpr.invoke(JExpr._this(), getActionMethod).arg(state).arg(lookaheadNode));

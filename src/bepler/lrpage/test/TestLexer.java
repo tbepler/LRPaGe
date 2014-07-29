@@ -37,6 +37,7 @@ public class TestLexer
         List<Pattern> list = new ArrayList<Pattern>();
         list.add(Pattern.compile("true"));
         list.add(Pattern.compile("[A-Za-z_]+[A-Za-z0-9_]*"));
+        list.add(Pattern.compile("\\+"));
         list.add(Pattern.compile("\\s+"));
         list.add(Pattern.compile("."));
         return list;
@@ -56,8 +57,10 @@ public class TestLexer
             case  1 :
                 return new IDToken(text, line, pos);
             case  2 :
-                return this.nextToken();
+                return new PlusToken(text, line, pos);
             case  3 :
+                return this.nextToken();
+            case  4 :
                 return new TestToken(text, line, pos);
             default:
                 throw new RuntimeException("Unrecognized token index.");

@@ -99,7 +99,7 @@ public class MainGenerator {
 			def.body().invoke(JExpr._this(), print).arg(param);
 			if(!terminals.contains(paramType)){
 				//the param is not a terminal, so traverse its children
-				defineChildNodeTraversal(depth, print, paramType, def);
+				defineChildNodeTraversal(param, depth, print, paramType, def);
 			}
 		}
 		
@@ -115,7 +115,7 @@ public class MainGenerator {
 	 * 
 	 * @author Tristan Bepler
 	 */
-	private static void defineChildNodeTraversal(JVar depth, JMethod print,
+	private static void defineChildNodeTraversal(JVar param, JVar depth, JMethod print,
 			JDefinedClass paramType, JMethod def) {
 		//increment the depth and traverse the children
 		def.body().invoke(JExpr._this(), print).arg(JExpr.lit("{"));
@@ -124,7 +124,7 @@ public class MainGenerator {
 		for(JVar field : paramType.fields().values()){
 			//if the field is a JDefinedClass, traverse it
 			if(field.type() instanceof JDefinedClass){
-				def.body().invoke(field, "accept").arg(JExpr._this());
+				def.body().invoke(JExpr.ref(param, field), "accept").arg(JExpr._this());
 			}
 		}
 		//decrement the depth
@@ -148,7 +148,7 @@ public class MainGenerator {
 		JMethod print = printVisitor.method(JMod.PRIVATE, void.class, "print");
 		JVar obj = print.param(Object.class, "obj");
 		JForLoop loop = print.body()._for();
-		JVar i = loop.init(model.ref(int.class), "i", JExpr.lit(0));
+		JVar i = loop.init(model.INT, "i", JExpr.lit(0));
 		loop.test(i.lt(depth));
 		loop.update(i.incr());
 		loop.body().invoke(model.ref(System.class).staticRef("out"), "print").arg(delim);

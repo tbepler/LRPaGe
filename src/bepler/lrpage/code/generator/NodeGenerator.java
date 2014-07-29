@@ -1,7 +1,5 @@
 package bepler.lrpage.code.generator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +18,13 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
+/**
+ * This class is responsible for generating the source code for representing
+ * symbols as AST nodes.
+ * 
+ * @author Tristan Bepler, Jennifer Zou
+ *
+ */
 public class NodeGenerator {
 	
 	private static final String REPLACE = "replace";
@@ -52,52 +57,118 @@ public class NodeGenerator {
 		
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the abstract
+	 * AST node representing the given symbol
+	 * @param symbol
+	 * @return
+	 */
 	public JDefinedClass getAbstractNode(String symbol){
-		return abstractNodes.get(symbol);
+		JDefinedClass node = tokens.get(symbol);
+		if(node == null){
+			node = abstractNodes.get(symbol);
+		}
+		return node;
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the AST node
+	 * for the given production rule
+	 * @param rule
+	 * @return
+	 */
 	public JDefinedClass getConcreteNode(Rule rule){
 		return concreteNodes.get(rule);
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the token node
+	 * class representing the given symbol
+	 * @param terminalSymbol
+	 * @return
+	 */
 	public JDefinedClass getTokenNode(String terminalSymbol){
 		return tokens.get(terminalSymbol);
 	}
 	
+	/**
+	 * Returns a set containing all the JDefinedClass that define
+	 * a token node class, except for the EOF node class
+	 * @return
+	 */
 	public Set<JDefinedClass> getTokenNodeClasses(){
 		Set<JDefinedClass> nodes = new HashSet<JDefinedClass>(tokens.values());
 		nodes.remove(this.getEOFTokenNode());
 		return nodes;
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the EOF
+	 * token node class
+	 * @return
+	 */
 	public JDefinedClass getEOFTokenNode(){
 		return eofTokenClass;
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the AST
+	 * node interface
+	 * @return
+	 */
 	public JDefinedClass getNodeInterface(){
 		return nodeInterface;
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the Symbols
+	 * enumeration
+	 * @return
+	 */
 	public JDefinedClass getSymbolsEnumeration(){
 		return symbolsEnumeration;
 	}
 	
+	/**
+	 * Returns the JDefinedClass defining the Visitor
+	 * interface
+	 * @return
+	 */
 	public JDefinedClass getVisitorInterface(){
 		return visitorInterface;
 	}
 	
+	/**
+	 * Returns a list of all the production rules for
+	 * this grammar
+	 * @return
+	 */
 	public List<Rule> getRules(){
 		return symbols.getRules();
 	}
 	
+	/**
+	 * Returns a list of all the symbols
+	 * @return
+	 */
 	public Set<String> getAllSymbols(){
 		return symbols.getAllSymbols();
 	}
 	
+	/**
+	 * Returns the symbols object used by this class
+	 * @return
+	 */
 	public Symbols getSymbols(){
 		return symbols;
 	}
 	
+	/**
+	 * Defines the AST node interface
+	 * @return the defines interface
+	 * @throws JClassAlreadyExistsException
+	 * @author Tristan Bepler
+	 */
 	private JDefinedClass defineNodeInterface() throws JClassAlreadyExistsException{
 		JDefinedClass nodeInterface = model._class(ABSTRACT_SYNTAX_NODE, ClassType.INTERFACE);
 		
@@ -114,6 +185,12 @@ public class NodeGenerator {
 		return nodeInterface;
 	}
 	
+	/**
+	 * Defines the EOF token class
+	 * @return the EOF token class
+	 * @throws JClassAlreadyExistsException
+	 * @author Tristan Bepler
+	 */
 	private JDefinedClass defineEOFToken() throws JClassAlreadyExistsException{
 		JDefinedClass eofToken = model._class(symbols.getEOF()+"Token")._implements(this.nodeInterface);
 		
@@ -141,6 +218,12 @@ public class NodeGenerator {
 		return eofToken;
 	}
 	
+	/**
+	 * Defines all the terminal node classes
+	 * @return a mapping of symbols to their terminal node classes
+	 * @throws JClassAlreadyExistsException
+	 * @author Tristan Bepler
+	 */
 	private Map<String, JDefinedClass> defineTokenNodes() throws JClassAlreadyExistsException{
 		Map<String, JDefinedClass> terminalNodes = new HashMap<String, JDefinedClass>();
 		for(String symbol : symbols.getTerminals()){
@@ -153,6 +236,13 @@ public class NodeGenerator {
 		return terminalNodes;
 	}
 	
+	/**
+	 * Defines a terminal node class for the symbol
+	 * @param symbol
+	 * @return JDefinedClass for the symbol
+	 * @throws JClassAlreadyExistsException
+	 * @author Tristan Bepler
+	 */
 	private JDefinedClass defineTokenNode(String symbol) throws JClassAlreadyExistsException{
 		JDefinedClass node = model._class(symbol+"Token")._implements(this.nodeInterface);
 		
@@ -200,6 +290,12 @@ public class NodeGenerator {
 		return node;
 	}
 	
+	/**
+	 * Adds a visit method to the visitor for the node class.
+	 * @param node
+	 * @return the created method
+	 * @author Tristan Bepler
+	 */
 	private JMethod addVisitableNode(JDefinedClass node){
 		JMethod visit = this.visitorInterface.method(JMod.PUBLIC, void.class, "visit");
 		visit.param(node, "node");
