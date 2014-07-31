@@ -51,9 +51,10 @@ public class CodeGenerator {
 		model.build(dir);
 	}
 	
-	public static void appendJDocHeader(JDefinedClass clazz){
+	public static JDefinedClass appendJDocHeader(JDefinedClass clazz){
 		JDocComment doc = clazz.javadoc();
 		doc.append(CLASS_HEADER_DOC);
+		return clazz;
 	}
 
 }

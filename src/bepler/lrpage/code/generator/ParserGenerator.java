@@ -53,13 +53,13 @@ public class ParserGenerator {
 	private final JDefinedClass parserClass;
 	private final JVar burkeFischerK;
 	private final JDefinedClass actionsEnum;
+	private final ParseStackGenerator parseStack;
 	
 	private JSwitch getActionSwitch;
 	private JVar getActionLookaheadParam;
 	private JMethod parseNextMethod;
 	private JSwitch parseActionSwitch;
-	private JVar statesStack;
-	private JVar nodeStack;
+	private JVar stack;
 	private JVar lookaheadNode;
 	private Set<Action> definedActions;
 	private Map<State, Integer> stateIndex;
@@ -81,6 +81,7 @@ public class ParserGenerator {
 		burkeFischerK = parserClass.field(JMod.PRIVATE+JMod.STATIC+JMod.FINAL,
 				int.class, "BURKE_FISCHER_K", JExpr.lit(BURKE_FISCHER_K));
 		actionsEnum = parserClass._enum(JMod.PRIVATE+JMod.STATIC, "Actions");
+		parseStack = new ParseStackGenerator(model, parserClass, nodes.getNodeInterface());
 		JMethod getActionMethod = this.createGetActionMethod();
 		this.createParseMethod(lexer, getActionMethod);
 		this.initRuleIndices();
@@ -287,8 +288,7 @@ public class ParserGenerator {
 			if(type == null){
 				throw new NullPointerException("Node for: "+rhs[i]+" is null.");
 			}
-			fields[i] = body.decl(type, "field"+i, JExpr.cast(type, JExpr.invoke(nodeStack, "pop")));
-			body.invoke(statesStack, "pop");
+			fields[i] = body.decl(type, "field"+i, JExpr.cast(type, JExpr.invoke(stack, parseStack.getPopMethod())));
 		}
 		JInvocation newNodeClass = JExpr._new(nodeClass);
 		for(JVar field : fields){
@@ -296,14 +296,13 @@ public class ParserGenerator {
 		}
 		JVar node = body.decl(nodes.getNodeInterface(), "reduced", JExpr.invoke(newNodeClass, "replace"));
 		body.invoke(JExpr._this(), parseNextMethod)
-				.arg(nodeStack).arg(statesStack).arg(node);
+				.arg(stack).arg(node);
 		body._return(JExpr.invoke(JExpr._this(), parseNextMethod)
-				.arg(nodeStack).arg(statesStack).arg(lookaheadNode));
+				.arg(stack).arg(lookaheadNode));
 	}
 
 	private void defineShiftGotoAction(Action a, JBlock body) {
-		body.invoke(nodeStack, "push").arg(lookaheadNode);
-		body.invoke(statesStack, "push").arg(JExpr.lit(stateIndex.get(a.nextState())));
+		body.invoke(stack, parseStack.getPushMethod()).arg(lookaheadNode).arg(JExpr.lit(stateIndex.get(a.nextState())));
 		body._return(JExpr.FALSE);
 	}
 	
@@ -318,25 +317,14 @@ public class ParserGenerator {
 		JVar lexer = method.param(lexerClass, "lexer");
 		JVar errorHandler = method.param(exceptionHandler, "errHandler");
 		JBlock body = method.body();
-		//initialize the stack queues
-		JVar nodeStackQ = body.decl(
-				model.ref(Deque.class).narrow(model.ref(Deque.class).narrow(syntaxNodeClass)),
-				"nodeStackQ",
-				JExpr._new(model.ref(LinkedList.class).narrow(model.ref(Deque.class).narrow(syntaxNodeClass))));
-		//add the starting stack to the q
-		body.invoke(nodeStackQ, "add").arg( 
-				JExpr._new(model.ref(LinkedList.class).narrow(syntaxNodeClass)));
-		JVar statesStackQ = body.decl(
-				model.ref(Deque.class).narrow(model.ref(Deque.class).narrow(Integer.class)),
-				"statesStackQ",
-				JExpr._new(model.ref(LinkedList.class).narrow(model.ref(Deque.class).narrow(Integer.class))));
-		//add the starting state stack to the q
-		JVar startState = body.decl(
-				model.ref(Deque.class).narrow(Integer.class),
-				"startState",
-				JExpr._new(model.ref(LinkedList.class).narrow(Integer.class)));
-		body.invoke(startState, "add").arg(JExpr.lit(0));
-		body.invoke(statesStackQ, "add").arg(startState);
+		JDefinedClass stack = parseStack.getParseStack();
+		//initialize the stack queue
+		JVar stackQ = body.decl(
+				model.ref(Deque.class).narrow(stack),
+				"stackQ",
+				JExpr._new(model.ref(LinkedList.class).narrow(stack)));
+		//push the start state stack onto the q
+		body.invoke(stackQ, "add").arg(JExpr._new(stack));
 		JVar tokenQ = body.decl(
 				model.ref(Queue.class).narrow(syntaxNodeClass),
 				"tokenQ",
@@ -345,20 +333,14 @@ public class ParserGenerator {
 		JVar done = body.decl(model.BOOLEAN, "fin", JExpr.FALSE);
 		//add the while loop to the body and set its body to the body
 		body = body._while(done.not()).body();
-		JVar curNodes = body.decl(
-				model.ref(Deque.class).narrow(syntaxNodeClass),
-				"curNodes",
-				JExpr._new(model.ref(LinkedList.class).narrow(syntaxNodeClass))
-					.arg(JExpr.invoke(nodeStackQ, "peekLast")));
-		JVar curStates = body.decl(
-				model.ref(Deque.class).narrow(Integer.class),
-				"curStates",
-				JExpr._new(model.ref(LinkedList.class).narrow(Integer.class))
-					.arg(JExpr.invoke(statesStackQ, "peekLast")));
+		JVar cur = body.decl(
+				stack,
+				"cur",
+				JExpr.invoke(JExpr.invoke(stackQ, "peekLast"), parseStack.getCloneMethod()));
 		JVar lookahead = body.decl(syntaxNodeClass, "lookahead", JExpr.invoke(lexer, "nextToken"));
 		JTryBlock tryb = body._try();
 		tryb.body().assign(done, JExpr.invoke(JExpr._this(), parseNextMethod)
-				.arg(curNodes).arg(curStates).arg(lookahead));
+				.arg(cur).arg(lookahead));
 		JCatchBlock catchb = tryb._catch(parsingException);
 		JVar exc = catchb.param("e");
 		//do error handling code here - TODO
@@ -369,22 +351,20 @@ public class ParserGenerator {
 		//if error handler says to proceed, then apply the burke-fischer error repair algorithm
 		JBlock errRepair = errCodeBlock._then();
 		//need to try every single token insertion, deletion, and replacement
-		//of the token q starting from the first state of the nodes q
+		//of the token q starting from the first state of the nodes q - TODO
 		
 		errCodeBlock._else()._return(JExpr._null());
 		
 		//update the queues
 		body.invoke(tokenQ, "add").arg(lookahead);
-		body.invoke(nodeStackQ, "add").arg(curNodes);
-		body.invoke(statesStackQ, "add").arg(curStates);
+		body.invoke(stackQ, "add").arg(cur);
 		body = body._if(JExpr.invoke(tokenQ, "size").gt(burkeFischerK))._then();
 		body.invoke(tokenQ, "remove");
-		body.invoke(nodeStackQ, "removeFirst");
-		body.invoke(statesStackQ, "removeFirst");
+		body.invoke(stackQ, "remove");
 		
 		//return the first node on the last node stack
 		method.body()._if(err)._then()._return(JExpr._null());
-		method.body()._return(JExpr.invoke(JExpr.invoke(nodeStackQ, "peekLast"), "peek"));
+		method.body()._return(JExpr.invoke(JExpr.invoke(stackQ, "peekLast"), parseStack.getPopMethod()));
 		
 	}
 	
@@ -393,7 +373,7 @@ public class ParserGenerator {
 		JMethod bk = parserClass.method(JMod.PRIVATE, void.class, "burkeFischerRepair");
 		JVar tokenQ = bk.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "tokenQ");
 		JVar nodeStackQ = bk.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "nodeStackQ");
-		
+		//TODO
 		
 		return bk;
 	}
@@ -403,14 +383,11 @@ public class ParserGenerator {
 			JDefinedClass syntaxNodeClass) {
 		parseNextMethod = parserClass.method(JMod.PRIVATE, boolean.class, "parseNext");
 		parseNextMethod._throws(parsingException);
-		nodeStack = parseNextMethod.param(
-				model.ref(Deque.class).narrow(syntaxNodeClass),
+		stack = parseNextMethod.param(
+				parseStack.getParseStack(),
 				"stack");
-		statesStack = parseNextMethod.param(
-				model.ref(Deque.class).narrow(Integer.class),
-				"states");
 		lookaheadNode = parseNextMethod.param(syntaxNodeClass, "lookahead");
-		JVar state = parseNextMethod.body().decl(model.INT, "cur", JExpr.invoke(statesStack, "peek"));
+		JVar state = parseNextMethod.body().decl(model.INT, "state", JExpr.invoke(stack, parseStack.getCurStateMethod()));
 		JVar action = parseNextMethod.body().decl(actionsEnum, "action", JExpr.invoke(JExpr._this(), getActionMethod).arg(state).arg(lookaheadNode));
 		parseActionSwitch = parseNextMethod.body()._switch(action);
 		parseActionSwitch._default().body()._throw(JExpr._new(model.ref(RuntimeException.class)).arg(JExpr.lit("Unknown action.")));
