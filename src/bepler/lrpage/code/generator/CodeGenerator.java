@@ -33,15 +33,14 @@ public class CodeGenerator {
 			nodeGen = new NodeGenerator(symbols, pckg, model);
 			lexerGen = new LexerGenerator(pckg, model, nodeGen);
 			lexerGen.generate(g.getTokens());
-			parserGen = new ParserGenerator(symbols);
-			JDefinedClass parser = parserGen.generate(pckg, model,
+			parserGen = new ParserGenerator(symbols, pckg, model,
 					lexerGen.getLexerClass(), nodeGen);
 			
 			JDefinedClass printVisitor = MainGenerator.generatePrintVisitor(
 					pckg, model, nodeGen.getVisitorInterface(),
 					nodeGen.getTokenNodeClasses());
 			MainGenerator.generateMain(pckg, model, lexerGen.getLexerClass(),
-					parser, printVisitor,nodeGen.getNodeInterface());
+					parserGen, printVisitor,nodeGen.getNodeInterface());
 			
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);

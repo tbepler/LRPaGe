@@ -71,7 +71,7 @@ public class Main {
 		
 	}
 	
-	public static class TerminalTest implements Terminal{
+	public static class ErrorChar implements Terminal{
 
 		@Override
 		public String getRegex() {
@@ -80,7 +80,7 @@ public class Main {
 
 		@Override
 		public String getSymbol() {
-			return "Test";
+			return "ErrorChar";
 		}
 
 		@Override
@@ -166,6 +166,18 @@ public class Main {
 		@Override public int replace(){ return 1; }
 	}
 	
+	/*
+	public static class ErrorSynchRule implements Rule{
+		@Override public String leftHandSide(){ return "Exp"; }
+		@Override public String[] rightHandSide(){ return new String[]{"LParen", "ERROR", "RParen"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.NON; }
+		@Override public String getName(){ return "ErrorExp"; }
+		@Override public int[] ignoreSymbols(){ return new int[]{}; }
+		@Override public int replace(){ return -1; }
+	}
+	*/
+	
 	public static class TestGrammar implements Grammar {
 
 		@Override
@@ -175,7 +187,7 @@ public class Main {
 
 		@Override
 		public List<Terminal> getTokens() {
-			return Arrays.asList(new True(), new LParen(), new RParen(), new Id(), new Plus(), new IgnoreTest(), new TerminalTest());
+			return Arrays.asList(new True(), new LParen(), new RParen(), new Id(), new Plus(), new IgnoreTest(), new ErrorChar());
 		}
 
 		@Override

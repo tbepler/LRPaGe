@@ -61,7 +61,6 @@ public class NodeGenerator {
 		this.tokens = this.defineTokenNodes();
 		this.abstractNodes= this.defineAbstractNodes();
 		this.concreteNodes= this.defineConcreteNodes();
-		
 	}
 	
 	/**
