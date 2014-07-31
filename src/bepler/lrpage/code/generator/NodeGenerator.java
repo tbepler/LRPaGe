@@ -272,6 +272,12 @@ public class NodeGenerator {
 		cons.body().assign(JExpr._this().ref(line), cons.param(int.class, "line"));
 		cons.body().assign(JExpr._this().ref(pos), cons.param(int.class, "pos"));
 		
+		//add a no args constructor for the burke-fischer algorithm to use
+		cons = node.constructor(JMod.PUBLIC);
+		cons.body().assign(JExpr._this().ref(text), JExpr.lit(""));
+		cons.body().assign(JExpr._this().ref(line), JExpr.lit(0));
+		cons.body().assign(JExpr._this().ref(pos), JExpr.lit(0));
+		
 		//override accept method to call visitor.visit(this)
 		JMethod accept = node.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.annotate(Override.class);

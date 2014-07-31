@@ -341,6 +341,7 @@ public class ParserGenerator {
 				model.ref(Queue.class).narrow(syntaxNodeClass),
 				"tokenQ",
 				JExpr._new(model.ref(LinkedList.class).narrow(syntaxNodeClass)));
+		JVar err = body.decl(model.BOOLEAN, "error", JExpr.FALSE);
 		JVar done = body.decl(model.BOOLEAN, "fin", JExpr.FALSE);
 		//add the while loop to the body and set its body to the body
 		body = body._while(done.not()).body();
@@ -361,8 +362,16 @@ public class ParserGenerator {
 		JCatchBlock catchb = tryb._catch(parsingException);
 		JVar exc = catchb.param("e");
 		//do error handling code here - TODO
-		catchb.body()._if(errorHandler.ne(JExpr._null()))._then()
-			.invoke(errorHandler, PROCEED_METHOD).arg(exc);
+		catchb.body().assign(err, JExpr.TRUE);
+		JConditional cond = catchb.body()._if(errorHandler.ne(JExpr._null()));
+		cond._else()._throw(exc);
+		JConditional errCodeBlock = cond._then()._if(JExpr.invoke(errorHandler, PROCEED_METHOD).arg(exc));
+		//if error handler says to proceed, then apply the burke-fischer error repair algorithm
+		JBlock errRepair = errCodeBlock._then();
+		//need to try every single token insertion, deletion, and replacement
+		//of the token q starting from the first state of the nodes q
+		
+		errCodeBlock._else()._return(JExpr._null());
 		
 		//update the queues
 		body.invoke(tokenQ, "add").arg(lookahead);
@@ -374,9 +383,21 @@ public class ParserGenerator {
 		body.invoke(statesStackQ, "removeFirst");
 		
 		//return the first node on the last node stack
+		method.body()._if(err)._then()._return(JExpr._null());
 		method.body()._return(JExpr.invoke(JExpr.invoke(nodeStackQ, "peekLast"), "peek"));
 		
 	}
+	
+	private JMethod createBurkeFischerMethod(){
+		JDefinedClass iNode = nodes.getNodeInterface();
+		JMethod bk = parserClass.method(JMod.PRIVATE, void.class, "burkeFischerRepair");
+		JVar tokenQ = bk.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "tokenQ");
+		JVar nodeStackQ = bk.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "nodeStackQ");
+		
+		
+		return bk;
+	}
+	
 
 	private void createParseNextMethod(JMethod getActionMethod,
 			JDefinedClass syntaxNodeClass) {
