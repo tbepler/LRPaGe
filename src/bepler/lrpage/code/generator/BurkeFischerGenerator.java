@@ -94,9 +94,9 @@ public class BurkeFischerGenerator {
 	}
 
 	private void checkDistanceAndUpdateBest(JVar best, JBlock body, JVar dist,
-			JInvocation constRepair) {
+			JInvocation newRepair) {
 		body._if(dist.gt(best.ref(this.dist)))._then()
-			.assign(best, constRepair);
+			.assign(best, newRepair);
 	}
 
 	private void checkStopCriteria(JVar stop, JBlock body, JVar dist,
