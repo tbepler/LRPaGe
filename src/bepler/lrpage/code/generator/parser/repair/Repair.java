@@ -10,7 +10,7 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpressionImpl;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
@@ -40,6 +40,7 @@ public class Repair {
 	private final JDefinedClass iNode;
 	private final JDefinedClass stack;
 	private final JDefinedClass clazz;
+	private final JMethod compare;
 	
 	public Repair(ParseStackGenerator stack, Mod mod,
 			JDefinedClass parser, JDefinedClass iNode){
@@ -49,12 +50,42 @@ public class Repair {
 		this.stack = stack.getParseStack();
 		clazz = initRepairClass(parser);
 		initConstructor();
+		compare = initCompareToMethod();
 	}
 	
-	public JExpressionImpl newRepair(JVar dist, JVar tokenQ,
-			JVar stackDeq, JVar mod, JVar pos, JVar completed){
+	public JExpression compare(JExpression _this, JExpression that){
+		return JExpr.invoke(_this, compare).arg(that);
+	}
+	
+	public JExpression newRepair(JExpression dist, JExpression tokenQ,
+			JExpression stackDeq, JExpression mod, JExpression pos,
+			JExpression completed){
 		return JExpr._new(clazz).arg(dist).arg(tokenQ)
 				.arg(stackDeq).arg(mod).arg(pos).arg(completed);
+	}
+	
+	public JExpression getCompletedField(JVar instance){
+		return JExpr.ref(instance, getCompletedField());
+	}
+	
+	public JExpression getLexerPosField(JVar instance){
+		return JExpr.ref(instance, getLexerPosField());
+	}
+	
+	public JExpression getModField(JVar instance){
+		return JExpr.ref(instance, getModField());
+	}
+	
+	public JExpression getStackDequeField(JVar instance){
+		return JExpr.ref(instance, getStackDequeField());
+	}
+	
+	public JExpression getTokenQField(JVar instance){
+		return JExpr.ref(instance, getTokenQField());
+	}
+	
+	public JExpression getDistField(JVar instance){
+		return JExpr.ref(instance, getDistField());
 	}
 	
 	public JVar getCompletedField(){
@@ -111,6 +142,18 @@ public class Repair {
 		return clazz;
 	}
 	
+	private JMethod initCompareToMethod(){
+		JMethod m = clazz.getMethod("compareTo", new JType[]{clazz});
+		if(m == null){
+			m = clazz.method(JMod.PUBLIC, int.class, "compareTo");
+			m.annotate(Override.class);
+			JVar other = m.param(clazz, "other");
+			m.body()._if(other.eq(JExpr._null()))._then()._return(JExpr.lit(1));
+			m.body()._return(JExpr._this().ref(getDistField()).minus(other.ref(getDistField())));
+		}
+		return m;
+	}
+	
 	private void initConstructor(){
 		JMethod cons = clazz.constructor(JMod.PUBLIC);
 		JVar f = getDistField();
@@ -133,7 +176,9 @@ public class Repair {
 	
 	private JDefinedClass initRepairClass(JDefinedClass parser){
 		try {
-			return parser._class(JMod.PRIVATE+JMod.STATIC, CLASS_NAME);
+			JDefinedClass c = parser._class(JMod.PRIVATE+JMod.STATIC, CLASS_NAME);
+			c._implements(model.ref(Comparable.class).narrow(c));
+			return c;
 		} catch (JClassAlreadyExistsException e) {
 			JDefinedClass c = model._getClass(parser.fullName() + "." + CLASS_NAME);
 			assert(c != null);
