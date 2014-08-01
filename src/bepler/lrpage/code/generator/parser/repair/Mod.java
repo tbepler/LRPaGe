@@ -12,7 +12,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class ModClass {
+public class Mod {
 	
 	private static final String TOKEN = "token";
 	private static final String INDEX = "index";
@@ -32,7 +32,7 @@ public class ModClass {
 	private final JDefinedClass clazz;
 	private final JDefinedClass typeEnum;
 	
-	public ModClass(JDefinedClass parser, JDefinedClass iNode){
+	public Mod(JDefinedClass parser, JDefinedClass iNode){
 		model = parser.owner();
 		this.iNode = iNode;
 		clazz = initModClass(parser);
@@ -41,18 +41,18 @@ public class ModClass {
 	}
 	
 	public JExpression newDeletionMod(JVar index, JVar token){
-		return JExpr._new(clazz).arg(typeEnum.enumConstant(DELETION)
-				.arg(index).arg(token));
+		return JExpr._new(clazz).arg(typeEnum.enumConstant(DELETION))
+				.arg(index).arg(token);
 	}
 	
 	public JExpression newInsertionMod(JVar index, JVar token){
-		return JExpr._new(clazz).arg(typeEnum.enumConstant(INSERTION)
-				.arg(index).arg(token));
+		return JExpr._new(clazz).arg(typeEnum.enumConstant(INSERTION))
+				.arg(index).arg(token);
 	}
 	
 	public JExpression newReplacementMod(JVar index, JVar token){
-		return JExpr._new(clazz).arg(typeEnum.enumConstant(REPLACEMENT)
-				.arg(index).arg(token));
+		return JExpr._new(clazz).arg(typeEnum.enumConstant(REPLACEMENT))
+				.arg(index).arg(token);
 	}
 	
 	public JExpression getReplacementTypeLabel(){
