@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Terminal;
 
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
@@ -26,11 +29,30 @@ import com.sun.codemodel.JVar;
 
 public class LexerGenerator {
 	
+	private static final String SUBLIST = "subList";
+
+	private static final String RECORD = "record";
+
+	private static final String SET_POS = "setPos";
+
+	private static final String HISTORY = "history";
+
+	private static final String IS_MARKED = "isMarked";
+
+	private static final String GET_POS = "getPos";
+
+	private static final String RESET = "reset";
+
+	private static final String UNMARK = "unmark";
+
+	private static final String MARK = "mark";
+
 	private static final int PRIVATE_FINAL = JMod.PRIVATE + JMod.FINAL;
 	
 	private static final String LEXER = "Lexer";
 	private static final String HAS_NEXT = "hasNext";
 	private static final String NEXT_TOKEN = "nextToken";
+	private static final String READ_NEXT = "readNext";
 	private static final String HAS_MATCH = "hasMatch";
 
 	private static final String CREATE_TOKEN = "createToken";
@@ -47,6 +69,7 @@ public class LexerGenerator {
 	
 	private final JCodeModel model;
 	private final NodeGenerator nodeGen;
+	private final TokenFactoryGenerator tokenGen;
 	
 	private JMethod buildPatternListMethod;
 	private JVar patternList;
@@ -62,25 +85,97 @@ public class LexerGenerator {
 	private int tokenIndex = 0;
 	
 	private final JDefinedClass lexer;
+	private final JMethod isMarked;
+	private final JMethod mark;
+	private final JMethod unmark;
+	private final JMethod reset;
+	private final JMethod getPos;
+	private final JMethod setPos;
+	private final JMethod hasNext;
+	private final JMethod readNext;
+	private final JMethod nextToken;
+	private final JMethod history;
+	private final JMethod record;
+	private final JMethod getTokenFactory;
+	
 	private JFieldVar readerField;
 	private JFieldVar nextField;
+	private JVar facField;
+	private JVar markField;
+	private JVar posField;
+	private JVar historyField;
 	
-	public LexerGenerator(String pckg, JCodeModel model, NodeGenerator nodeGen){
+	public LexerGenerator(String pckg, JCodeModel model, NodeGenerator nodeGen, Grammar g)
+			throws JClassAlreadyExistsException{
 		this.model = model;
 		this.nodeGen = nodeGen;
-		try {
-			lexer = this.initializeLexer(pckg);
-		} catch (JClassAlreadyExistsException e) {
-			throw new RuntimeException(e);
-		}
+		this.tokenGen = new TokenFactoryGenerator(pckg, model, nodeGen.getNodeInterface());
+		lexer = this.initializeLexer(pckg);
+		getTokenFactory = this.defineGetTokenFactoryMethod();
+		isMarked = this.defineIsMarkedMethod();
+		mark = this.defineMarkMethod();
+		unmark = this.defineUnmarkMethod();
+		reset = this.defineResetMethod();
+		getPos = this.defineGetPosMethod();
+		setPos = this.defineSetPosMethod();
+		history = this.defineHistoryMethod();
+		record = this.defineRecordMethod();
+		hasNext = this.defineHasNext();
+		readNext = this.defineReadNext();
+		nextToken = this.defineNextToken();
+		this.defineCreateToken(g.getTokens());
 		
+	}
+	
+	public TokenFactoryGenerator getTokenFactoryGenerator(){
+		return tokenGen;
 	}
 	
 	public JDefinedClass getLexerClass(){
 		return lexer;
 	}
 	
-	public void generate(List<Terminal> terminals){
+	public JMethod getHashNextMethod(){
+		return hasNext;
+	}
+	
+	public JMethod getNextTokenMethod(){
+		return nextToken;
+	}
+	
+	public JMethod getHistoryMethod(){
+		return history;
+	}
+	
+	public JMethod getIsMarkedMethod(){
+		return isMarked;
+	}
+	
+	public JMethod getMarkMethod(){
+		return mark;
+	}
+	
+	public JMethod getUnmarkMethod(){
+		return unmark;
+	}
+	
+	public JMethod getResetMethod(){
+		return reset;
+	}
+	
+	public JMethod getGetPosMethod(){
+		return getPos;
+	}
+	
+	public JMethod getSetPosMethod(){
+		return setPos;
+	}
+	
+	public JMethod getGetTokenFactoryMethod(){
+		return getTokenFactory;
+	}
+	
+	private void defineCreateToken(List<Terminal> terminals){
 		for(Terminal t : terminals){
 			String regex = t.getRegex();
 			String symbol = t.getSymbol();
@@ -97,11 +192,81 @@ public class LexerGenerator {
 		JCase c = createTokenSwitch._case(JExpr.lit(tokenIndex++));
 		//if nodeClass is null, then this token regex is to be ignored
 		if(nodeClass == null){
-			c.body()._return(JExpr.invoke(JExpr._this(), NEXT_TOKEN));
+			c.body()._return(JExpr.invoke(JExpr._this(), readNext));
 		}else{
 			//token constructor takes (String text, int line, int c)
-			c.body()._return(JExpr._new(nodeClass).arg(createTokenText).arg(createTokenLine).arg(createTokenChar));
+			int facIndex = tokenGen.appendTokenClass(nodeClass);
+			c.body()._return(JExpr.invoke(facField, tokenGen.getBuildIndexTextLinePosMethod())
+					.arg(JExpr.lit(facIndex)).arg(createTokenText).arg(createTokenLine).arg(createTokenChar));
 		}
+	}
+	
+	private JMethod defineGetTokenFactoryMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, tokenGen.getTokenFactoryClass(), "getTokenFactory");
+		meth.body()._return(facField);
+		return meth;
+	}
+	
+	private JMethod defineRecordMethod(){
+		JMethod meth = lexer.method(JMod.PRIVATE, nodeGen.getNodeInterface(), RECORD);
+		JVar token = meth.param(nodeGen.getNodeInterface(), "token");
+		JBlock body = meth.body()._if(JExpr.invoke(JExpr._this(), isMarked))._then();
+		body.invoke(historyField, "add").arg(token);
+		body.invoke(JExpr._this(), setPos).arg(posField.plus(JExpr.lit(1)));
+		meth.body()._return(token);
+		return meth;
+	}
+	
+	private JMethod defineHistoryMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, int.class, HISTORY);
+		meth.body()._return(JExpr.invoke(historyField, "size"));
+		return meth;
+	}
+	
+	private JMethod defineSetPosMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, void.class, SET_POS);
+		JVar pos = meth.param(int.class, "pos");
+		JBlock body = meth.body()._if(JExpr.invoke(JExpr._this(), isMarked).not())._then();
+		body.invoke(
+				JExpr.invoke(historyField, SUBLIST).arg(JExpr.lit(0)).arg(pos),
+				"clear");
+		body.assign(pos, JExpr.lit(0));
+		meth.body().assign(JExpr._this().ref(posField), pos);
+		return meth;
+	}
+	
+	private JMethod defineGetPosMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, int.class, GET_POS);
+		meth.body()._return(posField);
+		return meth;
+	}
+	
+	private JMethod defineResetMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, void.class, RESET);
+		meth.body().assign(posField, JExpr.lit(0));
+		return meth;
+	}
+	
+	private JMethod defineUnmarkMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, void.class, UNMARK);
+		meth.body().assign(markField, JExpr.lit(-1));
+		return meth;
+	}
+	
+	private JMethod defineMarkMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, void.class, MARK);
+		JBlock body = meth.body()._if(JExpr.invoke(JExpr._this(), isMarked).not())._then();
+		body.invoke(
+				JExpr.invoke(historyField, SUBLIST).arg(JExpr.lit(0)).arg(posField),
+				"clear");
+		body.assign(markField, JExpr.assign(posField, JExpr.lit(0)));
+		return meth;
+	}
+	
+	private JMethod defineIsMarkedMethod(){
+		JMethod meth = lexer.method(JMod.PUBLIC, boolean.class, IS_MARKED);
+		meth.body()._return(markField.gte(JExpr.lit(0)));
+		return meth;
 	}
 	
 	private JDefinedClass initializeLexer(String pckg) throws JClassAlreadyExistsException{
@@ -114,8 +279,6 @@ public class LexerGenerator {
 		this.addReaderConstructor(lexer);
 		this.addInputStreamConstructor(lexer);
 		this.addStringConstructor(lexer);
-		//add methods
-		this.initializeMethods(lexer);
 		
 		return lexer;
 	}
@@ -125,10 +288,21 @@ public class LexerGenerator {
 		//eofTokenClass should take no args on the constructor
 		eofToken = lexer.field(PRIVATE_FINAL+JMod.STATIC, nodeGen.getNodeInterface(), EOF, JExpr._new(nodeGen.getEOFTokenNode()));
 		readerField = lexer.field(PRIVATE_FINAL, Reader.class, READER);
+		facField = lexer.field(
+				JMod.PRIVATE+JMod.FINAL,
+				tokenGen.getTokenFactoryClass(),
+				"fac",
+				JExpr._new(tokenGen.getTokenFactoryClass()));
 		nextField = lexer.field(JMod.PRIVATE, boolean.class, NEXT, JExpr.TRUE);
 		lexer.field(JMod.PRIVATE, int.class, LINE, JExpr.lit(1));
 		lexer.field(JMod.PRIVATE, int.class, CHAR, JExpr.lit(1));
 		lexer.field(PRIVATE_FINAL, model.ref(Deque.class).narrow(Character.class), BUFFER, JExpr._new(model.ref(LinkedList.class).narrow(Character.class)));
+		markField = lexer.field(JMod.PRIVATE, int.class, MARK, JExpr.lit(-1));
+		posField = lexer.field(JMod.PRIVATE, int.class, "pos", JExpr.lit(0));
+		historyField = lexer.field(JMod.PRIVATE+JMod.FINAL,
+				model.ref(List.class).narrow(nodeGen.getNodeInterface()),
+				HISTORY,
+				JExpr._new(model.ref(ArrayList.class).narrow(nodeGen.getNodeInterface())));
 	}
 	
 	private void initializePatternListField(JDefinedClass lexer){
@@ -159,10 +333,30 @@ public class LexerGenerator {
 		cons.body().directStatement("this(new java.io.StringReader(str));");
 	}
 	
-	private void initializeMethods(JDefinedClass lexer){
-		//implement the hasNext() method
-		JMethod hasNextImpl = lexer.method(JMod.PUBLIC, boolean.class, HAS_NEXT);
-		hasNextImpl.body()._return(nextField);
+	private JMethod defineHasNext(){
+		JMethod method = lexer.method(JMod.PUBLIC, boolean.class, HAS_NEXT);
+		method.body()._return(nextField);
+		return method;
+	}
+	
+	private JMethod defineNextToken(){
+		JMethod method = lexer.method(JMod.PUBLIC, nodeGen.getNodeInterface(),
+				NEXT_TOKEN);
+		method._throws(IOException.class);
+		JVar token = method.body().decl(nodeGen.getNodeInterface(), "token");
+		JConditional cond = method.body()._if(
+				posField.lt(JExpr.invoke(historyField, "size")));
+		JBlock body = cond._then();
+		body.assign(token, JExpr.invoke(historyField, "get").arg(posField));
+		body.invoke(JExpr._this(), setPos).arg(posField.plus(JExpr.lit(1)));
+		body = cond._else();
+		body.assign(token, JExpr.invoke(JExpr._this(), record)
+				.arg(JExpr.invoke(JExpr._this(), readNext)));
+		method.body()._return(token);
+		return method;
+	}
+	
+	private JMethod defineReadNext(){
 		
 		//init the createToken(int tokenIndex, int line, int pos, String text) method
 		JMethod createTokenMethod = lexer.method(JMod.PRIVATE, nodeGen.getNodeInterface(), CREATE_TOKEN);
@@ -188,16 +382,10 @@ public class LexerGenerator {
 				"return false;\n"
 				);
 		
-		//implement the nextToken() method using direct statement, as it is rather complicated
-		JMethod nextTokenImpl = lexer.method(JMod.PUBLIC, nodeGen.getNodeInterface(), NEXT_TOKEN);
-		nextTokenImpl._throws(IOException.class);
-		//JBlock body = nextTokenImpl.body();
-		//JConditional cond = body._if(nextField.not());
-		//cond._then()._throw(JExpr._new(model._ref(RuntimeException.class)).arg("No tokens remaining."));
-		//JVar matchers = body.decl(model.ref(List.class).narrow(Matcher.class), "matchers", JExpr._new(model.ref(ArrayList.class).narrow(Matcher.class)));
-		//JForEach foreach = body.forEach(model.ref(Pattern.class), "p", patternField);
-		//foreach.body().invoke(matchers, "add").arg(JExpr.invoke(foreach.var(), "matcher").arg(JExpr.lit("")));
-		nextTokenImpl.body().directStatement(
+		//implement the readNext() method using direct statement, as it is rather complicated
+		JMethod readNext = lexer.method(JMod.PRIVATE, nodeGen.getNodeInterface(), READ_NEXT);
+		readNext._throws(IOException.class);
+		readNext.body().directStatement(
 				"if(!next){\n"+
 				"	throw new RuntimeException(\"No tokens remaining.\"); \n" +
 				"}\n"+
@@ -257,9 +445,9 @@ public class LexerGenerator {
 				"//an error occurred, the string is unmatched" +"\n" +
 				"throw new RuntimeException(\"Unmatched token: \"+cur);" + "\n"
 				);
+		return readNext;
 	}
-	
-	
+		
 	
 	
 	

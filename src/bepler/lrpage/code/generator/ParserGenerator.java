@@ -66,7 +66,7 @@ public class ParserGenerator {
 	private Map<Rule, Integer> ruleIndices;
 
 	public ParserGenerator(Symbols s, String pckg, JCodeModel model,
-			JDefinedClass lexer, NodeGenerator nodes)
+			LexerGenerator lexer, NodeGenerator nodes)
 			throws JClassAlreadyExistsException{
 		ActionTableBuilder builder = new ActionTableBuilder(s);
 		table = builder.generateActionTable();
@@ -306,7 +306,7 @@ public class ParserGenerator {
 		body._return(JExpr.FALSE);
 	}
 	
-	private void createParseMethod(JDefinedClass lexerClass, JMethod getActionMethod){
+	private void createParseMethod(LexerGenerator lexGen, JMethod getActionMethod){
 		JDefinedClass syntaxNodeClass = nodes.getNodeInterface();
 		//initialize the parseNext method
 		createParseNextMethod(getActionMethod, syntaxNodeClass);
@@ -314,7 +314,7 @@ public class ParserGenerator {
 		JMethod method = parserClass.method(JMod.PUBLIC, syntaxNodeClass, "parse");
 		method._throws(IOException.class);
 		method._throws(parsingException);
-		JVar lexer = method.param(lexerClass, "lexer");
+		JVar lexer = method.param(lexGen.getLexerClass(), "lexer");
 		JVar errorHandler = method.param(exceptionHandler, "errHandler");
 		JBlock body = method.body();
 		JDefinedClass stack = parseStack.getParseStack();
@@ -337,7 +337,7 @@ public class ParserGenerator {
 				stack,
 				"cur",
 				JExpr.invoke(JExpr.invoke(stackQ, "peekLast"), parseStack.getCloneMethod()));
-		JVar lookahead = body.decl(syntaxNodeClass, "lookahead", JExpr.invoke(lexer, "nextToken"));
+		JVar lookahead = body.decl(syntaxNodeClass, "lookahead", JExpr.invoke(lexer, lexGen.getNextTokenMethod()));
 		JTryBlock tryb = body._try();
 		tryb.body().assign(done, JExpr.invoke(JExpr._this(), parseNextMethod)
 				.arg(cur).arg(lookahead));
@@ -370,12 +370,12 @@ public class ParserGenerator {
 	
 	private JMethod createBurkeFischerMethod(){
 		JDefinedClass iNode = nodes.getNodeInterface();
-		JMethod bk = parserClass.method(JMod.PRIVATE, void.class, "burkeFischerRepair");
-		JVar tokenQ = bk.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "tokenQ");
-		JVar nodeStackQ = bk.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "nodeStackQ");
+		JMethod bf = parserClass.method(JMod.PRIVATE, void.class, "burkeFischerRepair");
+		JVar tokenQ = bf.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "tokenQ");
+		JVar nodeStackQ = bf.param(model.ref(Queue.class).narrow(model.ref(Deque.class).narrow(iNode)), "nodeStackQ");
 		//TODO
 		
-		return bk;
+		return bf;
 	}
 	
 

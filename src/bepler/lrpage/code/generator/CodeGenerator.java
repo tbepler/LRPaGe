@@ -31,10 +31,9 @@ public class CodeGenerator {
 		try {
 			Symbols symbols = new Symbols(g, EOF);
 			nodeGen = new NodeGenerator(symbols, pckg, model);
-			lexerGen = new LexerGenerator(pckg, model, nodeGen);
-			lexerGen.generate(g.getTokens());
+			lexerGen = new LexerGenerator(pckg, model, nodeGen, g);
 			parserGen = new ParserGenerator(symbols, pckg, model,
-					lexerGen.getLexerClass(), nodeGen);
+					lexerGen, nodeGen);
 			
 			JDefinedClass printVisitor = MainGenerator.generatePrintVisitor(
 					pckg, model, nodeGen.getVisitorInterface(),
