@@ -10,10 +10,16 @@ import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.parser.Symbols;
 
 import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JForLoop;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
@@ -44,7 +50,7 @@ public class NodeGenerator {
 	private final Map<String, JDefinedClass> abstractNodes;
 	private final Map<Rule, JDefinedClass> concreteNodes;
 	
-	public NodeGenerator(Symbols symbols, JCodeModel model) throws JClassAlreadyExistsException{
+	public NodeGenerator(Symbols symbols, JCodeModel model) throws JClassAlreadyExistsException, ClassNotFoundException{
 		this.symbols = symbols;
 		this.model = model;
 		this.visitorInterface = model._class(VISITOR, ClassType.INTERFACE);
@@ -287,6 +293,13 @@ public class NodeGenerator {
 				.plus(pos)
 				.plus(JExpr.lit(")")));
 		
+		//define method to get line of token node
+		JMethod getLine = node.method(JMod.PUBLIC, int.class, "getLine");
+		getLine.body()._return(JExpr._this().ref(line));
+		
+		//define method to get pos of token node
+		JMethod getPos = node.method(JMod.PUBLIC,  int.class,  "getPos");
+		getPos.body()._return(JExpr._this().ref(pos));
 		return node;
 	}
 	
@@ -304,6 +317,7 @@ public class NodeGenerator {
 	}
 
 	/**
+	 * Defines abstract node classes and creates abstractNodes map
 	 * @author Jennifer Zou
 	 * @return
 	 * @throws JClassAlreadyExistsException
@@ -320,6 +334,7 @@ public class NodeGenerator {
 	}
 	
 	/**
+	 * Defines an abstract node from a symbol
 	 * @author Jennifer Zou
 	 * @param s
 	 * @return
@@ -328,27 +343,34 @@ public class NodeGenerator {
 	private JDefinedClass defineAbstractNode(String s) throws JClassAlreadyExistsException{
 		JDefinedClass asn= model._class(JMod.PUBLIC+JMod.ABSTRACT, s+"AbstractNode", ClassType.CLASS);
 		asn._implements(nodeInterface);
+		
 		//declare the type method
 		JMethod type= asn.method(JMod.PUBLIC, symbolsEnumeration, TYPE);
 		type.annotate(Override.class);
 		type.body()._return(symbolsEnumeration.enumConstant(s));
+		
 		//define replace method
 		JMethod replace= asn.method(JMod.PUBLIC, nodeInterface, REPLACE);
 		replace.annotate(Override.class);
 		replace.body()._return(JExpr._this());
+		
 		//define toString()
 		JMethod toString= asn.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
 		toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
+
+		
 		return asn;
 	}
 	
 	/**
+	 * Defines all concrete nodes and creates concreteNodes map
 	 * @author Jennifer Zou
 	 * @return
 	 * @throws JClassAlreadyExistsException
+	 * @throws ClassNotFoundException 
 	 */
-	private Map<Rule, JDefinedClass> defineConcreteNodes() throws JClassAlreadyExistsException{
+	private Map<Rule, JDefinedClass> defineConcreteNodes() throws JClassAlreadyExistsException, ClassNotFoundException{
 		Map<Rule, JDefinedClass> ret= new HashMap<Rule, JDefinedClass>();
 		for(Rule r:symbols.getRules()){
 			ret.put(r, defineConcreteNode(r));
@@ -357,12 +379,14 @@ public class NodeGenerator {
 	}
 	
 	/**
+	 * Creates a concrete node from a rule
 	 * @author Jennifer Zou
 	 * @param r
 	 * @return
 	 * @throws JClassAlreadyExistsException
+	 * @throws ClassNotFoundException 
 	 */
-	private JDefinedClass defineConcreteNode(Rule r) throws JClassAlreadyExistsException{
+	private JDefinedClass defineConcreteNode(Rule r) throws JClassAlreadyExistsException, ClassNotFoundException{
 		String lhs= r.leftHandSide();
 		JDefinedClass asn= abstractNodes.get(lhs);
 		JDefinedClass concreteNode= model._class(r.getName());
@@ -405,9 +429,29 @@ public class NodeGenerator {
 			replace.body()._return(field);
 		}
 		
-		return concreteNode;
+		HashCodeGenerator h= new HashCodeGenerator();
+		StringGenerator s= new StringGenerator();
+		EqualsGenerator e= new EqualsGenerator();
+		for(JVar f:concreteNode.fields().values()){
+			h.appendField(f);
+			s.appendField(f);
+			e.appendField(f);
+		}
+		h.define(concreteNode);
+		s.define(concreteNode);
+		e.define(concreteNode);
 		
+		JDefinedClass firstChild= concreteNodes.get(symbols.getRules(lhs).get(0));
+		
+		JMethod getLine = concreteNode.method(JMod.PUBLIC,  int.class, "getLine");
+		getLine.body()._return(JExpr.invoke(firstChild, getLine));
+		
+		JMethod getPos= concreteNode.method(JMod.PUBLIC,int.class, "getPos");
+		
+		return concreteNode;
 	}
+	
+	
 	
 	/**
 	 * @author Jennifer Zou
