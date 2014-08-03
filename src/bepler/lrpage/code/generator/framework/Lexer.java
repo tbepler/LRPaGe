@@ -122,7 +122,7 @@ public class Lexer<V> {
 		//if cur is empty, then return eof and mark lexing done
 		if(cur.length() == 0){
 			next = false;
-			return fac.getEOFToken();
+			return fac.getEOFToken(lineNum, charNum);
 		}
 		//find the longest match
 		for( int end = cur.length() ; end >= 0 ; --end ){

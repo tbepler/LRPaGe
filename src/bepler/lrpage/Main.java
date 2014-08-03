@@ -24,12 +24,17 @@ public class Main {
 
 		@Override
 		public String getSymbol() {
-			return "TRUE";
+			return "True";
 		}
 
 		@Override
 		public int getPriority() {
 			return 0;
+		}
+
+		@Override
+		public boolean isPunctuation() {
+			return false;
 		}
 		
 	}
@@ -38,18 +43,21 @@ public class Main {
 		@Override public String getRegex(){ return "\\+"; }
 		@Override public String getSymbol(){ return "Plus"; }
 		@Override public int getPriority(){ return 0; }
+		@Override public boolean isPunctuation() { return true; }
 	}
 	
 	public static class LParen implements Terminal{
 		@Override public String getRegex(){ return "\\("; }
 		@Override public String getSymbol(){ return "LParen"; }
 		@Override public int getPriority(){ return 0; }
+		@Override public boolean isPunctuation() { return true; }
 	}
 	
 	public static class RParen implements Terminal{
 		@Override public String getRegex(){ return "\\)"; }
 		@Override public String getSymbol(){ return "RParen"; }
 		@Override public int getPriority(){ return 0; }
+		@Override public boolean isPunctuation() { return true; }
 	}
 	
 	public static class Id implements Terminal{
@@ -61,12 +69,17 @@ public class Main {
 
 		@Override
 		public String getSymbol() {
-			return "ID";
+			return "Id";
 		}
 
 		@Override
 		public int getPriority() {
 			return 0;
+		}
+
+		@Override
+		public boolean isPunctuation() {
+			return false;
 		}
 		
 	}
@@ -87,6 +100,11 @@ public class Main {
 		public int getPriority() {
 			return 0;
 		}
+
+		@Override
+		public boolean isPunctuation() {
+			return false;
+		}
 		
 	}
 	
@@ -105,6 +123,11 @@ public class Main {
 		public int getPriority() {
 			return 0;
 		}
+
+		@Override
+		public boolean isPunctuation() {
+			return false;
+		}
 	}
 	
 	public static class IdExpRule implements Rule{
@@ -116,7 +139,7 @@ public class Main {
 
 		@Override
 		public String[] rightHandSide() {
-			return new String[]{"ID"};
+			return new String[]{"Id"};
 		}
 
 		@Override
@@ -193,6 +216,16 @@ public class Main {
 		@Override
 		public int defaultPriority() {
 			return 0;
+		}
+
+		@Override
+		public String getPseudonym(String symbol) {
+			switch(symbol){
+			case "Plus": return "+";
+			case "LParen": return "(";
+			case "RParen": return ")";
+			default: return null;
+			}
 		}
 		
 	}

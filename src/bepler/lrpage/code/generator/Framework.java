@@ -24,11 +24,12 @@ public class Framework {
 	private final JClass parsingEng;
 	private final JClass stack;
 	private final JClass status;
+	private final JClass symbol;
 	private final JClass token;
 	private final JClass tokenFac;
 	
 	public Framework(JCodeModel model, String pckg){
-		JPackage pack = model._package(pckg == null ? "" : pckg);
+		JPackage pack = model._package(pckg == null ? "" : pckg+".framework");
 		errorRepair = toStaticJClass(pack, ErrorRepair.class);
 		excErrorRepair = toStaticJClass(pack, ExceptionErrorRepair.class);
 		lexer = toStaticJClass(pack, Lexer.class);
@@ -37,14 +38,25 @@ public class Framework {
 		parsingEng = toStaticJClass(pack, ParsingEngine.class);
 		stack = toStaticJClass(pack, Stack.class);
 		status = toStaticJClass(pack, Status.class);
+		symbol = toStaticJClass(pack, Symbol.class);
 		token = toStaticJClass(pack, Token.class);
 		tokenFac = toStaticJClass(pack, TokenFactory.class);
 	}
 	
 	private JClass toStaticJClass(JPackage pckg, Class<?> clazz){
-		return new JStaticJavaFile(pckg, clazz.getSimpleName(),
-				clazz.getResource(clazz.getSimpleName()+".java"), null).getJClass();
+		JStaticJavaFile f = new JStaticJavaFile(pckg, clazz.getSimpleName(),
+				clazz.getResource(clazz.getSimpleName()+".java"), null);
+		pckg.addResourceFile(f);
+		return f.getJClass();
 	}
+	
+	/*
+	private String toPackagePath(Class<?> clazz){
+		String name = clazz.getCanonicalName();
+		name.replace('.', '/');
+		return name;
+	}
+	*/
 	
 	public JClass getTokenFactoryInterface(){
 		return tokenFac;
@@ -52,6 +64,10 @@ public class Framework {
 	
 	public JClass getTokenClass(){
 		return token;
+	}
+	
+	public JClass getSymbolInterface(){
+		return symbol;
 	}
 	
 	public JClass getStatusEnum(){

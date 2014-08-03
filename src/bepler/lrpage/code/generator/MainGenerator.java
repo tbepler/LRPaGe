@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 
-import bepler.lrpage.code.generator.parser.ParserGenerator;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -41,53 +40,36 @@ public class MainGenerator {
 	 * @author Tristan Bepler
 	 */
 	public static void generateMain(String pckg, JCodeModel model,
-			JDefinedClass lexer, ParserGenerator parseGen, JDefinedClass printVisitor,
-			JDefinedClass abstractNode)
+			Framework f, NodeGenerator nodes, JDefinedClass printVisitor,
+			TokenFactoryGenerator tokenFac)
 			throws JClassAlreadyExistsException{
 		String name = pckg == null ? MAIN : pckg+"."+MAIN;
 		JDefinedClass mainClass = model._class(name);
 		CodeGenerator.appendJDocHeader(mainClass);
 		JMethod main = mainClass.method(JMod.PUBLIC + JMod.STATIC, void.class, "main");
 		main._throws(IOException.class);
-		main._throws(parseGen.getParsingExceptionClass());
 		main.param(String[].class, "args");
 		JBlock body = main.body();
-		JVar visitor = body.decl(printVisitor, "visitor", JExpr._new(printVisitor));
-		JVar parse = body.decl(parseGen.getParserClass(), "parser", JExpr._new(parseGen.getParserClass()));
-		JDefinedClass errorHandlerClass = generateDefaultExceptionHandler(pckg, model, parseGen);
-		JVar errorHandler = body.decl(errorHandlerClass, "errorHandler", JExpr._new(errorHandlerClass));
+		JVar visitor = body.decl(nodes.getVisitorInterface(), "visitor", JExpr._new(printVisitor));
+		JVar fac = body.decl(f.getTokenFactoryInterface().narrow(nodes.getVisitorInterface()),
+				"factory", tokenFac.newTokenFactory());
+		//JVar parse = body.decl(parseGen.getParserClass(), "parser", JExpr._new(parseGen.getParserClass()));
 		JVar str = body.decl(model.ref(String.class), "line");
 		body.decl(model.ref(BufferedReader.class), "reader", JExpr._new(model.ref(BufferedReader.class))
 				.arg(JExpr._new(model.ref(InputStreamReader.class)).arg(model.ref(System.class).staticRef("in"))));
 		JWhileLoop loop = body._while(JExpr.direct("(line = reader.readLine()) != null"));
 		loop.body()._if(JExpr.invoke(str, "equals").arg(JExpr.lit("q")))._then()._break();
-		JVar lex = loop.body().decl(lexer, "lexer", JExpr._new(lexer).arg(str));
+		JVar lex = loop.body().decl(
+				f.getLexerClass().narrow(nodes.getVisitorInterface()),
+				"lexer",
+				JExpr._new(f.getLexerClass().narrow(nodes.getVisitorInterface())).arg(str).arg(fac));
 		loop.body()._while(JExpr.invoke(lex, "hasNext")).body()
 			.invoke(model.ref(System.class).staticRef("out"), "print").arg(JExpr.invoke(lex, "nextToken").plus(JExpr.lit(" ")));
 		loop.body().invoke(model.ref(System.class).staticRef("out"), "println");
-		loop.body().assign(lex, JExpr._new(lexer).arg(str));
-		JVar node = loop.body().decl(abstractNode, "tree", JExpr.invoke(parse, "parse").arg(lex).arg(errorHandler));
-		loop.body()._if(node.ne(JExpr._null()))._then().invoke(node, "accept").arg(visitor);
+		//loop.body().assign(lex, JExpr._new(lexer).arg(str));
+		//JVar node = loop.body().decl(abstractNode, "tree", JExpr.invoke(parse, "parse").arg(lex).arg(errorHandler));
+		//loop.body()._if(node.ne(JExpr._null()))._then().invoke(node, "accept").arg(visitor);
 		
-	}
-	
-	private static JDefinedClass generateDefaultExceptionHandler(
-			String pckg, JCodeModel model, ParserGenerator parseGen)
-					throws JClassAlreadyExistsException{
-		String name = pckg == null ? DEFAULT_ERROR_HANDLER : pckg + "." + DEFAULT_ERROR_HANDLER;
-		JDefinedClass clazz = model._class(name);
-		CodeGenerator.appendJDocHeader(clazz);
-		clazz._implements(parseGen.getExceptionHandlerInterface());
-		
-		//define the proceed method to print the exception message and return true
-		JMethod proceed = clazz.method(JMod.PUBLIC, boolean.class, ParserGenerator.PROCEED_METHOD);
-		JVar excep = proceed.param(parseGen.getParsingExceptionClass(), "e");
-		proceed.annotate(Override.class);
-		proceed.body().invoke(model.ref(System.class).staticRef("err"), "println")
-			.arg(JExpr.invoke(excep, "getMessage"));
-		proceed.body()._return(JExpr.TRUE);
-		
-		return clazz;
 	}
 	
 	/**
