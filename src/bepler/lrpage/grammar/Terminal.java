@@ -16,6 +16,15 @@ public interface Terminal{
 	public String getSymbol();
 	
 	/**
+	 * Boolean indicating whether this terminal represents punctuation.
+	 * If true, then the text contained by tokens created for this 
+	 * terminal will be ignored, and those tokens will be removed 
+	 * from the abstract syntax tree.
+	 * @return
+	 */
+	public boolean isPunctuation();
+	
+	/**
 	 * The priority of this terminal symbol. Lower priorities are
 	 * favored when resolving parser action conflicts.
 	 * @return

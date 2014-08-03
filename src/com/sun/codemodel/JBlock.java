@@ -133,6 +133,14 @@ public final class JBlock implements JGenerable, JStatement {
     public boolean isEmpty() {
         return content.isEmpty();
     }
+    
+    /**
+     * Clears all the statements from this block.
+     */
+    public void clear(){
+    	content.clear();
+    	pos = 0;
+    }
 
     /**
      * Adds a local variable declaration to this block

@@ -11,6 +11,7 @@ public class Symbols{
 	private final List<Rule> rules;
 	private final Map<String, List<Rule>> producers = new HashMap<String, List<Rule>>();
 	
+	private final Set<String> punctuation = new HashSet<String>();
 	private final List<String> terminals = new ArrayList<String>();
 	private final Map<String, Terminal> terminalSymbols = new HashMap<String, Terminal>();
 	
@@ -41,6 +42,9 @@ public class Symbols{
 				allSymbols.add(symbol);
 				terminals.add(symbol);
 				terminalSymbols.put(symbol, t);
+			}
+			if(t.isPunctuation()){
+				punctuation.add(symbol);
 			}
 		}
 		allSymbols.add(eof);
@@ -77,6 +81,14 @@ public class Symbols{
 	
 	public List<String> getTerminals(){
 		return Collections.unmodifiableList(terminals);
+	}
+	
+	public Terminal getTerminal(String symbol){
+		return terminalSymbols.get(symbol);
+	}
+	
+	public boolean isPunctuation(String symbol){
+		return punctuation.contains(symbol);
 	}
 	
 	/**

@@ -10,7 +10,10 @@ import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.parser.Symbols;
 
 import com.sun.codemodel.ClassType;
+<<<<<<< HEAD
 import com.sun.codemodel.JBlock;
+=======
+>>>>>>> 04676607f76e0c3d8f87d7a24d1fd478c0616e74
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -37,30 +40,39 @@ public class NodeGenerator {
 	private static final String TYPE = "type";
 	private static final String ACCEPT = "accept";
 	private static final String VISITOR = "Visitor";
-	private static final String ABSTRACT_SYNTAX_NODE = "AbstractSyntaxNode";
 	private static final String SYMBOLS = "Symbols";
+	private static final String NODES = "nodes";
 	
 	private final Symbols symbols;
+	private final Framework framework;
+	private final SymbolsGenerator symbolsGen;
+	private final String pckg;
 	private final JCodeModel model;
 	private final JDefinedClass visitorInterface;
-	private final JDefinedClass symbolsEnumeration;
-	private final JDefinedClass nodeInterface;
 	private final JDefinedClass eofTokenClass;
 	private final Map<String, JDefinedClass> tokens;
 	private final Map<String, JDefinedClass> abstractNodes;
 	private final Map<Rule, JDefinedClass> concreteNodes;
 	
+<<<<<<< HEAD
 	public NodeGenerator(Symbols symbols, JCodeModel model) throws JClassAlreadyExistsException, ClassNotFoundException{
+=======
+	public NodeGenerator(Symbols symbols, String pckg, JCodeModel model, Framework f,
+			SymbolsGenerator symbolsGen) throws JClassAlreadyExistsException{
+>>>>>>> 04676607f76e0c3d8f87d7a24d1fd478c0616e74
 		this.symbols = symbols;
+		this.framework = f;
+		this.symbolsGen = symbolsGen;
 		this.model = model;
-		this.visitorInterface = model._class(VISITOR, ClassType.INTERFACE);
-		this.symbolsEnumeration = model._class(SYMBOLS, ClassType.ENUM);
-		this.nodeInterface = this.defineNodeInterface();
+		this.pckg = pckg;
+		String name = pckg == null ? VISITOR : pckg + "." + VISITOR;
+		this.visitorInterface = model._class(name, ClassType.INTERFACE);
+		CodeGenerator.appendJDocHeader(visitorInterface);
+		name = pckg == null ? SYMBOLS : pckg + "." + SYMBOLS;
 		this.eofTokenClass = this.defineEOFToken();
 		this.tokens = this.defineTokenNodes();
 		this.abstractNodes= this.defineAbstractNodes();
 		this.concreteNodes= this.defineConcreteNodes();
-		
 	}
 	
 	/**
@@ -118,21 +130,21 @@ public class NodeGenerator {
 	}
 	
 	/**
-	 * Returns the JDefinedClass defining the AST
+	 * Returns the JClass defining the AST
 	 * node interface
 	 * @return
 	 */
-	public JDefinedClass getNodeInterface(){
-		return nodeInterface;
+	public JClass getNodeInterface(){
+		return framework.getNodeInterface();
 	}
 	
 	/**
-	 * Returns the JDefinedClass defining the Symbols
-	 * enumeration
+	 * Returns the SymbolsGenerator defining
+	 * the symbols constants
 	 * @return
 	 */
-	public JDefinedClass getSymbolsEnumeration(){
-		return symbolsEnumeration;
+	public SymbolsGenerator getSymbolsClass(){
+		return symbolsGen;
 	}
 	
 	/**
@@ -170,35 +182,16 @@ public class NodeGenerator {
 	}
 	
 	/**
-	 * Defines the AST node interface
-	 * @return the defines interface
-	 * @throws JClassAlreadyExistsException
-	 * @author Tristan Bepler
-	 */
-	private JDefinedClass defineNodeInterface() throws JClassAlreadyExistsException{
-		JDefinedClass nodeInterface = model._class(ABSTRACT_SYNTAX_NODE, ClassType.INTERFACE);
-		
-		//declare the accept(Visitor) method
-		JMethod accept = nodeInterface.method(JMod.PUBLIC, void.class , ACCEPT);
-		accept.param(visitorInterface, "visitor");
-		
-		//declare the type() method
-		nodeInterface.method(JMod.PUBLIC, symbolsEnumeration, TYPE);
-		
-		//declare the replace() method
-		nodeInterface.method(JMod.PUBLIC, nodeInterface, REPLACE);
-		
-		return nodeInterface;
-	}
-	
-	/**
 	 * Defines the EOF token class
 	 * @return the EOF token class
 	 * @throws JClassAlreadyExistsException
 	 * @author Tristan Bepler
 	 */
 	private JDefinedClass defineEOFToken() throws JClassAlreadyExistsException{
-		JDefinedClass eofToken = model._class(symbols.getEOF()+"Token")._implements(this.nodeInterface);
+		String name = pckg == null ? symbols.getEOF() + "Token" : pckg+"."+NODES+"."+symbols.getEOF()+"Token";
+		JDefinedClass eofToken = model._class(name)._extends(
+				framework.getTokenClass().narrow(visitorInterface));
+		CodeGenerator.appendJDocHeader(eofToken);
 		
 		//override accept method
 		JMethod accept = eofToken.method(JMod.PUBLIC, void.class, ACCEPT);
@@ -207,19 +200,14 @@ public class NodeGenerator {
 		accept.body().directStatement("//do nothing");
 		
 		//override type method
-		JMethod type = eofToken.method(JMod.PUBLIC, this.symbolsEnumeration, TYPE);
+		JMethod type = eofToken.method(JMod.PUBLIC, int.class, TYPE);
 		type.annotate(Override.class);
-		type.body()._return(symbolsEnumeration.enumConstant(this.symbols.getEOF()));
-		
-		//override the replace method
-		JMethod replace = eofToken.method(JMod.PUBLIC, this.nodeInterface, REPLACE);
-		replace.annotate(Override.class);
-		replace.body()._return(JExpr._this());
+		type.body()._return(symbolsGen.getType(symbols.getEOF()));
 		
 		//override toString method
 		JMethod toString = eofToken.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
-		toString.body()._return(JExpr.invoke(JExpr.invoke(JExpr._this(), type), "toString"));
+		toString.body()._return(symbolsGen.getName(symbols.getEOF()));
 		
 		return eofToken;
 	}
@@ -250,21 +238,22 @@ public class NodeGenerator {
 	 * @author Tristan Bepler
 	 */
 	private JDefinedClass defineTokenNode(String symbol) throws JClassAlreadyExistsException{
-		JDefinedClass node = model._class(symbol+"Token")._implements(this.nodeInterface);
+		String name = pckg == null ? symbol + "Token" : pckg+"."+NODES+"."+symbol+"Token";
+		JDefinedClass node = model._class(name)._extends(
+				framework.getTokenClass().narrow(visitorInterface));
+		CodeGenerator.appendJDocHeader(node);
 		
 		//add method to the visitor for visiting this node
 		JMethod visit = this.addVisitableNode(node);
 		
-		//tokens should have fields for text, line and char positions
-		JVar text = node.field(JMod.PUBLIC+JMod.FINAL, String.class, "text");
-		JVar line = node.field(JMod.PUBLIC+JMod.FINAL, int.class, "line");
-		JVar pos = node.field(JMod.PUBLIC+JMod.FINAL, int.class, "pos");
-		
 		//add constructor that defines the text, line, and pos fields
 		JMethod cons = node.constructor(JMod.PUBLIC);
-		cons.body().assign(JExpr._this().ref(text), cons.param(String.class, "text"));
-		cons.body().assign(JExpr._this().ref(line), cons.param(int.class, "line"));
-		cons.body().assign(JExpr._this().ref(pos), cons.param(int.class, "pos"));
+		cons.body().invoke("super").arg(cons.param(String.class, "text"))
+			.arg(cons.param(int.class, "line")).arg(cons.param(int.class, "pos"));
+		
+		//add a no args constructor for the burke-fischer algorithm to use
+		cons = node.constructor(JMod.PUBLIC);
+		cons.body().invoke("super");
 		
 		//override accept method to call visitor.visit(this)
 		JMethod accept = node.method(JMod.PUBLIC, void.class, ACCEPT);
@@ -272,26 +261,22 @@ public class NodeGenerator {
 		accept.body().invoke(accept.param(this.visitorInterface, "visitor"), visit).arg(JExpr._this());
 		
 		//override type method to return the enumerated type of this symbol
-		JMethod type = node.method(JMod.PUBLIC, symbolsEnumeration, TYPE);
+		JMethod type = node.method(JMod.PUBLIC, int.class, TYPE);
 		type.annotate(Override.class);
-		type.body()._return(symbolsEnumeration.enumConstant(symbol)); //this will add symbol to the enumeration if not already defined
-		
-		//override the replace method to return this
-		JMethod replace = node.method(JMod.PUBLIC, nodeInterface, REPLACE);
-		replace.annotate(Override.class);
-		replace.body()._return(JExpr._this());
+		type.body()._return(JExpr.invoke(symbolsGen.getType(symbol), "ordinal"));
 		
 		//define toString() for this class
 		JMethod toString = node.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
-		toString.body()._return(JExpr.invoke(JExpr._this(), type)
-				.plus(JExpr.lit("("))
-				.plus(text)
-				.plus(JExpr.lit(", "))
-				.plus(line)
-				.plus(JExpr.lit(":"))
-				.plus(pos)
-				.plus(JExpr.lit(")")));
+		//if this is punctuation, only return the name
+		if(symbols.isPunctuation(symbol)){
+			toString.body()._return(symbolsGen.getName(symbol));
+		}else{
+			toString.body()._return(symbolsGen.getName(symbol)
+					.plus(JExpr.lit("("))
+					.plus(JExpr.invoke("getText"))
+					.plus(JExpr.lit(")")));
+		}
 		
 		//define method to get line of token node
 		JMethod getLine = node.method(JMod.PUBLIC, int.class, "getLine");
@@ -341,25 +326,41 @@ public class NodeGenerator {
 	 * @throws JClassAlreadyExistsException
 	 */
 	private JDefinedClass defineAbstractNode(String s) throws JClassAlreadyExistsException{
+<<<<<<< HEAD
 		JDefinedClass asn= model._class(JMod.PUBLIC+JMod.ABSTRACT, s+"AbstractNode", ClassType.CLASS);
 		asn._implements(nodeInterface);
+=======
+		String name = pckg == null ? s + "AbstractNode" : pckg+"."+NODES+"."+s+"AbstractNode";
+		JDefinedClass asn= model._class(JMod.PUBLIC+JMod.ABSTRACT, name, ClassType.CLASS);
+		CodeGenerator.appendJDocHeader(asn);
+		
+		asn._implements(framework.getNodeInterface().narrow(visitorInterface));
+>>>>>>> 04676607f76e0c3d8f87d7a24d1fd478c0616e74
 		
 		//declare the type method
-		JMethod type= asn.method(JMod.PUBLIC, symbolsEnumeration, TYPE);
+		JMethod type= asn.method(JMod.PUBLIC, int.class, TYPE);
 		type.annotate(Override.class);
+<<<<<<< HEAD
 		type.body()._return(symbolsEnumeration.enumConstant(s));
 		
+=======
+		type.body()._return(symbolsGen.getType(s));
+>>>>>>> 04676607f76e0c3d8f87d7a24d1fd478c0616e74
 		//define replace method
-		JMethod replace= asn.method(JMod.PUBLIC, nodeInterface, REPLACE);
+		JMethod replace= asn.method(JMod.PUBLIC, asn, REPLACE);
 		replace.annotate(Override.class);
 		replace.body()._return(JExpr._this());
 		
 		//define toString()
 		JMethod toString= asn.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
+<<<<<<< HEAD
 		toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
 
 		
+=======
+		toString.body()._return(symbolsGen.getName(s));
+>>>>>>> 04676607f76e0c3d8f87d7a24d1fd478c0616e74
 		return asn;
 	}
 	
@@ -389,7 +390,9 @@ public class NodeGenerator {
 	private JDefinedClass defineConcreteNode(Rule r) throws JClassAlreadyExistsException, ClassNotFoundException{
 		String lhs= r.leftHandSide();
 		JDefinedClass asn= abstractNodes.get(lhs);
-		JDefinedClass concreteNode= model._class(r.getName());
+		String name = pckg == null ? r.getName() : pckg+"."+NODES+"."+r.getName();
+		JDefinedClass concreteNode= model._class(name);
+		CodeGenerator.appendJDocHeader(concreteNode);
 		concreteNode._extends(asn);
 		
 		//define constructor and fields
@@ -420,7 +423,7 @@ public class NodeGenerator {
 		
 		//if replace is specified, define replace method
 		if(r.replace()>=0){
-			JMethod replace= concreteNode.method(JMod.PUBLIC, nodeInterface, REPLACE);
+			JMethod replace= concreteNode.method(JMod.PUBLIC, asn, REPLACE);
 			replace.annotate(Override.class);
 			JVar field= fieldInd.get(r.replace());
 			if(field==null){
