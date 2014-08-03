@@ -3,7 +3,7 @@ package bepler.lrpage.code.generator.parser.repair;
 import java.util.Deque;
 import java.util.Queue;
 
-import bepler.lrpage.code.generator.ParseStackGenerator;
+import bepler.lrpage.code.generator.parser.ParseStackGenerator;
 
 import com.sun.codemodel.JAssignmentTarget;
 import com.sun.codemodel.JClassAlreadyExistsException;

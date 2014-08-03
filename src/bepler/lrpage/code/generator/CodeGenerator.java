@@ -3,6 +3,7 @@ package bepler.lrpage.code.generator;
 import java.io.File;
 import java.io.IOException;
 
+import bepler.lrpage.code.generator.parser.ParserGenerator;
 import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.parser.Symbols;
 

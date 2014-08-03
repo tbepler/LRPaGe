@@ -10,5 +10,7 @@ public interface Grammar{
 	
 	public int defaultPriority();
 	
+	public String getPseudonym(String symbol);
+	
 	
 }

@@ -1,7 +1,9 @@
-package bepler.lrpage.code.generator;
+package bepler.lrpage.code.generator.parser;
 
 import java.util.Deque;
 import java.util.LinkedList;
+
+import bepler.lrpage.code.generator.CodeGenerator;
 
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;

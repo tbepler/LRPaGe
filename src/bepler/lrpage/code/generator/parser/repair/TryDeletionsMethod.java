@@ -3,7 +3,7 @@ package bepler.lrpage.code.generator.parser.repair;
 import java.util.List;
 
 import bepler.lrpage.code.generator.LexerGenerator;
-import bepler.lrpage.code.generator.ParseStackGenerator;
+import bepler.lrpage.code.generator.parser.ParseStackGenerator;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

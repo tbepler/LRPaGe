@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Queue;
 
 import bepler.lrpage.code.generator.LexerGenerator;
-import bepler.lrpage.code.generator.ParseStackGenerator;
 import bepler.lrpage.code.generator.parser.AdvanceMethod;
+import bepler.lrpage.code.generator.parser.ParseStackGenerator;
 import bepler.lrpage.code.generator.parser.Status;
 
 import com.sun.codemodel.JCase;

@@ -1,7 +1,10 @@
-package bepler.lrpage.code.generator;
+package bepler.lrpage.code.generator.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import bepler.lrpage.code.generator.LexerGenerator;
+import bepler.lrpage.code.generator.TokenFactoryGenerator;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;

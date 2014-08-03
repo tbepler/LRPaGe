@@ -1,4 +1,4 @@
-package bepler.lrpage.code.generator;
+package bepler.lrpage.code.generator.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +29,9 @@ import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
+import bepler.lrpage.code.generator.CodeGenerator;
+import bepler.lrpage.code.generator.LexerGenerator;
+import bepler.lrpage.code.generator.NodeGenerator;
 import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.parser.Action;
 import bepler.lrpage.parser.ActionTable;
