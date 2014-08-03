@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="lrpage" default="run" basedir=".">
+	<property name="source.dir" value="src/"/>
+	<property name="class.dir" value="bin/"/>
+	<property name="resource.dir" value="src/bepler/lrpage/code/generator/framework/"/>
+	<property name="jar.dir" value="dist/"/>
+	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar"/>
+	<property name="main-class" value="bepler.lrpage.Main"/>
+	<property name="args" value="src"/>
+	
+	<path id="resources.path">
+		<fileset dir="${resource.dir}">
+			<include name="*.java"/>
+		</fileset>
+	</path>
+	
+	<target name="clean" description="Delete old jar and class files">
+		<delete dir="${jar.dir}"/>
+		<delete dir="${class.dir}"/>
+	</target>
+	
+	<target name="compile" description="Compile class files" depends="clean">
+		<mkdir dir="${class.dir}"/>
+		<javac srcdir="${source.dir}" destdir="${class.dir}">
+			<!-- <src path="${source.dir}"/> -->
+			<exclude name="bepler/lrpage/code/generator/parser/**"/>
+			<!-- <exclude name="bepler/lrpage/test/**"/> -->
+		</javac>
+	</target>
+	
+	<target name="jar" description="Package into a runnable jar" depends="compile">
+		<mkdir dir="${jar.dir}"/>
+		<copy todir="${class.dir}/bepler/lrpage/code/generator/framework" flatten="false">
+			<path refid="resources.path"/>
+		</copy>
+		
+		<jar destfile="${jar.file}" basedir="${class.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}"/>
+			</manifest>
+		</jar>	
+	</target>
+	
+	<target name="run" depends="jar">
+		<java jar="${jar.file}" fork="true">
+			<arg line="${args}"/>
+		</java>
+	</target>
+	
+	
+</project> 

@@ -25,7 +25,7 @@ public interface TokenFactory<V> {
      */
     public Token<V> build(int index, String text, int line, int pos) ;
     
-    public Token<V> getEOFToken();
+    public Token<V> getEOFToken(int line, int pos);
     
     public Pattern[] getPatterns();
 

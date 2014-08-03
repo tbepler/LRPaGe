@@ -3,7 +3,6 @@ package bepler.lrpage.code.generator;
 import java.io.File;
 import java.io.IOException;
 
-import bepler.lrpage.code.generator.parser.ParserGenerator;
 import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.parser.Symbols;
 
@@ -24,23 +23,22 @@ public class CodeGenerator {
 	private static final String EOF = "EOF";
 	
 	private final JCodeModel model = new JCodeModel();
-	private final NodeGenerator nodeGen;
-	private final LexerGenerator lexerGen;
-	private final ParserGenerator parserGen;
 	
 	public CodeGenerator(String pckg, Grammar g){
 		try {
 			Symbols symbols = new Symbols(g, EOF);
-			nodeGen = new NodeGenerator(symbols, pckg, model);
-			lexerGen = new LexerGenerator(pckg, model, nodeGen, g);
-			parserGen = new ParserGenerator(symbols, pckg, model,
-					lexerGen, nodeGen);
+			Framework f = new Framework(model, pckg);
+			SymbolsGenerator symGen = new SymbolsGenerator(pckg, model, g, f);
+			NodeGenerator nodeGen = new NodeGenerator(symbols, pckg, model, f, symGen);
+			TokenFactoryGenerator tokenFac = new TokenFactoryGenerator(pckg, model, nodeGen,
+					symGen, g, f);
+			//parserGen = new ParserGenerator(symbols, pckg, model,
+			//		lexerGen, nodeGen);
 			
 			JDefinedClass printVisitor = MainGenerator.generatePrintVisitor(
 					pckg, model, nodeGen.getVisitorInterface(),
 					nodeGen.getTokenNodeClasses());
-			MainGenerator.generateMain(pckg, model, lexerGen.getLexerClass(),
-					parserGen, printVisitor,nodeGen.getNodeInterface());
+			MainGenerator.generateMain(pckg, model, f, nodeGen, printVisitor, tokenFac);
 			
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);

@@ -29,7 +29,7 @@ import com.sun.codemodel.JVar;
 public class NodeGenerator {
 	
 	private static final String REPLACE = "replace";
-	private static final String TYPE = "type";
+	private static final String TYPE = "symbol";
 	private static final String ACCEPT = "accept";
 	private static final String VISITOR = "Visitor";
 	private static final String SYMBOLS = "Symbols";
@@ -181,21 +181,27 @@ public class NodeGenerator {
 				framework.getTokenClass().narrow(visitorInterface));
 		CodeGenerator.appendJDocHeader(eofToken);
 		
+		JMethod cons = eofToken.constructor(JMod.PUBLIC);
+		cons.body().invoke("super").arg(JExpr.lit("")).arg(cons.param(int.class, "line"))
+			.arg(cons.param(int.class, "pos"));
+		
 		//override accept method
 		JMethod accept = eofToken.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.param(this.visitorInterface, "visitor");
 		accept.annotate(Override.class);
 		accept.body().directStatement("//do nothing");
 		
-		//override type method
-		JMethod type = eofToken.method(JMod.PUBLIC, int.class, TYPE);
+		//override symbol method
+		JMethod type = eofToken.method(JMod.PUBLIC, framework.getSymbolInterface(), TYPE);
 		type.annotate(Override.class);
-		type.body()._return(symbolsGen.getType(symbols.getEOF()));
+		type.body()._return(symbolsGen.getSymbolObj(symbols.getEOF()));
+		
+		//
 		
 		//override toString method
 		JMethod toString = eofToken.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
-		toString.body()._return(symbolsGen.getName(symbols.getEOF()));
+		toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
 		
 		return eofToken;
 	}
@@ -249,18 +255,18 @@ public class NodeGenerator {
 		accept.body().invoke(accept.param(this.visitorInterface, "visitor"), visit).arg(JExpr._this());
 		
 		//override type method to return the enumerated type of this symbol
-		JMethod type = node.method(JMod.PUBLIC, int.class, TYPE);
+		JMethod type = node.method(JMod.PUBLIC, framework.getSymbolInterface(), TYPE);
 		type.annotate(Override.class);
-		type.body()._return(JExpr.invoke(symbolsGen.getType(symbol), "ordinal"));
+		type.body()._return(symbolsGen.getSymbolObj(symbol));
 		
 		//define toString() for this class
 		JMethod toString = node.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
 		//if this is punctuation, only return the name
 		if(symbols.isPunctuation(symbol)){
-			toString.body()._return(symbolsGen.getName(symbol));
+			toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
 		}else{
-			toString.body()._return(symbolsGen.getName(symbol)
+			toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString")
 					.plus(JExpr.lit("("))
 					.plus(JExpr.invoke("getText"))
 					.plus(JExpr.lit(")")));
@@ -312,9 +318,9 @@ public class NodeGenerator {
 		asn._implements(framework.getNodeInterface().narrow(visitorInterface));
 		
 		//declare the type method
-		JMethod type= asn.method(JMod.PUBLIC, int.class, TYPE);
+		JMethod type= asn.method(JMod.PUBLIC, framework.getSymbolInterface(), TYPE);
 		type.annotate(Override.class);
-		type.body()._return(symbolsGen.getType(s));
+		type.body()._return(symbolsGen.getSymbolObj(s));
 		//define replace method
 		JMethod replace= asn.method(JMod.PUBLIC, asn, REPLACE);
 		replace.annotate(Override.class);
@@ -322,7 +328,7 @@ public class NodeGenerator {
 		//define toString()
 		JMethod toString= asn.method(JMod.PUBLIC, String.class, "toString");
 		toString.annotate(Override.class);
-		toString.body()._return(symbolsGen.getName(s));
+		toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
 		return asn;
 	}
 	
@@ -358,15 +364,28 @@ public class NodeGenerator {
 		String[] rhs= r.rightHandSide();
 		Map<Integer, JVar> fieldInd= new HashMap<Integer, JVar>();
 		int[] ignore= r.ignoreSymbols();
+		JVar firstField = null;
 		for(int i=0;i<rhs.length;i++){
 			JDefinedClass clazz= lookupNodeClass(rhs[i]);
 			JVar param= cons.param(clazz, "node"+i);
 			if(!contains(ignore, i)){
 				JVar field= concreteNode.field(JMod.PUBLIC+JMod.FINAL, clazz, "f"+i);
+				if(firstField == null){
+					firstField = field;
+				}
 				fieldInd.put(i, field);
 				cons.body().assign(JExpr._this().ref(field), param);
 			}
 		}
+		
+		//define getLine and getPos methods
+		JMethod line = concreteNode.method(JMod.PUBLIC, int.class, "getLine");
+		line.annotate(Override.class);
+		line.body()._return(JExpr.invoke(firstField, "getLine"));
+		
+		JMethod pos = concreteNode.method(JMod.PUBLIC, int.class, "getPos");
+		pos.annotate(Override.class);
+		pos.body()._return(JExpr.invoke(firstField, "getPos"));
 		
 		//define accept method
 		JMethod accept= concreteNode.method(JMod.PUBLIC, void.class, ACCEPT);

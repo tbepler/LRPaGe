@@ -6,7 +6,7 @@ public interface Node<V> {
 	
 	public void accept(V visitor);
 
-    public int type();
+    public Symbol symbol();
 
     public Node<V> replace();
     
