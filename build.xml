@@ -21,7 +21,7 @@
 	
 	<target name="compile" description="Compile class files" depends="clean">
 		<mkdir dir="${class.dir}"/>
-		<javac srcdir="${source.dir}" destdir="${class.dir}">
+		<javac srcdir="${source.dir}" destdir="${class.dir}" includeantruntime="false">
 			<!-- <src path="${source.dir}"/> -->
 			<exclude name="bepler/lrpage/code/generator/parser/**"/>
 			<!-- <exclude name="bepler/lrpage/test/**"/> -->

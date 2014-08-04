@@ -72,6 +72,15 @@ public class SymbolsGenerator {
 		return JExpr.invoke(obj, "type");
 	}
 	
+	public JExpression getRef(String symbol){
+		this.getSymbolObj(symbol);
+		return JExpr.ref(symbol.toUpperCase());
+	}
+	
+	public JExpression castTo(JExpression exp){
+		return JExpr.cast(clazz, exp);
+	}
+	
 	public JExpression getName(String symbol){
 		JExpression obj = this.getSymbolObj(symbol);
 		return JExpr.invoke(obj, "toString");

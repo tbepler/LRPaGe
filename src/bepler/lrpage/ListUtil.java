@@ -67,6 +67,7 @@ public class ListUtil {
 		return list;
 	}
 	
+	@SafeVarargs
 	public static <T> List<T> asUnmodifiableList(T ... es){
 		return Collections.unmodifiableList(Arrays.asList(es));
 	}

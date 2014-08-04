@@ -123,7 +123,7 @@ public class NodeGenerator {
 	 * @return
 	 */
 	public JClass getNodeInterface(){
-		return framework.getNodeInterface();
+		return framework.getNodeInterface().narrow(visitorInterface);
 	}
 	
 	/**

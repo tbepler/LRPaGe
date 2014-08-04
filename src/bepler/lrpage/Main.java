@@ -221,9 +221,9 @@ public class Main {
 		@Override
 		public String getPseudonym(String symbol) {
 			switch(symbol){
-			case "Plus": return "+";
-			case "LParen": return "(";
-			case "RParen": return ")";
+			case "Plus": return "'+'";
+			case "LParen": return "'('";
+			case "RParen": return "')'";
 			default: return null;
 			}
 		}

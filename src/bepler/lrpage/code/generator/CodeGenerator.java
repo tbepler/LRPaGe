@@ -32,13 +32,13 @@ public class CodeGenerator {
 			NodeGenerator nodeGen = new NodeGenerator(symbols, pckg, model, f, symGen);
 			TokenFactoryGenerator tokenFac = new TokenFactoryGenerator(pckg, model, nodeGen,
 					symGen, g, f);
-			//parserGen = new ParserGenerator(symbols, pckg, model,
-			//		lexerGen, nodeGen);
+			ParsingEngineGenerator eng = new ParsingEngineGenerator(symbols, pckg,
+					model, f, nodeGen, symGen);
 			
 			JDefinedClass printVisitor = MainGenerator.generatePrintVisitor(
 					pckg, model, nodeGen.getVisitorInterface(),
 					nodeGen.getTokenNodeClasses());
-			MainGenerator.generateMain(pckg, model, f, nodeGen, printVisitor, tokenFac);
+			MainGenerator.generateMain(pckg, model, f, nodeGen, printVisitor, tokenFac, eng);
 			
 		} catch (JClassAlreadyExistsException e) {
 			throw new RuntimeException(e);

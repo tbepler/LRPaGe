@@ -18,6 +18,7 @@ public class Framework {
 	
 	private final JClass errorRepair;
 	private final JClass excErrorRepair;
+	private final JClass burkeFischerRepair;
 	private final JClass lexer;
 	private final JClass node;
 	private final JClass parser;
@@ -32,6 +33,7 @@ public class Framework {
 		JPackage pack = model._package(pckg == null ? "" : pckg+".framework");
 		errorRepair = toStaticJClass(pack, ErrorRepair.class);
 		excErrorRepair = toStaticJClass(pack, ExceptionErrorRepair.class);
+		burkeFischerRepair = toStaticJClass(pack, BurkeFischerErrorRepair.class);
 		lexer = toStaticJClass(pack, Lexer.class);
 		node = toStaticJClass(pack, Node.class);
 		parser = toStaticJClass(pack, Parser.class);
@@ -92,6 +94,10 @@ public class Framework {
 	
 	public JClass getLexerClass(){
 		return lexer;
+	}
+	
+	public JClass getBurkeFischerRepairClass(){
+		return burkeFischerRepair;
 	}
 	
 	public JClass getExceptionErrorRepairClass(){
