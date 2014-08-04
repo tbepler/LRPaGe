@@ -156,7 +156,7 @@ public class Main {
 		public String getName() {
 			return "IdExp";
 		}
-
+		/*
 		@Override
 		public int[] ignoreSymbols() {
 			return new int[]{};
@@ -166,7 +166,7 @@ public class Main {
 		public int replace() {
 			return -1;
 		}
-		
+		*/
 	}
 	
 	public static class PlusExpRule implements Rule{
@@ -175,8 +175,8 @@ public class Main {
 		@Override public Integer getPriority(){ return null; }
 		@Override public Assoc getAssoc(){ return Assoc.LEFT; }
 		@Override public String getName(){ return "PlusExp"; }
-		@Override public int[] ignoreSymbols(){ return new int[]{1}; }
-		@Override public int replace(){ return -1; }
+		//@Override public int[] ignoreSymbols(){ return new int[]{1}; }
+		//@Override public int replace(){ return -1; }
 	}
 	
 	public static class ParenExpRule implements Rule{
@@ -185,8 +185,8 @@ public class Main {
 		@Override public Integer getPriority(){ return null; }
 		@Override public Assoc getAssoc(){ return Assoc.NON; }
 		@Override public String getName(){ return "ParenExp"; }
-		@Override public int[] ignoreSymbols(){ return new int[]{}; }
-		@Override public int replace(){ return 1; }
+		//@Override public int[] ignoreSymbols(){ return new int[]{}; }
+		//@Override public int replace(){ return 1; }
 	}
 	
 	/*
