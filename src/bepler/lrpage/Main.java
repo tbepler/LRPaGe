@@ -60,6 +60,13 @@ public class Main {
 		@Override public boolean isPunctuation() { return true; }
 	}
 	
+	public static class Semicolon implements Terminal{
+		@Override public String getRegex(){ return ";"; }
+		@Override public String getSymbol(){ return "Semicolon"; }
+		@Override public int getPriority(){ return 0; }
+		@Override public boolean isPunctuation() { return true; }
+	}
+	
 	public static class Id implements Terminal{
 
 		@Override
@@ -185,8 +192,30 @@ public class Main {
 		@Override public Integer getPriority(){ return null; }
 		@Override public Assoc getAssoc(){ return Assoc.NON; }
 		@Override public String getName(){ return "ParenExp"; }
-		//@Override public int[] ignoreSymbols(){ return new int[]{}; }
-		//@Override public int replace(){ return 1; }
+	}
+	
+	public static class ExpStmt implements Rule{
+		@Override public String leftHandSide(){ return "Stmt"; }
+		@Override public String[] rightHandSide(){ return new String[]{"Exp", "Semicolon"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.NON; }
+		@Override public String getName(){ return "ExpStmt"; }
+	}
+	
+	public static class StmtListHead implements Rule{
+		@Override public String leftHandSide(){ return "StmtList"; }
+		@Override public String[] rightHandSide(){ return new String[]{"Stmt"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.NON; }
+		@Override public String getName(){ return "StmtListHead"; }
+	}
+	
+	public static class StmtList implements Rule{
+		@Override public String leftHandSide(){ return "StmtList"; }
+		@Override public String[] rightHandSide(){ return new String[]{"StmtList","Stmt"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.NON; }
+		@Override public String getName(){ return "StmtList"; }
 	}
 	
 	/*
@@ -205,12 +234,12 @@ public class Main {
 
 		@Override
 		public List<Rule> getRules() {
-			return Arrays.asList(new PlusExpRule(), new IdExpRule(), new ParenExpRule());
+			return Arrays.asList(new StmtList(), new StmtListHead(), new ExpStmt(), new PlusExpRule(), new IdExpRule(), new ParenExpRule());
 		}
 
 		@Override
 		public List<Terminal> getTokens() {
-			return Arrays.asList(new True(), new LParen(), new RParen(), new Id(), new Plus(), new IgnoreTest(), new ErrorChar());
+			return Arrays.asList(new True(), new LParen(), new RParen(), new Id(), new Semicolon(), new Plus(), new IgnoreTest(), new ErrorChar());
 		}
 
 		@Override
@@ -224,6 +253,7 @@ public class Main {
 			case "Plus": return "'+'";
 			case "LParen": return "'('";
 			case "RParen": return "')'";
+			case "Semicolon": return "';'";
 			default: return null;
 			}
 		}

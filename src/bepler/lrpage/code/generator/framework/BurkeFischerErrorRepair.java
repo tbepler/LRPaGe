@@ -38,7 +38,15 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		Symbol[] expected = eng.expectedSymbols(s.curState());
 		printErrorMessage(lookahead, expected);
 		
+		lexer.mark();
 		Repair<V> best = null;
+		Repair<V> insertion = tryInsertions(revert, history, lexer, eng);
+		if(meetsStopCriteria(insertion)){
+			return acceptRepair(insertion, history, lexer);
+		}
+		if(insertion.dist >= 0 && insertion.compareTo(best) > 0){
+			best = insertion;
+		}
 		Repair<V> deletion = tryDeletions(revert, history, lexer, eng);
 		if(meetsStopCriteria(deletion)){
 			return acceptRepair(deletion, history, lexer);
@@ -53,13 +61,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		if(replacement.dist >= 0 && replacement.compareTo(best) > 0){
 			best = replacement;
 		}
-		Repair<V> insertion = tryInsertions(revert, history, lexer, eng);
-		if(meetsStopCriteria(insertion)){
-			return acceptRepair(insertion, history, lexer);
-		}
-		if(insertion.dist >= 0 && insertion.compareTo(best) > 0){
-			best = insertion;
-		}
+		lexer.unmark();
 		
 		if(best == null){
 			//this should not happen
@@ -124,7 +126,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		TokenFactory<V> fac = lexer.getTokenFactory();
 		Repair<V> best = null;
 		Modification<V> mod;
-		for( int i = 0 ; i < tokens.size() ; ++i ){
+		for( int i = tokens.size() - 1 ; i >= 0 ; --i ){
 			for( int j = 0 ; j < fac.size() ; ++j ){
 				Token<V> insert = fac.build(j);
 				if(insert != null){
@@ -150,7 +152,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		TokenFactory<V> fac = lexer.getTokenFactory();
 		Repair<V> best = null;
 		Modification<V> mod;
-		for( int i = 0 ; i < tokens.size() ; ++i ){
+		for( int i = tokens.size() - 1 ; i >= 0 ; --i ){
 			for( int j = 0 ; j < fac.size() ; ++j ){
 				Token<V> insert = fac.build(j);
 				if(insert != null){
@@ -176,7 +178,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 	
 		Repair<V> best = null;
 		Modification<V> mod;
-		for( int i = 0 ; i < tokens.size() ; ++i ){
+		for( int i = tokens.size() - 1 ; i >= 0 ; --i ){
 			Token<V> t = tokens.remove(i);
 			mod = new Modification<V>(ModTypes.DELETION, i, t);
 			Repair<V> repair = tryModification(s, tokens, mod, lexer, eng);
@@ -199,7 +201,6 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		int dist = -tokens.size();
 		boolean complete = false;
 		boolean fin = false;
-		lexer.mark();
 		while(!fin){
 			Token<V> next;
 			if(dist < 0){
@@ -238,7 +239,6 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		}
 		int pos = lexer.getPos();
 		lexer.reset();
-		lexer.unmark();
 		return new Repair<V>(parse, dist, complete, pos, mod);
 	}
 	
