@@ -23,7 +23,6 @@ public class MainGenerator {
 	
 	private static final String MAIN = "Main";
 	private static final String PRINT_VISITOR = "PrintVisitor";
-	private static final String DEFAULT_ERROR_HANDLER = "DefaultParserErrorHandler";
 	
 	/**
 	 * Generates a main class with main method for testing the generated parser and lexer
@@ -41,7 +40,7 @@ public class MainGenerator {
 	 */
 	public static void generateMain(String pckg, JCodeModel model,
 			Framework f, NodeGenerator nodes, JDefinedClass printVisitor,
-			TokenFactoryGenerator tokenFac)
+			TokenFactoryGenerator tokenFac, ParsingEngineGenerator parseEng)
 			throws JClassAlreadyExistsException{
 		String name = pckg == null ? MAIN : pckg+"."+MAIN;
 		JDefinedClass mainClass = model._class(name);
@@ -53,7 +52,11 @@ public class MainGenerator {
 		JVar visitor = body.decl(nodes.getVisitorInterface(), "visitor", JExpr._new(printVisitor));
 		JVar fac = body.decl(f.getTokenFactoryInterface().narrow(nodes.getVisitorInterface()),
 				"factory", tokenFac.newTokenFactory());
-		//JVar parse = body.decl(parseGen.getParserClass(), "parser", JExpr._new(parseGen.getParserClass()));
+		JVar parse = body.decl(
+				f.getParserClass().narrow(nodes.getVisitorInterface()),
+				"parser",
+				JExpr._new(f.getParserClass().narrow(nodes.getVisitorInterface()))
+						.arg(JExpr._new(parseEng.getParsingEngine())));
 		JVar str = body.decl(model.ref(String.class), "line");
 		body.decl(model.ref(BufferedReader.class), "reader", JExpr._new(model.ref(BufferedReader.class))
 				.arg(JExpr._new(model.ref(InputStreamReader.class)).arg(model.ref(System.class).staticRef("in"))));
@@ -66,9 +69,14 @@ public class MainGenerator {
 		loop.body()._while(JExpr.invoke(lex, "hasNext")).body()
 			.invoke(model.ref(System.class).staticRef("out"), "print").arg(JExpr.invoke(lex, "nextToken").plus(JExpr.lit(" ")));
 		loop.body().invoke(model.ref(System.class).staticRef("out"), "println");
-		//loop.body().assign(lex, JExpr._new(lexer).arg(str));
-		//JVar node = loop.body().decl(abstractNode, "tree", JExpr.invoke(parse, "parse").arg(lex).arg(errorHandler));
-		//loop.body()._if(node.ne(JExpr._null()))._then().invoke(node, "accept").arg(visitor);
+		loop.body().assign(lex, JExpr._new(f.getLexerClass().narrow(nodes.getVisitorInterface())).arg(str).arg(fac));
+		JVar node = loop.body().decl(
+				f.getNodeInterface().narrow(nodes.getVisitorInterface()),
+				"root",
+				JExpr.invoke(parse, "parse").arg(lex).arg(
+						JExpr._new(f.getBurkeFischerRepairClass().narrow(nodes.getVisitorInterface()))
+								.arg(JExpr.lit(10)).arg(JExpr.lit(4))));
+		loop.body()._if(node.ne(JExpr._null()))._then().invoke(node, "accept").arg(visitor);
 		
 	}
 	

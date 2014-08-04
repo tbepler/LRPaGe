@@ -20,7 +20,12 @@ public class Parser<V> {
         boolean error = false;
         boolean fin = false;
         while (!fin) {
-        	Token<V> lookahead = lexer.nextToken();
+        	Token<V> lookahead;
+        	if(lexer.hasNext()){
+        		lookahead = lexer.nextToken();
+        	}else{
+        		break;
+        	}
         	switch(eng.advance(stack, lookahead)){
 			case COMPLETE:
 				fin = true;
