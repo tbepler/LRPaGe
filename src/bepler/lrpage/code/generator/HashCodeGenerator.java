@@ -48,12 +48,10 @@ public class HashCodeGenerator {
 		//define variable for hash value to return
 	    JVar hash= jBlock.decl(model.INT, "hash", JExpr.lit(initPrime));
 	    for(JVar f:fields){
-    		hash.mul(JExpr.lit(incPrime));
-    		hash.plus(JExpr.lit(f.hashCode()));
+    		jBlock.assign(hash, hash.mul(JExpr.lit(incPrime).plus(JExpr.invoke(f, "hashCode"))));
 	    }
     	for(JInvocation m:methods){
-    		hash.mul(JExpr.lit(incPrime));
-    		hash.plus(JExpr.lit(m.hashCode()));
+    		jBlock.assign(hash, hash.mul(JExpr.lit(incPrime).plus(JExpr.invoke(m, "hashCode"))));
     	}
 		hashCode.body()._return(hash);
 		return hashCode;

@@ -8,6 +8,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -33,27 +34,28 @@ public class EqualsGenerator {
 	
 	
 	public JMethod define(JDefinedClass clazz){
-		JCodeModel model= clazz.owner();
+		JCodeModel model= clazz.owner(
 		JMethod equals= clazz.method(JMod.PUBLIC, boolean.class, "equals");
 		equals.annotate(Override.class);
 		JVar o = equals.param(Object.class, "o");
 		
 		JBlock jBlock = equals.body();
-	    JVar ret= jBlock.decl(model.BOOLEAN, "ret", JExpr.TRUE);
-	    
+		
 		//if objects are the same, return true
-		JConditional sameObj= jBlock._if(JExpr._this().eq(o));
+		JConditional sameObj = jBlock._if(JExpr.invoke(JExpr._this(), "equals").arg(o));
+		//JConditional sameObj= jBlock._if(JExpr._this().eq(o));
 		sameObj._then()._return(JExpr.lit(true));
 		//if object is null, return false
-		JConditional nullObj= jBlock._if(o.eq(null));
+		JConditional nullObj= jBlock._if(JExpr.invoke(o, "equals").arg(JExpr._null()));
 		nullObj._then()._return(JExpr.lit(false));
 		//if object is not instance of same class, return false
-		JConditional notInstOf = jBlock._if(JExpr.lit(JExpr._this().getClass().equals(o.getClass())).not());
+		JConditional notInstOf = jBlock._if(o._instanceof(clazz).not());
 		notInstOf._then()._return(JExpr.lit(false));
 		
+		JVar castResult = jBlock.decl(clazz, "castResult", JExpr.cast(clazz, o));
 		//compare field values
 		for(JVar f:fields){
-			JConditional notEq= jBlock._if(JExpr.lit(JExpr._this().ref(f).equals(o.ref(f).not())));
+			JConditional notEq= jBlock._if(JExpr.invoke(JExpr._this().ref(f), "equals").arg(castResult.ref(f)).not());
 			notEq._then()._return(JExpr.lit(false));
 		}
 		

@@ -410,21 +410,15 @@ public class NodeGenerator {
 		}
 		
 		HashCodeGenerator h= new HashCodeGenerator();
-		StringGenerator s= new StringGenerator();
 		EqualsGenerator e= new EqualsGenerator();
+		//StringGenerator s= new StringGenerator();
 		for(JVar f:concreteNode.fields().values()){
 			h.appendField(f);
-			s.appendField(f);
 			e.appendField(f);
+			//s.appendField(f);
 		}
-		for(JMethod m:concreteNode.methods()){
-			h.appendMethod(JExpr.invoke(m));
-			s.appendMethod(JExpr.invoke(m));
-			e.appendMethod(JExpr.invoke(m));
-		}
-		
+		//s.define(concreteNode);
 		h.define(concreteNode);
-		s.define(concreteNode);
 		e.define(concreteNode);
 		
 		return concreteNode;

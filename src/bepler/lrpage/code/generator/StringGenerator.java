@@ -36,12 +36,12 @@ public class StringGenerator {
 		JBlock jBlock = toString.body();
 		JVar string= jBlock.decl(model._ref(String.class), "string", JExpr.lit(""));
 	    for(JVar f:fields){
-    		string.plus(JExpr.lit(f.toString()));
+    		jBlock.assign(string, string.plus(JExpr.lit(" ").plus(JExpr.invoke(f, "toString"))));
 	    }
     	for(JInvocation m:methods){
-    		string.plus(JExpr.lit(m.toString()));
+    		jBlock.assign(string, string.plus(JExpr.lit(" ").plus(JExpr.invoke(m, "toString"))));
     	}
-		toString.body()._return(string);
+		toString.body()._return(JExpr.invoke(string, "trim"));
 		return toString;
 	}
 }
