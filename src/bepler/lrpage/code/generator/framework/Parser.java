@@ -24,6 +24,7 @@ public class Parser<V> {
         	if(lexer.hasNext()){
         		lookahead = lexer.nextToken();
         	}else{
+        		//error
         		break;
         	}
         	switch(eng.advance(stack, lookahead)){

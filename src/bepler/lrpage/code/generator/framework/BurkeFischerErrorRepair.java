@@ -43,21 +43,21 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		if(meetsStopCriteria(deletion)){
 			return acceptRepair(deletion, history, lexer);
 		}
-		if(deletion.dist >= k && deletion.compareTo(best) > 0){
+		if(deletion.dist >= 0 && deletion.compareTo(best) > 0){
 			best = deletion;
 		}
 		Repair<V> replacement = tryReplacements(revert, history, lexer, eng);
 		if(meetsStopCriteria(replacement)){
 			return acceptRepair(replacement, history, lexer);
 		}
-		if(replacement.dist >= k && replacement.compareTo(best) > 0){
+		if(replacement.dist >= 0 && replacement.compareTo(best) > 0){
 			best = replacement;
 		}
 		Repair<V> insertion = tryInsertions(revert, history, lexer, eng);
 		if(meetsStopCriteria(insertion)){
 			return acceptRepair(insertion, history, lexer);
 		}
-		if(insertion.dist >= k && insertion.compareTo(best) > 0){
+		if(insertion.dist >= 0 && insertion.compareTo(best) > 0){
 			best = insertion;
 		}
 		
@@ -100,21 +100,22 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 	}
 	
 	private void printSuggestion(Repair<V> repair, List<Token<V>> tokens){
-		System.err.print("Suggested change: ");
+		System.err.print("Suggestion: ");
 		Modification<V> mod = repair.mod;
 		switch(mod.type){
 		case DELETION:
-			System.err.println("delete ["+mod.token.getLine()+":"+mod.token.getPos()+"] "+mod.token);
+			System.err.println("["+mod.token.getLine()+":"+mod.token.getPos()+"] delete "+mod.token);
 			break;
 		case INSERTION:
 			Token<V> before = tokens.get(mod.index);
-			System.err.println("insert "+mod.token.symbol()+" before ["+before.getLine()+":"+before.getPos()+"] "+before);
+			System.err.println("["+before.getLine()+":"+before.getPos()+"] insert "+mod.token.symbol()+" before "+before);
 			break;
 		case REPLACEMENT:
 			Token<V> replaced = tokens.get(mod.index);
-			System.err.println("replace ["+replaced.getLine()+":"+replaced.getPos()+"] "+replaced+" with "+mod.token.symbol());
+			System.err.println("["+replaced.getLine()+":"+replaced.getPos()+"] replace "+replaced+" with "+mod.token.symbol());
 			break;
 		}
+		System.err.println();
 	}
 	
 	private Repair<V> tryInsertions(Stack<V> s, List<Token<V>> tokens, Lexer<V> lexer,
@@ -195,12 +196,20 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 			Lexer<V> lexer, ParsingEngine<V> eng) throws IOException{
 		
 		Parse<V> parse = new Parse<V>(s);
-		int dist = 0;
+		int dist = -tokens.size();
 		boolean complete = false;
 		boolean fin = false;
 		lexer.mark();
 		while(!fin){
-			Token<V> next = dist < tokens.size() ? tokens.get(dist) : lexer.nextToken();
+			Token<V> next;
+			if(dist < 0){
+				next = tokens.get(dist + tokens.size());
+			}else if(lexer.hasNext()){
+				next = lexer.nextToken();
+			}else{
+				//error
+				break;
+			}
 			++dist;
 			Stack<V> cur = parse.peekLast().clone();
 			int pos;
@@ -238,7 +247,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 	}
 	
 	private boolean meetsStopCriteria(int dist){
-		return s >= 0 && dist >= (s+k);
+		return s >= 0 && dist >= s;
 	}
 	
 	private static class Repair<V> implements Comparable<Repair<V>>{
