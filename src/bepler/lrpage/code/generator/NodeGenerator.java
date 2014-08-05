@@ -237,9 +237,6 @@ public class NodeGenerator {
 				framework.getTokenClass().narrow(visitorInterface));
 		CodeGenerator.appendJDocHeader(node);
 		
-		//add method to the visitor for visiting this node
-		JMethod visit = this.addVisitableNode(node);
-		
 		//add constructor that defines the text, line, and pos fields
 		JMethod cons = node.constructor(JMod.PUBLIC);
 		cons.body().invoke("super").arg(cons.param(String.class, "text"))
@@ -249,10 +246,16 @@ public class NodeGenerator {
 		cons = node.constructor(JMod.PUBLIC);
 		cons.body().invoke("super");
 		
-		//override accept method to call visitor.visit(this)
+		//override accept method to call visitor.visit(this) if this is not punctuation
 		JMethod accept = node.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.annotate(Override.class);
-		accept.body().invoke(accept.param(this.visitorInterface, "visitor"), visit).arg(JExpr._this());
+		if(!symbols.isPunctuation(symbol)){
+			JMethod visit = this.addVisitableNode(node);
+			accept.body().invoke(accept.param(this.visitorInterface, "visitor"), visit).arg(JExpr._this());
+		}else{
+			accept.param(this.visitorInterface, "visitor");
+			accept.body().directStatement("//do nothing");
+		}
 		
 		//override type method to return the enumerated type of this symbol
 		JMethod type = node.method(JMod.PUBLIC, framework.getSymbolInterface(), TYPE);

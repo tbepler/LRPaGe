@@ -8,17 +8,28 @@ import bepler.lrpage.grammar.Terminal;
 
 public enum Terminals implements Terminal{
 	
-	Definition( "=" , true ),
-	Concatenation( "," , true ),
-	Termination( ";" , true ),
-	Alternation( "|" , true ),
-	StartOption( "[" , true ),
-	EndOption( "]" , true ),
-	StartRepetition( "{" , true ),
-	EndRepetition( "}" , true ),
-	StartGrouping( "\\(" , true ),
-	EndGrouping( "\\)" , true ),
-	TerminalString( "(['\"])" , false); //TODO
+	Definition( "=" , true , "=" ),
+	Concatenation( "," , true, "," ),
+	Termination( ";" , true , ";" ),
+	Alternation( "\\|" , true, "|" ),
+	StartOption( "\\[" , true, "[" ),
+	EndOption( "\\]" , true, "]" ),
+	StartRepetition( "\\{" , true, "{" ),
+	EndRepetition( "\\}" , true, "}" ),
+	StartGrouping( "\\(" , true, "(" ),
+	EndGrouping( "\\)" , true, ")" ),
+	Bang( "!", true, "!" ),
+	Special( "#" , true, "#" ),
+	TokensKeyword ( "Tokens" , true, "Tokens" ),
+	IgnoreKeyword ( "Ignore" , true, "Ignore" ),
+	RulesKeyword ( "Rules" , true, "Rules" ),
+	StartBlock ( ":" ,  true, ":" ),
+	Identifier( "[a-zA-Z][a-zA-Z0-9_]*" , false ),
+	TerminalString( "(['\"])(?:\\\\.|(?!\\1).)*\\1" , false ),
+	Comment( "\\(\\*.*\\*\\)" , false , true ),
+	Whitespace( "\\s+" , false , true ),
+	Error( "." , false )
+	;
 	
 	public static List<Terminal> asList(){
 		return Collections.unmodifiableList(Arrays.<Terminal>asList(Terminals.values()));
@@ -26,14 +37,39 @@ public enum Terminals implements Terminal{
 	
 	private final String regex;
 	private final boolean punctuation;
+	private final boolean ignored;
+	private final String psuedonym;
 	
-	private Terminals(String regex, boolean punctuation){
+	private Terminals(String regex, boolean punctuation, boolean ignored, String pseudonym){
 		this.regex = regex;
 		this.punctuation = punctuation;
+		this.ignored = ignored;
+		this.psuedonym = pseudonym;
+	}
+	
+	private Terminals(String regex, boolean punctuation, boolean ignored){
+		this(regex, punctuation, ignored, null);
+	}
+	
+	private Terminals(String regex, boolean punctuation, String pseudonym){
+		this(regex, punctuation, false, pseudonym);
+	}
+	
+	private Terminals(String regex, boolean punctuation){
+		this(regex, punctuation, false);
 	}
 	
 	private Terminals(String regex){
 		this(regex, false);
+	}
+	
+	public static String pseudonym(String symbol){
+		try{
+			Terminals t = Terminals.valueOf(symbol);
+			return t.psuedonym;
+		} catch (IllegalArgumentException e){
+			return null;
+		}
 	}
 	
 	@Override
@@ -43,6 +79,9 @@ public enum Terminals implements Terminal{
 
 	@Override
 	public String getSymbol() {
+		if(ignored){
+			return null;
+		}
 		return this.toString();
 	}
 

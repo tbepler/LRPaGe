@@ -67,6 +67,13 @@ public class Main {
 		@Override public boolean isPunctuation() { return true; }
 	}
 	
+	public static class StrLit implements Terminal{
+		@Override public String getRegex(){ return "(['\"])(?:\\\\.|(?!\\1).)*\\1"; }
+		@Override public String getSymbol(){ return "Str"; }
+		@Override public int getPriority(){ return 0; }
+		@Override public boolean isPunctuation() { return false; }
+	}
+	
 	public static class Id implements Terminal{
 
 		@Override
@@ -176,6 +183,14 @@ public class Main {
 		*/
 	}
 	
+	public static class StrExpRule implements Rule{
+		@Override public String leftHandSide(){ return "Exp"; }
+		@Override public String[] rightHandSide(){ return new String[]{"Str"}; }
+		@Override public Integer getPriority(){ return null; }
+		@Override public Assoc getAssoc(){ return Assoc.NON; }
+		@Override public String getName(){ return "StrExp"; }
+	}
+	
 	public static class PlusExpRule implements Rule{
 		@Override public String leftHandSide(){ return "Exp"; }
 		@Override public String[] rightHandSide(){ return new String[]{"Exp","Plus","Exp"}; }
@@ -234,12 +249,30 @@ public class Main {
 
 		@Override
 		public List<Rule> getRules() {
-			return Arrays.asList(new StmtList(), new StmtListHead(), new ExpStmt(), new PlusExpRule(), new IdExpRule(), new ParenExpRule());
+			return Arrays.asList(
+					new StmtList(),
+					new StmtListHead(),
+					new ExpStmt(),
+					new PlusExpRule(),
+					new IdExpRule(),
+					new StrExpRule(),
+					new ParenExpRule()
+					);
 		}
 
 		@Override
 		public List<Terminal> getTokens() {
-			return Arrays.asList(new True(), new LParen(), new RParen(), new Id(), new Semicolon(), new Plus(), new IgnoreTest(), new ErrorChar());
+			return Arrays.asList(
+					new True(),
+					new LParen(),
+					new RParen(),
+					new StrLit(),
+					new Id(),
+					new Semicolon(),
+					new Plus(),
+					new IgnoreTest(),
+					new ErrorChar()
+					);
 		}
 
 		@Override
