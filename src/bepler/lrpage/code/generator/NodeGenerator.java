@@ -415,6 +415,18 @@ public class NodeGenerator {
 		}
 		*/
 		
+		HashCodeGenerator h= new HashCodeGenerator();
+		EqualsGenerator e= new EqualsGenerator();
+		//StringGenerator s= new StringGenerator();
+		for(JVar f:concreteNode.fields().values()){
+			h.appendField(f);
+			e.appendField(f);
+			//s.appendField(f);
+		}
+		//s.define(concreteNode);
+		h.define(concreteNode);
+		e.define(concreteNode);
+		
 		return concreteNode;
 		
 	}
