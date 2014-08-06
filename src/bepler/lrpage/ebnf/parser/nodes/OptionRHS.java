@@ -33,12 +33,7 @@ public class OptionRHS
 
     @Override
     public void accept(Visitor visitor) {
-        //do nothing
-    }
-
-    @Override
-    public RHSAbstractNode replace() {
-        return rhs0;
+        visitor.visit(this);
     }
 
 }

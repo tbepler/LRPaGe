@@ -11,6 +11,7 @@ import bepler.lrpage.ebnf.parser.nodes.EmptySymbol;
 import bepler.lrpage.ebnf.parser.nodes.ErrorToken;
 import bepler.lrpage.ebnf.parser.nodes.GrammarAppendBlock;
 import bepler.lrpage.ebnf.parser.nodes.GrammarStartBlock;
+import bepler.lrpage.ebnf.parser.nodes.GroupRHS;
 import bepler.lrpage.ebnf.parser.nodes.IdSymbol;
 import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
 import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
@@ -18,10 +19,12 @@ import bepler.lrpage.ebnf.parser.nodes.IntToken;
 import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
 import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
+import bepler.lrpage.ebnf.parser.nodes.OptionRHS;
 import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
 import bepler.lrpage.ebnf.parser.nodes.PrecDirectiveBlock;
 import bepler.lrpage.ebnf.parser.nodes.PrecRHS;
 import bepler.lrpage.ebnf.parser.nodes.PriorityDirective;
+import bepler.lrpage.ebnf.parser.nodes.RepRHS;
 import bepler.lrpage.ebnf.parser.nodes.RightAssoc;
 import bepler.lrpage.ebnf.parser.nodes.RuleDecl;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclBlock;
@@ -228,6 +231,36 @@ public class PrintVisitor
         this.print("{");
         depth = (depth + 1);
         node.symbol0 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(OptionRHS node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.rhs0 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(RepRHS node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.rhs0 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(GroupRHS node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.rhs0 .accept(this);
         depth = (depth- 1);
         this.print("}");
     }
