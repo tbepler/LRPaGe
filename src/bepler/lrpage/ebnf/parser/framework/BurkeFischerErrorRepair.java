@@ -1,4 +1,4 @@
-package bepler.lrpage.code.generator.framework;
+package bepler.lrpage.ebnf.parser.framework;
 
 import java.io.IOException;
 import java.util.ArrayDeque;

@@ -46,7 +46,8 @@ public interface Rule {
 	 * not ignored.
 	 * @return
 	 */
-	public int[] ignoreSymbols();
+	//public int[] ignoreSymbols();
+	
 	
 	/**
 	 * An int indicating the index of a right hand side symbol
@@ -57,6 +58,6 @@ public interface Rule {
 	 * indicates that no replacement should occur.
 	 * @return
 	 */
-	public int replace();
+	//public int replace();
 
 }

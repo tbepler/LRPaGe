@@ -237,9 +237,6 @@ public class NodeGenerator {
 				framework.getTokenClass().narrow(visitorInterface));
 		CodeGenerator.appendJDocHeader(node);
 		
-		//add method to the visitor for visiting this node
-		JMethod visit = this.addVisitableNode(node);
-		
 		//add constructor that defines the text, line, and pos fields
 		JMethod cons = node.constructor(JMod.PUBLIC);
 		cons.body().invoke("super").arg(cons.param(String.class, "text"))
@@ -249,10 +246,16 @@ public class NodeGenerator {
 		cons = node.constructor(JMod.PUBLIC);
 		cons.body().invoke("super");
 		
-		//override accept method to call visitor.visit(this)
+		//override accept method to call visitor.visit(this) if this is not punctuation
 		JMethod accept = node.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.annotate(Override.class);
-		accept.body().invoke(accept.param(this.visitorInterface, "visitor"), visit).arg(JExpr._this());
+		if(!symbols.isPunctuation(symbol)){
+			JMethod visit = this.addVisitableNode(node);
+			accept.body().invoke(accept.param(this.visitorInterface, "visitor"), visit).arg(JExpr._this());
+		}else{
+			accept.param(this.visitorInterface, "visitor");
+			accept.body().directStatement("//do nothing");
+		}
 		
 		//override type method to return the enumerated type of this symbol
 		JMethod type = node.method(JMod.PUBLIC, framework.getSymbolInterface(), TYPE);
@@ -362,18 +365,22 @@ public class NodeGenerator {
 		//define constructor and fields
 		JMethod cons= concreteNode.constructor(JMod.PUBLIC);
 		String[] rhs= r.rightHandSide();
-		Map<Integer, JVar> fieldInd= new HashMap<Integer, JVar>();
-		int[] ignore= r.ignoreSymbols();
+		//Map<Integer, JVar> fieldInd= new HashMap<Integer, JVar>();
+		//int[] ignore= r.ignoreSymbols();
 		JVar firstField = null;
+		int fields = 0;
+		String firstSymbol = null;
 		for(int i=0;i<rhs.length;i++){
-			JDefinedClass clazz= lookupNodeClass(rhs[i]);
-			JVar param= cons.param(clazz, "node"+i);
-			if(!contains(ignore, i)){
-				JVar field= concreteNode.field(JMod.PUBLIC+JMod.FINAL, clazz, "f"+i);
+			String symbol = rhs[i];
+			JDefinedClass clazz= lookupNodeClass(symbol);
+			JVar param= cons.param(clazz, symbol.toLowerCase()+i);
+			
+			if(!symbols.isPunctuation(symbol)){
+				JVar field= concreteNode.field(JMod.PUBLIC+JMod.FINAL, clazz, symbol.toLowerCase()+(fields++));
 				if(firstField == null){
 					firstField = field;
+					firstSymbol = symbol;
 				}
-				fieldInd.put(i, field);
 				cons.body().assign(JExpr._this().ref(field), param);
 			}
 		}
@@ -387,26 +394,21 @@ public class NodeGenerator {
 		pos.annotate(Override.class);
 		pos.body()._return(JExpr.invoke(firstField, "getPos"));
 		
+		boolean replace = fields == 1 && lhs.equals(firstSymbol);
+		
 		//define accept method
 		JMethod accept= concreteNode.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.annotate(Override.class);
 		JVar visitor= accept.param(visitorInterface, "visitor");
-		if(r.replace() < 0){ //if not replaced, define visit method on visitor and accept to call that method
+		if(!replace){ //if not replaced, define visit method on visitor and accept to call that method
 			JMethod visit= addVisitableNode(concreteNode);
 			accept.body().invoke(visitor, visit).arg(JExpr._this());
-		}else{ //if replaced, make accept do nothing
+		}else{ //if replaced, make accept do nothing and define the replace method
 			accept.body().directStatement("//do nothing");
-		}
-		
-		//if replace is specified, define replace method
-		if(r.replace()>=0){
-			JMethod replace= concreteNode.method(JMod.PUBLIC, asn, REPLACE);
-			replace.annotate(Override.class);
-			JVar field= fieldInd.get(r.replace());
-			if(field==null){
-				throw new NullPointerException("Replace index not found: "+r.replace()+", "+r);
-			}
-			replace.body()._return(field);
+			
+			JMethod replaceMethod= concreteNode.method(JMod.PUBLIC, asn, REPLACE);
+			replaceMethod.annotate(Override.class);
+			replaceMethod.body()._return(firstField);
 		}
 		
 		HashCodeGenerator h= new HashCodeGenerator();
@@ -448,6 +450,7 @@ public class NodeGenerator {
 	 * @param i
 	 * @return
 	 */
+	/*
 	private boolean contains(int[] array, int i){
 		for(int a:array){
 			if(a==i){
@@ -456,5 +459,5 @@ public class NodeGenerator {
 		}
 		return false;
 	}
-
+	*/
 }

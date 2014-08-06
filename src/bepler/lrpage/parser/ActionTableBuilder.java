@@ -68,7 +68,8 @@ public class ActionTableBuilder {
 			public String getName() {
 				return "S'";
 			}
-
+			
+			/*
 			@Override
 			public int[] ignoreSymbols() {
 				return new int[]{};
@@ -78,7 +79,7 @@ public class ActionTableBuilder {
 			public int replace() {
 				return -1;
 			}
-			
+			*/
 		};
 	}
 	
