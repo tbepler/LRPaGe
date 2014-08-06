@@ -6,6 +6,12 @@ import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.grammar.Terminal;
 
+/**
+ * EBNF grammar implementation.
+ * 
+ * @author Tristan Bepler
+ *
+ */
 public class EBNFGrammar implements Grammar{
 
 	@Override
