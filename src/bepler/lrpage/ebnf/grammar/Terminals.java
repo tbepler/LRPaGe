@@ -6,6 +6,12 @@ import java.util.List;
 
 import bepler.lrpage.grammar.Terminal;
 
+/**
+ * Terminals for the EBNF grammar.
+ * 
+ * @author Tristan Bepler
+ *
+ */
 public enum Terminals implements Terminal{
 	
 	Definition( "=" , true , "=" ),
