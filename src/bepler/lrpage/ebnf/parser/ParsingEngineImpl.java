@@ -8,11 +8,18 @@ import bepler.lrpage.ebnf.parser.framework.Status;
 import bepler.lrpage.ebnf.parser.framework.Symbol;
 import bepler.lrpage.ebnf.parser.nodes.AltRHS;
 import bepler.lrpage.ebnf.parser.nodes.AlternationToken;
+import bepler.lrpage.ebnf.parser.nodes.AssocAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.AssocDirective;
 import bepler.lrpage.ebnf.parser.nodes.BangToken;
 import bepler.lrpage.ebnf.parser.nodes.BlockAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.BothDirective;
 import bepler.lrpage.ebnf.parser.nodes.ConcatRHS;
 import bepler.lrpage.ebnf.parser.nodes.ConcatenationToken;
 import bepler.lrpage.ebnf.parser.nodes.DefinitionToken;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveList;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveListAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveListHead;
 import bepler.lrpage.ebnf.parser.nodes.EmptySymbol;
 import bepler.lrpage.ebnf.parser.nodes.EndGroupingToken;
 import bepler.lrpage.ebnf.parser.nodes.EndOptionToken;
@@ -24,10 +31,24 @@ import bepler.lrpage.ebnf.parser.nodes.GroupRHS;
 import bepler.lrpage.ebnf.parser.nodes.IdSymbol;
 import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
 import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
+import bepler.lrpage.ebnf.parser.nodes.IntToken;
+import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
+import bepler.lrpage.ebnf.parser.nodes.LeftKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
+import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
+import bepler.lrpage.ebnf.parser.nodes.NonKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.OptionRHS;
+import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
+import bepler.lrpage.ebnf.parser.nodes.PrecDeclAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.PrecDirectiveBlock;
+import bepler.lrpage.ebnf.parser.nodes.PrecKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.PrecRHS;
+import bepler.lrpage.ebnf.parser.nodes.PrecedenceKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.PriorityDirective;
 import bepler.lrpage.ebnf.parser.nodes.RHSAbstractNode;
 import bepler.lrpage.ebnf.parser.nodes.RepRHS;
+import bepler.lrpage.ebnf.parser.nodes.RightAssoc;
+import bepler.lrpage.ebnf.parser.nodes.RightKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.RuleDecl;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclAbstractNode;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclBlock;
@@ -41,6 +62,9 @@ import bepler.lrpage.ebnf.parser.nodes.StartGroupingToken;
 import bepler.lrpage.ebnf.parser.nodes.StartOptionToken;
 import bepler.lrpage.ebnf.parser.nodes.StartRepetitionToken;
 import bepler.lrpage.ebnf.parser.nodes.SymbolAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.SymbolList;
+import bepler.lrpage.ebnf.parser.nodes.SymbolListAbstractNode;
+import bepler.lrpage.ebnf.parser.nodes.SymbolListHead;
 import bepler.lrpage.ebnf.parser.nodes.SymbolRHS;
 import bepler.lrpage.ebnf.parser.nodes.TerminalStringToken;
 import bepler.lrpage.ebnf.parser.nodes.TerminationToken;
@@ -197,8 +221,6 @@ public class ParsingEngineImpl
                 return this.getState64Action(lookahead);
             case  65 :
                 return this.getState65Action(lookahead);
-            case  0 :
-                return this.getState0Action(lookahead);
             case  66 :
                 return this.getState66Action(lookahead);
             case  67 :
@@ -253,6 +275,82 @@ public class ParsingEngineImpl
                 return this.getState91Action(lookahead);
             case  92 :
                 return this.getState92Action(lookahead);
+            case  93 :
+                return this.getState93Action(lookahead);
+            case  94 :
+                return this.getState94Action(lookahead);
+            case  95 :
+                return this.getState95Action(lookahead);
+            case  96 :
+                return this.getState96Action(lookahead);
+            case  97 :
+                return this.getState97Action(lookahead);
+            case  98 :
+                return this.getState98Action(lookahead);
+            case  99 :
+                return this.getState99Action(lookahead);
+            case  100 :
+                return this.getState100Action(lookahead);
+            case  101 :
+                return this.getState101Action(lookahead);
+            case  102 :
+                return this.getState102Action(lookahead);
+            case  103 :
+                return this.getState103Action(lookahead);
+            case  104 :
+                return this.getState104Action(lookahead);
+            case  105 :
+                return this.getState105Action(lookahead);
+            case  0 :
+                return this.getState0Action(lookahead);
+            case  106 :
+                return this.getState106Action(lookahead);
+            case  107 :
+                return this.getState107Action(lookahead);
+            case  108 :
+                return this.getState108Action(lookahead);
+            case  109 :
+                return this.getState109Action(lookahead);
+            case  110 :
+                return this.getState110Action(lookahead);
+            case  111 :
+                return this.getState111Action(lookahead);
+            case  112 :
+                return this.getState112Action(lookahead);
+            case  113 :
+                return this.getState113Action(lookahead);
+            case  114 :
+                return this.getState114Action(lookahead);
+            case  115 :
+                return this.getState115Action(lookahead);
+            case  116 :
+                return this.getState116Action(lookahead);
+            case  117 :
+                return this.getState117Action(lookahead);
+            case  118 :
+                return this.getState118Action(lookahead);
+            case  119 :
+                return this.getState119Action(lookahead);
+            case  120 :
+                return this.getState120Action(lookahead);
+            case  121 :
+                return this.getState121Action(lookahead);
+            case  122 :
+                return this.getState122Action(lookahead);
+            case  123 :
+                return this.getState123Action(lookahead);
+            case  124 :
+                return this.getState124Action(lookahead);
+            case  125 :
+                return this.getState125Action(lookahead);
+            case  126 :
+                return this.getState126Action(lookahead);
+            case  127 :
+                return this.getState127Action(lookahead);
+            case  128 :
+                return this.getState128Action(lookahead);
+            case  129 :
+                return this.getState129Action(lookahead);
             default:
                 throw new RuntimeException("Unknown state.");
         }
@@ -262,254 +360,25 @@ public class ParsingEngineImpl
     public Status advance(Stack<Visitor> stack, Node<Visitor> lookahead) {
         ParsingEngineImpl.Actions action = getAction(stack.curState(), lookahead);
         switch (action) {
-            case SHIFT88 :
-                stack.push(lookahead, 88);
-                return Status.NOMINAL;
-            case SHIFT46 :
-                stack.push(lookahead, 46);
-                return Status.NOMINAL;
-            case REDUCE15 :
-            {
-                RHSAbstractNode field2 = ((RHSAbstractNode) stack.pop());
-                AlternationToken field1 = ((AlternationToken) stack.pop());
-                RHSAbstractNode field0 = ((RHSAbstractNode) stack.pop());
-                Node<Visitor> reduced = new AltRHS(field0, field1, field2).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT52 :
-                stack.push(lookahead, 52);
-                return Status.NOMINAL;
-            case REDUCE11 :
-            {
-                SymbolAbstractNode field0 = ((SymbolAbstractNode) stack.pop());
-                Node<Visitor> reduced = new SymbolRHS(field0).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT76 :
-                stack.push(lookahead, 76);
+            case SHIFT29 :
+                stack.push(lookahead, 29);
                 return Status.NOMINAL;
             case SHIFT34 :
                 stack.push(lookahead, 34);
                 return Status.NOMINAL;
-            case SHIFT47 :
-                stack.push(lookahead, 47);
+            case SHIFT12 :
+                stack.push(lookahead, 12);
                 return Status.NOMINAL;
-            case SHIFT19 :
-                stack.push(lookahead, 19);
+            case GOTO103 :
+                stack.push(lookahead, 103);
                 return Status.NOMINAL;
-            case SHIFT55 :
-                stack.push(lookahead, 55);
+            case SHIFT82 :
+                stack.push(lookahead, 82);
                 return Status.NOMINAL;
-            case SHIFT40 :
-                stack.push(lookahead, 40);
+            case SHIFT125 :
+                stack.push(lookahead, 125);
                 return Status.NOMINAL;
-            case SHIFT77 :
-                stack.push(lookahead, 77);
-                return Status.NOMINAL;
-            case SHIFT26 :
-                stack.push(lookahead, 26);
-                return Status.NOMINAL;
-            case SHIFT31 :
-                stack.push(lookahead, 31);
-                return Status.NOMINAL;
-            case SHIFT9 :
-                stack.push(lookahead, 9);
-                return Status.NOMINAL;
-            case REDUCE4 :
-            {
-                Node<Visitor> reduced = new TokenDeclListHead().replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case GOTO84 :
-                stack.push(lookahead, 84);
-                return Status.NOMINAL;
-            case REDUCE12 :
-            {
-                EndOptionToken field2 = ((EndOptionToken) stack.pop());
-                RHSAbstractNode field1 = ((RHSAbstractNode) stack.pop());
-                StartOptionToken field0 = ((StartOptionToken) stack.pop());
-                Node<Visitor> reduced = new OptionRHS(field0, field1, field2).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT35 :
-                stack.push(lookahead, 35);
-                return Status.NOMINAL;
-            case REDUCE17 :
-            {
-                Node<Visitor> reduced = new EmptySymbol().replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT62 :
-                stack.push(lookahead, 62);
-                return Status.NOMINAL;
-            case SHIFT13 :
-                stack.push(lookahead, 13);
-                return Status.NOMINAL;
-            case SHIFT22 :
-                stack.push(lookahead, 22);
-                return Status.NOMINAL;
-            case SHIFT68 :
-                stack.push(lookahead, 68);
-                return Status.NOMINAL;
-            case GOTO66 :
-                stack.push(lookahead, 66);
-                return Status.NOMINAL;
-            case SHIFT57 :
-                stack.push(lookahead, 57);
-                return Status.NOMINAL;
-            case GOTO32 :
-                stack.push(lookahead, 32);
-                return Status.NOMINAL;
-            case SHIFT49 :
-                stack.push(lookahead, 49);
-                return Status.NOMINAL;
-            case SHIFT29 :
-                stack.push(lookahead, 29);
-                return Status.NOMINAL;
-            case SHIFT60 :
-                stack.push(lookahead, 60);
-                return Status.NOMINAL;
-            case SHIFT92 :
-                stack.push(lookahead, 92);
-                return Status.NOMINAL;
-            case GOTO74 :
-                stack.push(lookahead, 74);
-                return Status.NOMINAL;
-            case SHIFT48 :
-                stack.push(lookahead, 48);
-                return Status.NOMINAL;
-            case GOTO87 :
-                stack.push(lookahead, 87);
-                return Status.NOMINAL;
-            case SHIFT83 :
-                stack.push(lookahead, 83);
-                return Status.NOMINAL;
-            case REDUCE6 :
-            {
-                RuleDeclAbstractNode field0 = ((RuleDeclAbstractNode) stack.pop());
-                Node<Visitor> reduced = new RuleDeclListHead(field0).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT28 :
-                stack.push(lookahead, 28);
-                return Status.NOMINAL;
-            case SHIFT20 :
-                stack.push(lookahead, 20);
-                return Status.NOMINAL;
-            case SHIFT37 :
-                stack.push(lookahead, 37);
-                return Status.NOMINAL;
-            case SHIFT56 :
-                stack.push(lookahead, 56);
-                return Status.NOMINAL;
-            case GOTO69 :
-                stack.push(lookahead, 69);
-                return Status.NOMINAL;
-            case SHIFT72 :
-                stack.push(lookahead, 72);
-                return Status.NOMINAL;
-            case GOTO63 :
-                stack.push(lookahead, 63);
-                return Status.NOMINAL;
-            case SHIFT39 :
-                stack.push(lookahead, 39);
-                return Status.NOMINAL;
-            case SHIFT91 :
-                stack.push(lookahead, 91);
-                return Status.NOMINAL;
-            case SHIFT64 :
-                stack.push(lookahead, 64);
-                return Status.NOMINAL;
-            case SHIFT18 :
-                stack.push(lookahead, 18);
-                return Status.NOMINAL;
-            case GOTO3 :
-                stack.push(lookahead, 3);
-                return Status.NOMINAL;
-            case SHIFT24 :
-                stack.push(lookahead, 24);
-                return Status.NOMINAL;
-            case GOTO59 :
-                stack.push(lookahead, 59);
-                return Status.NOMINAL;
-            case GOTO58 :
-                stack.push(lookahead, 58);
-                return Status.NOMINAL;
-            case REDUCE13 :
-            {
-                EndRepetitionToken field2 = ((EndRepetitionToken) stack.pop());
-                RHSAbstractNode field1 = ((RHSAbstractNode) stack.pop());
-                StartRepetitionToken field0 = ((StartRepetitionToken) stack.pop());
-                Node<Visitor> reduced = new RepRHS(field0, field1, field2).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
             case REDUCE19 :
-            {
-                TerminalStringToken field0 = ((TerminalStringToken) stack.pop());
-                Node<Visitor> reduced = new LitSymbol(field0).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT42 :
-                stack.push(lookahead, 42);
-                return Status.NOMINAL;
-            case ACCEPT:
-                return Status.COMPLETE;
-            case GOTO38 :
-                stack.push(lookahead, 38);
-                return Status.NOMINAL;
-            case GOTO90 :
-                stack.push(lookahead, 90);
-                return Status.NOMINAL;
-            case GOTO73 :
-                stack.push(lookahead, 73);
-                return Status.NOMINAL;
-            case SHIFT43 :
-                stack.push(lookahead, 43);
-                return Status.NOMINAL;
-            case GOTO17 :
-                stack.push(lookahead, 17);
-                return Status.NOMINAL;
-            case GOTO75 :
-                stack.push(lookahead, 75);
-                return Status.NOMINAL;
-            case SHIFT78 :
-                stack.push(lookahead, 78);
-                return Status.NOMINAL;
-            case REDUCE18 :
-            {
-                IdentifierToken field0 = ((IdentifierToken) stack.pop());
-                Node<Visitor> reduced = new IdSymbol(field0).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case GOTO27 :
-                stack.push(lookahead, 27);
-                return Status.NOMINAL;
-            case REDUCE10 :
-            {
-                TerminationToken field3 = ((TerminationToken) stack.pop());
-                RHSAbstractNode field2 = ((RHSAbstractNode) stack.pop());
-                DefinitionToken field1 = ((DefinitionToken) stack.pop());
-                IdentifierToken field0 = ((IdentifierToken) stack.pop());
-                Node<Visitor> reduced = new RuleDecl(field0, field1, field2, field3).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case SHIFT33 :
-                stack.push(lookahead, 33);
-                return Status.NOMINAL;
-            case GOTO5 :
-                stack.push(lookahead, 5);
-                return Status.NOMINAL;
-            case REDUCE16 :
             {
                 RHSAbstractNode field2 = ((RHSAbstractNode) stack.pop());
                 ConcatenationToken field1 = ((ConcatenationToken) stack.pop());
@@ -518,6 +387,180 @@ public class ParsingEngineImpl
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
+            case GOTO89 :
+                stack.push(lookahead, 89);
+                return Status.NOMINAL;
+            case GOTO67 :
+                stack.push(lookahead, 67);
+                return Status.NOMINAL;
+            case SHIFT26 :
+                stack.push(lookahead, 26);
+                return Status.NOMINAL;
+            case GOTO115 :
+                stack.push(lookahead, 115);
+                return Status.NOMINAL;
+            case SHIFT59 :
+                stack.push(lookahead, 59);
+                return Status.NOMINAL;
+            case SHIFT43 :
+                stack.push(lookahead, 43);
+                return Status.NOMINAL;
+            case SHIFT57 :
+                stack.push(lookahead, 57);
+                return Status.NOMINAL;
+            case SHIFT120 :
+                stack.push(lookahead, 120);
+                return Status.NOMINAL;
+            case GOTO109 :
+                stack.push(lookahead, 109);
+                return Status.NOMINAL;
+            case SHIFT68 :
+                stack.push(lookahead, 68);
+                return Status.NOMINAL;
+            case REDUCE12 :
+            {
+                TerminationToken field2 = ((TerminationToken) stack.pop());
+                TerminalStringToken field1 = ((TerminalStringToken) stack.pop());
+                BangToken field0 = ((BangToken) stack.pop());
+                Node<Visitor> reduced = new IgnoreTokenDecl(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE32 :
+            {
+                TerminalStringToken field0 = ((TerminalStringToken) stack.pop());
+                Node<Visitor> reduced = new LitSymbol(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE28 :
+            {
+                SymbolAbstractNode field0 = ((SymbolAbstractNode) stack.pop());
+                Node<Visitor> reduced = new SymbolListHead(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE21 :
+            {
+                SymbolAbstractNode field2 = ((SymbolAbstractNode) stack.pop());
+                PrecKeywordToken field1 = ((PrecKeywordToken) stack.pop());
+                SpecialToken field0 = ((SpecialToken) stack.pop());
+                Node<Visitor> reduced = new PrecDecl(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case GOTO87 :
+                stack.push(lookahead, 87);
+                return Status.NOMINAL;
+            case REDUCE30 :
+            {
+                Node<Visitor> reduced = new EmptySymbol().replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT88 :
+                stack.push(lookahead, 88);
+                return Status.NOMINAL;
+            case SHIFT80 :
+                stack.push(lookahead, 80);
+                return Status.NOMINAL;
+            case SHIFT94 :
+                stack.push(lookahead, 94);
+                return Status.NOMINAL;
+            case SHIFT93 :
+                stack.push(lookahead, 93);
+                return Status.NOMINAL;
+            case GOTO58 :
+                stack.push(lookahead, 58);
+                return Status.NOMINAL;
+            case SHIFT123 :
+                stack.push(lookahead, 123);
+                return Status.NOMINAL;
+            case GOTO55 :
+                stack.push(lookahead, 55);
+                return Status.NOMINAL;
+            case SHIFT53 :
+                stack.push(lookahead, 53);
+                return Status.NOMINAL;
+            case SHIFT91 :
+                stack.push(lookahead, 91);
+                return Status.NOMINAL;
+            case REDUCE18 :
+            {
+                RHSAbstractNode field2 = ((RHSAbstractNode) stack.pop());
+                AlternationToken field1 = ((AlternationToken) stack.pop());
+                RHSAbstractNode field0 = ((RHSAbstractNode) stack.pop());
+                Node<Visitor> reduced = new AltRHS(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT51 :
+                stack.push(lookahead, 51);
+                return Status.NOMINAL;
+            case SHIFT23 :
+                stack.push(lookahead, 23);
+                return Status.NOMINAL;
+            case SHIFT41 :
+                stack.push(lookahead, 41);
+                return Status.NOMINAL;
+            case SHIFT39 :
+                stack.push(lookahead, 39);
+                return Status.NOMINAL;
+            case SHIFT106 :
+                stack.push(lookahead, 106);
+                return Status.NOMINAL;
+            case SHIFT32 :
+                stack.push(lookahead, 32);
+                return Status.NOMINAL;
+            case SHIFT8 :
+                stack.push(lookahead, 8);
+                return Status.NOMINAL;
+            case SHIFT47 :
+                stack.push(lookahead, 47);
+                return Status.NOMINAL;
+            case GOTO128 :
+                stack.push(lookahead, 128);
+                return Status.NOMINAL;
+            case SHIFT56 :
+                stack.push(lookahead, 56);
+                return Status.NOMINAL;
+            case GOTO92 :
+                stack.push(lookahead, 92);
+                return Status.NOMINAL;
+            case REDUCE15 :
+            {
+                EndOptionToken field2 = ((EndOptionToken) stack.pop());
+                RHSAbstractNode field1 = ((RHSAbstractNode) stack.pop());
+                StartOptionToken field0 = ((StartOptionToken) stack.pop());
+                Node<Visitor> reduced = new OptionRHS(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT69 :
+                stack.push(lookahead, 69);
+                return Status.NOMINAL;
+            case REDUCE14 :
+            {
+                SymbolAbstractNode field0 = ((SymbolAbstractNode) stack.pop());
+                Node<Visitor> reduced = new SymbolRHS(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT96 :
+                stack.push(lookahead, 96);
+                return Status.NOMINAL;
+            case SHIFT110 :
+                stack.push(lookahead, 110);
+                return Status.NOMINAL;
+            case SHIFT49 :
+                stack.push(lookahead, 49);
+                return Status.NOMINAL;
+            case SHIFT76 :
+                stack.push(lookahead, 76);
+                return Status.NOMINAL;
+            case SHIFT20 :
+                stack.push(lookahead, 20);
+                return Status.NOMINAL;
             case REDUCE1 :
             {
                 BlockAbstractNode field1 = ((BlockAbstractNode) stack.pop());
@@ -526,47 +569,107 @@ public class ParsingEngineImpl
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
-            case SHIFT8 :
-                stack.push(lookahead, 8);
+            case SHIFT112 :
+                stack.push(lookahead, 112);
                 return Status.NOMINAL;
-            case SHIFT81 :
-                stack.push(lookahead, 81);
+            case REDUCE26 :
+            {
+                RightKeywordToken field0 = ((RightKeywordToken) stack.pop());
+                Node<Visitor> reduced = new RightAssoc(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE24 :
+            {
+                TerminationToken field2 = ((TerminationToken) stack.pop());
+                SymbolListAbstractNode field1 = ((SymbolListAbstractNode) stack.pop());
+                IntToken field0 = ((IntToken) stack.pop());
+                Node<Visitor> reduced = new PriorityDirective(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case GOTO27 :
+                stack.push(lookahead, 27);
                 return Status.NOMINAL;
-            case SHIFT14 :
+            case GOTO10 :
+                stack.push(lookahead, 10);
+                return Status.NOMINAL;
+            case SHIFT35 :
+                stack.push(lookahead, 35);
+                return Status.NOMINAL;
+            case GOTO19 :
+                stack.push(lookahead, 19);
+                return Status.NOMINAL;
+            case GOTO100 :
+                stack.push(lookahead, 100);
+                return Status.NOMINAL;
+            case SHIFT108 :
+                stack.push(lookahead, 108);
+                return Status.NOMINAL;
+            case SHIFT46 :
+                stack.push(lookahead, 46);
+                return Status.NOMINAL;
+            case GOTO77 :
+                stack.push(lookahead, 77);
+                return Status.NOMINAL;
+            case GOTO9 :
+                stack.push(lookahead, 9);
+                return Status.NOMINAL;
+            case SHIFT101 :
+                stack.push(lookahead, 101);
+                return Status.NOMINAL;
+            case SHIFT2 :
+                stack.push(lookahead, 2);
+                return Status.NOMINAL;
+            case SHIFT79 :
+                stack.push(lookahead, 79);
+                return Status.NOMINAL;
+            case SHIFT63 :
+                stack.push(lookahead, 63);
+                return Status.NOMINAL;
+            case SHIFT17 :
+                stack.push(lookahead, 17);
+                return Status.NOMINAL;
+            case SHIFT16 :
+                stack.push(lookahead, 16);
+                return Status.NOMINAL;
+            case SHIFT61 :
+                stack.push(lookahead, 61);
+                return Status.NOMINAL;
+            case GOTO97 :
+                stack.push(lookahead, 97);
+                return Status.NOMINAL;
+            case SHIFT111 :
+                stack.push(lookahead, 111);
+                return Status.NOMINAL;
+            case GOTO14 :
                 stack.push(lookahead, 14);
                 return Status.NOMINAL;
-            case REDUCE0 :
-            {
-                BlockAbstractNode field0 = ((BlockAbstractNode) stack.pop());
-                Node<Visitor> reduced = new GrammarStartBlock(field0).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case GOTO7 :
-                stack.push(lookahead, 7);
-                return Status.NOMINAL;
-            case GOTO41 :
-                stack.push(lookahead, 41);
-                return Status.NOMINAL;
-            case REDUCE14 :
-            {
-                EndGroupingToken field2 = ((EndGroupingToken) stack.pop());
-                RHSAbstractNode field1 = ((RHSAbstractNode) stack.pop());
-                StartGroupingToken field0 = ((StartGroupingToken) stack.pop());
-                Node<Visitor> reduced = new GroupRHS(field0, field1, field2).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
             case GOTO11 :
                 stack.push(lookahead, 11);
                 return Status.NOMINAL;
-            case SHIFT89 :
-                stack.push(lookahead, 89);
+            case SHIFT117 :
+                stack.push(lookahead, 117);
                 return Status.NOMINAL;
-            case GOTO2 :
-                stack.push(lookahead, 2);
+            case SHIFT126 :
+                stack.push(lookahead, 126);
                 return Status.NOMINAL;
-            case REDUCE5 :
+            case SHIFT105 :
+                stack.push(lookahead, 105);
+                return Status.NOMINAL;
+            case SHIFT84 :
+                stack.push(lookahead, 84);
+                return Status.NOMINAL;
+            case GOTO22 :
+                stack.push(lookahead, 22);
+                return Status.NOMINAL;
+            case SHIFT74 :
+                stack.push(lookahead, 74);
+                return Status.NOMINAL;
+            case GOTO73 :
+                stack.push(lookahead, 73);
+                return Status.NOMINAL;
+            case REDUCE6 :
             {
                 TokenDeclAbstractNode field1 = ((TokenDeclAbstractNode) stack.pop());
                 TokenDeclListAbstractNode field0 = ((TokenDeclListAbstractNode) stack.pop());
@@ -574,25 +677,84 @@ public class ParsingEngineImpl
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
-            case GOTO12 :
-                stack.push(lookahead, 12);
+            case REDUCE8 :
+            {
+                RuleDeclAbstractNode field1 = ((RuleDeclAbstractNode) stack.pop());
+                RuleDeclListAbstractNode field0 = ((RuleDeclListAbstractNode) stack.pop());
+                Node<Visitor> reduced = new RuleDeclList(field0, field1).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case GOTO104 :
+                stack.push(lookahead, 104);
                 return Status.NOMINAL;
-            case GOTO80 :
-                stack.push(lookahead, 80);
+            case REDUCE16 :
+            {
+                EndRepetitionToken field2 = ((EndRepetitionToken) stack.pop());
+                RHSAbstractNode field1 = ((RHSAbstractNode) stack.pop());
+                StartRepetitionToken field0 = ((StartRepetitionToken) stack.pop());
+                Node<Visitor> reduced = new RepRHS(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE0 :
+            {
+                BlockAbstractNode field0 = ((BlockAbstractNode) stack.pop());
+                Node<Visitor> reduced = new GrammarStartBlock(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT83 :
+                stack.push(lookahead, 83);
                 return Status.NOMINAL;
-            case GOTO16 :
-                stack.push(lookahead, 16);
+            case GOTO13 :
+                stack.push(lookahead, 13);
                 return Status.NOMINAL;
-            case SHIFT10 :
-                stack.push(lookahead, 10);
+            case SHIFT81 :
+                stack.push(lookahead, 81);
                 return Status.NOMINAL;
-            case SHIFT15 :
+            case SHIFT31 :
+                stack.push(lookahead, 31);
+                return Status.NOMINAL;
+            case SHIFT33 :
+                stack.push(lookahead, 33);
+                return Status.NOMINAL;
+            case GOTO25 :
+                stack.push(lookahead, 25);
+                return Status.NOMINAL;
+            case GOTO15 :
                 stack.push(lookahead, 15);
                 return Status.NOMINAL;
-            case SHIFT51 :
-                stack.push(lookahead, 51);
+            case SHIFT118 :
+                stack.push(lookahead, 118);
                 return Status.NOMINAL;
-            case REDUCE8 :
+            case REDUCE25 :
+            {
+                LeftKeywordToken field0 = ((LeftKeywordToken) stack.pop());
+                Node<Visitor> reduced = new LeftAssoc(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case GOTO98 :
+                stack.push(lookahead, 98);
+                return Status.NOMINAL;
+            case REDUCE29 :
+            {
+                SymbolAbstractNode field2 = ((SymbolAbstractNode) stack.pop());
+                ConcatenationToken field1 = ((ConcatenationToken) stack.pop());
+                SymbolListAbstractNode field0 = ((SymbolListAbstractNode) stack.pop());
+                Node<Visitor> reduced = new SymbolList(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE31 :
+            {
+                IdentifierToken field0 = ((IdentifierToken) stack.pop());
+                Node<Visitor> reduced = new IdSymbol(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE11 :
             {
                 TerminationToken field3 = ((TerminationToken) stack.pop());
                 TerminalStringToken field2 = ((TerminalStringToken) stack.pop());
@@ -602,28 +764,27 @@ public class ParsingEngineImpl
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
-            case GOTO23 :
-                stack.push(lookahead, 23);
+            case REDUCE2 :
+            {
+                TokenDeclListAbstractNode field3 = ((TokenDeclListAbstractNode) stack.pop());
+                StartBlockToken field2 = ((StartBlockToken) stack.pop());
+                TokensKeywordToken field1 = ((TokensKeywordToken) stack.pop());
+                SpecialToken field0 = ((SpecialToken) stack.pop());
+                Node<Visitor> reduced = new TokenDeclBlock(field0, field1, field2, field3).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT24 :
+                stack.push(lookahead, 24);
+                return Status.NOMINAL;
+            case SHIFT21 :
+                stack.push(lookahead, 21);
                 return Status.NOMINAL;
             case GOTO44 :
                 stack.push(lookahead, 44);
                 return Status.NOMINAL;
-            case SHIFT1 :
-                stack.push(lookahead, 1);
-                return Status.NOMINAL;
-            case GOTO4 :
-                stack.push(lookahead, 4);
-                return Status.NOMINAL;
-            case REDUCE7 :
-            {
-                RuleDeclAbstractNode field1 = ((RuleDeclAbstractNode) stack.pop());
-                RuleDeclListAbstractNode field0 = ((RuleDeclListAbstractNode) stack.pop());
-                Node<Visitor> reduced = new RuleDeclList(field0, field1).replace();
-                this.advance(stack, reduced);
-                return this.advance(stack, lookahead);
-            }
-            case GOTO6 :
-                stack.push(lookahead, 6);
+            case GOTO52 :
+                stack.push(lookahead, 52);
                 return Status.NOMINAL;
             case REDUCE3 :
             {
@@ -635,76 +796,230 @@ public class ParsingEngineImpl
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
+            case GOTO45 :
+                stack.push(lookahead, 45);
+                return Status.NOMINAL;
+            case REDUCE17 :
+            {
+                EndGroupingToken field2 = ((EndGroupingToken) stack.pop());
+                RHSAbstractNode field1 = ((RHSAbstractNode) stack.pop());
+                StartGroupingToken field0 = ((StartGroupingToken) stack.pop());
+                Node<Visitor> reduced = new GroupRHS(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT7 :
+                stack.push(lookahead, 7);
+                return Status.NOMINAL;
+            case SHIFT38 :
+                stack.push(lookahead, 38);
+                return Status.NOMINAL;
+            case ACCEPT:
+                return Status.COMPLETE;
+            case GOTO28 :
+                stack.push(lookahead, 28);
+                return Status.NOMINAL;
+            case SHIFT129 :
+                stack.push(lookahead, 129);
+                return Status.NOMINAL;
+            case GOTO5 :
+                stack.push(lookahead, 5);
+                return Status.NOMINAL;
+            case REDUCE10 :
+            {
+                DirectiveAbstractNode field1 = ((DirectiveAbstractNode) stack.pop());
+                DirectiveListAbstractNode field0 = ((DirectiveListAbstractNode) stack.pop());
+                Node<Visitor> reduced = new DirectiveList(field0, field1).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case GOTO90 :
+                stack.push(lookahead, 90);
+                return Status.NOMINAL;
             case SHIFT86 :
                 stack.push(lookahead, 86);
                 return Status.NOMINAL;
-            case GOTO71 :
-                stack.push(lookahead, 71);
+            case SHIFT4 :
+                stack.push(lookahead, 4);
                 return Status.NOMINAL;
-            case GOTO36 :
-                stack.push(lookahead, 36);
+            case GOTO116 :
+                stack.push(lookahead, 116);
                 return Status.NOMINAL;
-            case GOTO54 :
+            case GOTO62 :
+                stack.push(lookahead, 62);
+                return Status.NOMINAL;
+            case GOTO78 :
+                stack.push(lookahead, 78);
+                return Status.NOMINAL;
+            case GOTO6 :
+                stack.push(lookahead, 6);
+                return Status.NOMINAL;
+            case SHIFT54 :
                 stack.push(lookahead, 54);
+                return Status.NOMINAL;
+            case REDUCE22 :
+            {
+                TerminationToken field3 = ((TerminationToken) stack.pop());
+                SymbolListAbstractNode field2 = ((SymbolListAbstractNode) stack.pop());
+                IntToken field1 = ((IntToken) stack.pop());
+                AssocAbstractNode field0 = ((AssocAbstractNode) stack.pop());
+                Node<Visitor> reduced = new BothDirective(field0, field1, field2, field3).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE20 :
+            {
+                PrecDeclAbstractNode field1 = ((PrecDeclAbstractNode) stack.pop());
+                RHSAbstractNode field0 = ((RHSAbstractNode) stack.pop());
+                Node<Visitor> reduced = new PrecRHS(field0, field1).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT102 :
+                stack.push(lookahead, 102);
+                return Status.NOMINAL;
+            case GOTO3 :
+                stack.push(lookahead, 3);
                 return Status.NOMINAL;
             case SHIFT70 :
                 stack.push(lookahead, 70);
                 return Status.NOMINAL;
-            case SHIFT82 :
-                stack.push(lookahead, 82);
+            case GOTO1 :
+                stack.push(lookahead, 1);
                 return Status.NOMINAL;
-            case SHIFT25 :
-                stack.push(lookahead, 25);
+            case SHIFT18 :
+                stack.push(lookahead, 18);
                 return Status.NOMINAL;
-            case REDUCE2 :
+            case GOTO122 :
+                stack.push(lookahead, 122);
+                return Status.NOMINAL;
+            case SHIFT119 :
+                stack.push(lookahead, 119);
+                return Status.NOMINAL;
+            case REDUCE5 :
             {
-                TokenDeclListAbstractNode field3 = ((TokenDeclListAbstractNode) stack.pop());
-                StartBlockToken field2 = ((StartBlockToken) stack.pop());
-                TokensKeywordToken field1 = ((TokensKeywordToken) stack.pop());
-                SpecialToken field0 = ((SpecialToken) stack.pop());
-                Node<Visitor> reduced = new TokenDeclBlock(field0, field1, field2, field3).replace();
+                Node<Visitor> reduced = new TokenDeclListHead().replace();
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
-            case SHIFT67 :
-                stack.push(lookahead, 67);
+            case GOTO65 :
+                stack.push(lookahead, 65);
                 return Status.NOMINAL;
-            case SHIFT85 :
-                stack.push(lookahead, 85);
+            case SHIFT37 :
+                stack.push(lookahead, 37);
                 return Status.NOMINAL;
-            case GOTO53 :
-                stack.push(lookahead, 53);
+            case SHIFT99 :
+                stack.push(lookahead, 99);
                 return Status.NOMINAL;
-            case SHIFT50 :
+            case REDUCE13 :
+            {
+                TerminationToken field3 = ((TerminationToken) stack.pop());
+                RHSAbstractNode field2 = ((RHSAbstractNode) stack.pop());
+                DefinitionToken field1 = ((DefinitionToken) stack.pop());
+                IdentifierToken field0 = ((IdentifierToken) stack.pop());
+                Node<Visitor> reduced = new RuleDecl(field0, field1, field2, field3).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT113 :
+                stack.push(lookahead, 113);
+                return Status.NOMINAL;
+            case GOTO71 :
+                stack.push(lookahead, 71);
+                return Status.NOMINAL;
+            case GOTO50 :
                 stack.push(lookahead, 50);
                 return Status.NOMINAL;
-            case SHIFT45 :
-                stack.push(lookahead, 45);
+            case REDUCE4 :
+            {
+                DirectiveListAbstractNode field3 = ((DirectiveListAbstractNode) stack.pop());
+                StartBlockToken field2 = ((StartBlockToken) stack.pop());
+                PrecedenceKeywordToken field1 = ((PrecedenceKeywordToken) stack.pop());
+                SpecialToken field0 = ((SpecialToken) stack.pop());
+                Node<Visitor> reduced = new PrecDirectiveBlock(field0, field1, field2, field3).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case SHIFT127 :
+                stack.push(lookahead, 127);
+                return Status.NOMINAL;
+            case GOTO75 :
+                stack.push(lookahead, 75);
+                return Status.NOMINAL;
+            case SHIFT66 :
+                stack.push(lookahead, 66);
+                return Status.NOMINAL;
+            case SHIFT60 :
+                stack.push(lookahead, 60);
+                return Status.NOMINAL;
+            case GOTO124 :
+                stack.push(lookahead, 124);
                 return Status.NOMINAL;
             case SHIFT30 :
                 stack.push(lookahead, 30);
                 return Status.NOMINAL;
-            case SHIFT65 :
-                stack.push(lookahead, 65);
+            case SHIFT121 :
+                stack.push(lookahead, 121);
                 return Status.NOMINAL;
-            case REDUCE9 :
+            case GOTO85 :
+                stack.push(lookahead, 85);
+                return Status.NOMINAL;
+            case GOTO42 :
+                stack.push(lookahead, 42);
+                return Status.NOMINAL;
+            case SHIFT48 :
+                stack.push(lookahead, 48);
+                return Status.NOMINAL;
+            case REDUCE7 :
             {
-                TerminationToken field2 = ((TerminationToken) stack.pop());
-                TerminalStringToken field1 = ((TerminalStringToken) stack.pop());
-                BangToken field0 = ((BangToken) stack.pop());
-                Node<Visitor> reduced = new IgnoreTokenDecl(field0, field1, field2).replace();
+                RuleDeclAbstractNode field0 = ((RuleDeclAbstractNode) stack.pop());
+                Node<Visitor> reduced = new RuleDeclListHead(field0).replace();
                 this.advance(stack, reduced);
                 return this.advance(stack, lookahead);
             }
-            case SHIFT21 :
-                stack.push(lookahead, 21);
+            case GOTO40 :
+                stack.push(lookahead, 40);
                 return Status.NOMINAL;
-            case GOTO61 :
-                stack.push(lookahead, 61);
+            case SHIFT64 :
+                stack.push(lookahead, 64);
                 return Status.NOMINAL;
-            case GOTO79 :
-                stack.push(lookahead, 79);
+            case GOTO114 :
+                stack.push(lookahead, 114);
                 return Status.NOMINAL;
+            case SHIFT36 :
+                stack.push(lookahead, 36);
+                return Status.NOMINAL;
+            case GOTO72 :
+                stack.push(lookahead, 72);
+                return Status.NOMINAL;
+            case REDUCE9 :
+            {
+                Node<Visitor> reduced = new DirectiveListHead().replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case GOTO107 :
+                stack.push(lookahead, 107);
+                return Status.NOMINAL;
+            case GOTO95 :
+                stack.push(lookahead, 95);
+                return Status.NOMINAL;
+            case REDUCE27 :
+            {
+                NonKeywordToken field0 = ((NonKeywordToken) stack.pop());
+                Node<Visitor> reduced = new NonAssoc(field0).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
+            case REDUCE23 :
+            {
+                TerminationToken field2 = ((TerminationToken) stack.pop());
+                SymbolListAbstractNode field1 = ((SymbolListAbstractNode) stack.pop());
+                AssocAbstractNode field0 = ((AssocAbstractNode) stack.pop());
+                Node<Visitor> reduced = new AssocDirective(field0, field1, field2).replace();
+                this.advance(stack, reduced);
+                return this.advance(stack, lookahead);
+            }
             default:
                 return Status.ERROR;
         }
@@ -714,191 +1029,265 @@ public class ParsingEngineImpl
     public Symbol[] expectedSymbols(int state) {
         switch (state) {
             case  1 :
-                return new Symbol[] {Symbols.TERMINALSTRING };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.PRECDECL, Symbols.ENDGROUPING };
             case  2 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  3 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  4 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  5 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  6 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  7 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  8 :
                 return new Symbol[] {Symbols.STARTBLOCK };
-            case  9 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.TOKENDECLLIST, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
-            case  10 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  11 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  12 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  13 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  14 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  15 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  16 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  17 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
-            case  18 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
-            case  19 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  20 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  21 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  22 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  23 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.BLOCK };
-            case  24 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  25 :
+            case  3 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  4 :
                 return new Symbol[] {Symbols.RULEDECLLIST, Symbols.IDENTIFIER, Symbols.RULEDECL };
-            case  26 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  27 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  28 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  29 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  30 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
-            case  31 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
-            case  32 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  33 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  34 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
-            case  35 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  36 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  37 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  38 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF };
-            case  39 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  40 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  41 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  42 :
-                return new Symbol[] {Symbols.TOKENSKEYWORD, Symbols.RULESKEYWORD };
-            case  43 :
+            case  5 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION, Symbols.PRECDECL };
+            case  6 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.PRECDECL, Symbols.ENDGROUPING };
+            case  7 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
+            case  8 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  9 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
+            case  10 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  11 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION, Symbols.PRECDECL };
+            case  12 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
+            case  13 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  14 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION, Symbols.PRECDECL };
+            case  15 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION, Symbols.PRECDECL };
+            case  16 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+            case  17 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  18 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  19 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.PRECDECL, Symbols.ENDGROUPING };
+            case  20 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  21 :
+                return new Symbol[] {Symbols.TERMINALSTRING };
+            case  22 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  23 :
+                return new Symbol[] {Symbols.PRECKEYWORD };
+            case  24 :
                 return new Symbol[] {Symbols.DEFINITION };
-            case  44 :
+            case  25 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION, Symbols.PRECDECL };
+            case  26 :
+                return new Symbol[] {Symbols.DEFINITION };
+            case  27 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  28 :
                 return new Symbol[] {Symbols.SPECIAL, Symbols.EOF };
+            case  29 :
+                return new Symbol[] {Symbols.PRECKEYWORD };
+            case  30 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.INT, Symbols.TERMINATION, Symbols.TERMINALSTRING };
+            case  31 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.NONKEYWORD, Symbols.EOF, Symbols.INT, Symbols.LEFTKEYWORD, Symbols.RIGHTKEYWORD };
+            case  32 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  33 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINALSTRING, Symbols.SYMBOL };
+            case  34 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
+            case  35 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  36 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.TERMINALSTRING, Symbols.SYMBOLLIST, Symbols.SYMBOL };
+            case  37 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+            case  38 :
+                return new Symbol[] {Symbols.TOKENSKEYWORD, Symbols.PRECEDENCEKEYWORD, Symbols.RULESKEYWORD };
+            case  39 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  40 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  41 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  42 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+            case  43 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  44 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
             case  45 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
             case  46 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
             case  47 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
             case  48 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
             case  49 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
             case  50 :
-                return new Symbol[] {Symbols.TERMINATION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF };
             case  51 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
             case  52 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
             case  53 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
+                return new Symbol[] {Symbols.PRECKEYWORD };
             case  54 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
             case  55 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.PRECDECL, Symbols.ENDGROUPING };
             case  56 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
             case  57 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
             case  58 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
             case  59 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+                return new Symbol[] {Symbols.PRECKEYWORD };
             case  60 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.INT, Symbols.TERMINATION, Symbols.TERMINALSTRING };
             case  61 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
             case  62 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
             case  63 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
             case  64 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  65 :
                 return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
+            case  65 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG, Symbols.TOKENDECL };
+            case  66 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.TERMINALSTRING, Symbols.SYMBOLLIST, Symbols.SYMBOL };
+            case  67 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.RULEDECL };
+            case  68 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  69 :
+                return new Symbol[] {Symbols.TERMINATION };
+            case  70 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+            case  71 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.BLOCK };
+            case  72 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
+            case  73 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION, Symbols.PRECDECL };
+            case  74 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  75 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.NONKEYWORD, Symbols.EOF, Symbols.INT, Symbols.LEFTKEYWORD, Symbols.RIGHTKEYWORD };
+            case  76 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  77 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
+            case  78 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  79 :
+                return new Symbol[] {Symbols.STARTBLOCK };
+            case  80 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  81 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.TERMINALSTRING, Symbols.SYMBOL };
+            case  82 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+            case  83 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  84 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
+            case  85 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION, Symbols.PRECDECL };
+            case  86 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.NONKEYWORD, Symbols.EOF, Symbols.INT, Symbols.LEFTKEYWORD, Symbols.RIGHTKEYWORD };
+            case  87 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+            case  88 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+            case  89 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  90 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION, Symbols.PRECDECL };
+            case  91 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  92 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  93 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
+            case  94 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+            case  95 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  96 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.TERMINALSTRING, Symbols.SYMBOL };
+            case  97 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+            case  98 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.PRECDECL, Symbols.ENDGROUPING };
+            case  99 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.TOKENDECLLIST, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
+            case  100 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  101 :
+                return new Symbol[] {Symbols.STARTBLOCK };
+            case  102 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
+            case  103 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
+            case  104 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.PRECDECL, Symbols.ENDGROUPING };
+            case  105 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
             case  0 :
                 return new Symbol[] {Symbols.SPECIAL, Symbols.GRAMMAR, Symbols.BLOCK };
-            case  66 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  67 :
-                return new Symbol[] {Symbols.DEFINITION };
-            case  68 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
-            case  69 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  70 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  71 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
-            case  72 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  73 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.RULEDECL };
-            case  74 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  75 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  76 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
-            case  77 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINATION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  78 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  79 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  80 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  81 :
-                return new Symbol[] {Symbols.STARTBLOCK };
-            case  82 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDGROUPING };
-            case  83 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
-            case  84 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG, Symbols.TOKENDECL };
-            case  85 :
+            case  106 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  107 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.NONKEYWORD, Symbols.DIRECTIVE, Symbols.EOF, Symbols.INT, Symbols.LEFTKEYWORD, Symbols.ASSOC, Symbols.RIGHTKEYWORD };
+            case  108 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.TERMINATION };
+            case  109 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  110 :
                 return new Symbol[] {Symbols.TERMINALSTRING };
-            case  86 :
-                return new Symbol[] {Symbols.DEFINITION };
-            case  87 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
-            case  88 :
+            case  111 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  112 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.TERMINALSTRING, Symbols.SYMBOL, Symbols.ENDGROUPING };
+            case  113 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  114 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION, Symbols.PRECDECL };
+            case  115 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER };
+            case  116 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.PRECDECL };
+            case  117 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  118 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.TERMINALSTRING, Symbols.SYMBOL };
+            case  119 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+            case  120 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
+            case  121 :
                 return new Symbol[] {Symbols.TERMINATION };
-            case  89 :
-                return new Symbol[] {Symbols.SPECIAL, Symbols.EOF, Symbols.IDENTIFIER, Symbols.BANG };
-            case  90 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.ENDREPETITION };
-            case  91 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
-            case  92 :
-                return new Symbol[] {Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS, Symbols.ENDGROUPING };
+            case  122 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.TERMINATION };
+            case  123 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.ENDREPETITION, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  124 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.INT, Symbols.TERMINATION, Symbols.TERMINALSTRING, Symbols.SYMBOLLIST, Symbols.SYMBOL };
+            case  125 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.NONKEYWORD, Symbols.EOF, Symbols.INT, Symbols.LEFTKEYWORD, Symbols.DIRECTIVELIST, Symbols.RIGHTKEYWORD };
+            case  126 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION, Symbols.IDENTIFIER, Symbols.STARTOPTION, Symbols.TERMINALSTRING, Symbols.STARTGROUPING, Symbols.SYMBOL, Symbols.STARTREPETITION, Symbols.RHS };
+            case  127 :
+                return new Symbol[] {Symbols.CONCATENATION, Symbols.IDENTIFIER, Symbols.INT, Symbols.TERMINATION, Symbols.TERMINALSTRING };
+            case  128 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.CONCATENATION, Symbols.ENDOPTION, Symbols.ALTERNATION };
+            case  129 :
+                return new Symbol[] {Symbols.SPECIAL, Symbols.NONKEYWORD, Symbols.EOF, Symbols.INT, Symbols.LEFTKEYWORD, Symbols.RIGHTKEYWORD };
             default:
                 throw new RuntimeException("Unknown state");
         }
@@ -906,8 +1295,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState1Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT88;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT29;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT34;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT12;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO103;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT82;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -915,12 +1312,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState2Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT46;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE15;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT52;
+            case STARTBLOCK:
+                return ParsingEngineImpl.Actions.SHIFT125;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -928,12 +1321,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState3Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE19;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE19;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE11;
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -941,12 +1338,12 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState4Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT76;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT34;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT47;
+            case RULEDECLLIST:
+                return ParsingEngineImpl.Actions.GOTO67;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT26;
+            case RULEDECL:
+                return ParsingEngineImpl.Actions.GOTO115;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -954,12 +1351,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState5Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT59;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT76;
+                return ParsingEngineImpl.Actions.SHIFT43;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT34;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE15;
+                return ParsingEngineImpl.Actions.SHIFT57;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT120;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO109;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -967,12 +1368,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState6Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT29;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT19;
+                return ParsingEngineImpl.Actions.SHIFT34;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT55;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT40;
+                return ParsingEngineImpl.Actions.SHIFT12;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO103;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT68;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -980,12 +1385,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState7Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT77;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT26;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.SHIFT31;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE12;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE12;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE12;
+            case BANG:
+                return ParsingEngineImpl.Actions.REDUCE12;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -993,8 +1400,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState8Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case STARTBLOCK:
-                return ParsingEngineImpl.Actions.SHIFT9;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1002,16 +1415,10 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState9Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE4;
-            case TOKENDECLLIST:
-                return ParsingEngineImpl.Actions.GOTO84;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE4;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE4;
-            case BANG:
-                return ParsingEngineImpl.Actions.REDUCE4;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE28;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE28;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1019,12 +1426,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState10Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE21;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE21;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.REDUCE21;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1032,12 +1441,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState11Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE19;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT19;
+                return ParsingEngineImpl.Actions.REDUCE19;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT55;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT35;
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO87;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1045,12 +1458,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState12Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT19;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT55;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE15;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT88;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT80;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT94;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT93;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO58;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT123;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO55;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE30;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1058,26 +1487,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState13Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.SHIFT91;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE18;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT62;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT13;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT22;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT68;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO66;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT57;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO32;
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1085,25 +1504,15 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState14Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT23;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.SHIFT41;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT49;
+                return ParsingEngineImpl.Actions.SHIFT39;
             case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT29;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT60;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT92;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO74;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT48;
-            case RHS:
+                return ParsingEngineImpl.Actions.REDUCE18;
+            case PRECDECL:
                 return ParsingEngineImpl.Actions.GOTO87;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
@@ -1112,12 +1521,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState15Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT59;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.SHIFT43;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.SHIFT57;
             case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.REDUCE18;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO109;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1125,12 +1538,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState16Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE32;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT19;
+                return ParsingEngineImpl.Actions.REDUCE32;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT55;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT83;
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1139,11 +1554,27 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState17Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE6;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE6;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE6;
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT32;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO92;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1151,26 +1582,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState18Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE15;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT28;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT20;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT37;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT56;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO69;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT72;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO63;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE15;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE15;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1178,26 +1597,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState19Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE19;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE19;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT39;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT91;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT64;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT18;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO3;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT24;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO59;
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO103;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE19;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1205,26 +1614,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState20Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE15;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT62;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT13;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT22;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT68;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO66;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT57;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO58;
+                return ParsingEngineImpl.Actions.REDUCE15;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1232,12 +1629,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState21Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT69;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1245,12 +1638,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState22Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE14;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE14;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE14;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1258,12 +1653,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState23Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case SPECIAL:
-                return ParsingEngineImpl.Actions.SHIFT42;
-            case EOF:
-                return ParsingEngineImpl.Actions.ACCEPT;
-            case BLOCK:
-                return ParsingEngineImpl.Actions.GOTO38;
+            case PRECKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT96;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1271,26 +1662,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState24Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT39;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT91;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT64;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT18;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO3;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT24;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO90;
+            case DEFINITION:
+                return ParsingEngineImpl.Actions.SHIFT110;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1298,12 +1671,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState25Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case RULEDECLLIST:
-                return ParsingEngineImpl.Actions.GOTO73;
-            case IDENTIFIER:
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT59;
+            case CONCATENATION:
                 return ParsingEngineImpl.Actions.SHIFT43;
-            case RULEDECL:
-                return ParsingEngineImpl.Actions.GOTO17;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT57;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT49;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO109;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1311,26 +1688,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState26Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT49;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT29;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT60;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT92;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO74;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT48;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO75;
+            case DEFINITION:
+                return ParsingEngineImpl.Actions.SHIFT76;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1338,12 +1697,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState27Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT46;
+                return ParsingEngineImpl.Actions.SHIFT91;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.SHIFT78;
+                return ParsingEngineImpl.Actions.SHIFT20;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT52;
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1351,12 +1714,10 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState28Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE18;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE1;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE1;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1364,26 +1725,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState29Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT62;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT13;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT22;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT68;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO66;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT57;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO27;
+            case PRECKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT112;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1391,12 +1734,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState30Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE10;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE10;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE26;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE10;
+                return ParsingEngineImpl.Actions.REDUCE26;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE26;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE26;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.REDUCE26;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1405,11 +1752,17 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState31Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE10;
+                return ParsingEngineImpl.Actions.REDUCE24;
+            case NONKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE24;
             case EOF:
-                return ParsingEngineImpl.Actions.REDUCE10;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE10;
+                return ParsingEngineImpl.Actions.REDUCE24;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE24;
+            case LEFTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE24;
+            case RIGHTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE24;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1417,12 +1770,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState32Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT46;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.SHIFT33;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT52;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT32;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO27;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1430,12 +1799,20 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState33Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO10;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1443,26 +1820,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState34Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT28;
+                return ParsingEngineImpl.Actions.SHIFT88;
             case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT20;
+                return ParsingEngineImpl.Actions.SHIFT35;
             case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT37;
+                return ParsingEngineImpl.Actions.SHIFT94;
             case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT56;
+                return ParsingEngineImpl.Actions.SHIFT93;
             case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO69;
+                return ParsingEngineImpl.Actions.GOTO58;
             case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT72;
+                return ParsingEngineImpl.Actions.SHIFT123;
             case RHS:
-                return ParsingEngineImpl.Actions.GOTO5;
+                return ParsingEngineImpl.Actions.GOTO19;
             case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1470,12 +1849,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState35Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT32;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO100;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1484,11 +1879,17 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState36Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE16;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE16;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE16;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT108;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT46;
+            case SYMBOLLIST:
+                return ParsingEngineImpl.Actions.GOTO77;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO9;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1496,12 +1897,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState37Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE15;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE15;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1509,10 +1912,12 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState38Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE1;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE1;
+            case TOKENSKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT101;
+            case PRECEDENCEKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT2;
+            case RULESKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT79;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1520,12 +1925,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState39Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE18;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT63;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT17;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT16;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT61;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO97;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT111;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO14;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1533,12 +1954,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState40Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE21;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE21;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE21;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1546,12 +1969,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState41Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE16;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE16;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE16;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT63;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT17;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT16;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT61;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO97;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT111;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO11;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1559,10 +1998,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState42Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case TOKENSKEYWORD:
-                return ParsingEngineImpl.Actions.SHIFT8;
-            case RULESKEYWORD:
-                return ParsingEngineImpl.Actions.SHIFT81;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE21;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1570,8 +2013,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState43Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case DEFINITION:
-                return ParsingEngineImpl.Actions.SHIFT14;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT117;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT126;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT105;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT84;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO22;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT74;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO73;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1580,9 +2043,13 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState44Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE0;
+                return ParsingEngineImpl.Actions.REDUCE6;
             case EOF:
-                return ParsingEngineImpl.Actions.REDUCE0;
+                return ParsingEngineImpl.Actions.REDUCE6;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE6;
+            case BANG:
+                return ParsingEngineImpl.Actions.REDUCE6;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1590,26 +2057,12 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState45Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE8;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE8;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT49;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT29;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT60;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT92;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO74;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT48;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO7;
+                return ParsingEngineImpl.Actions.REDUCE8;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1618,25 +2071,9 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState46Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT62;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT13;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT22;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT68;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO66;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT57;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO41;
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1644,12 +2081,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState47Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT88;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT35;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT94;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT93;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO58;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT123;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO104;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE30;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1657,26 +2110,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState48Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE16;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE16;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT39;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT91;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT64;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT18;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO3;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT24;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO11;
+                return ParsingEngineImpl.Actions.REDUCE16;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE16;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1684,12 +2125,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState49Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE16;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
+                return ParsingEngineImpl.Actions.REDUCE16;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE16;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
+                return ParsingEngineImpl.Actions.REDUCE16;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1697,8 +2140,10 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState50Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.SHIFT89;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE0;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE0;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1706,12 +2151,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState51Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT83;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO13;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1720,25 +2181,9 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState52Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT62;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT13;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT22;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT68;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO66;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT57;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO2;
+                return ParsingEngineImpl.Actions.SHIFT81;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.SHIFT31;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1746,14 +2191,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState53Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE5;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE5;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE5;
-            case BANG:
-                return ParsingEngineImpl.Actions.REDUCE5;
+            case PRECKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT33;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1761,6 +2200,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState54Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE16;
             case CONCATENATION:
                 return ParsingEngineImpl.Actions.REDUCE16;
             case ALTERNATION:
@@ -1774,26 +2215,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState55Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT29;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.SHIFT34;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT39;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT91;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT64;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT18;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO3;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT24;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO12;
+                return ParsingEngineImpl.Actions.SHIFT12;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO103;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE18;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1801,26 +2232,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState56Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT28;
+                return ParsingEngineImpl.Actions.SHIFT117;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT20;
+                return ParsingEngineImpl.Actions.SHIFT126;
             case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT37;
+                return ParsingEngineImpl.Actions.SHIFT105;
             case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT56;
+                return ParsingEngineImpl.Actions.SHIFT84;
             case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO69;
+                return ParsingEngineImpl.Actions.GOTO22;
             case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT72;
+                return ParsingEngineImpl.Actions.SHIFT74;
             case RHS:
-                return ParsingEngineImpl.Actions.GOTO80;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.GOTO25;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1828,26 +2261,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState57Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT39;
+                return ParsingEngineImpl.Actions.SHIFT117;
             case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT91;
+                return ParsingEngineImpl.Actions.SHIFT126;
             case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT64;
+                return ParsingEngineImpl.Actions.SHIFT105;
             case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT18;
+                return ParsingEngineImpl.Actions.SHIFT84;
             case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO3;
+                return ParsingEngineImpl.Actions.GOTO22;
             case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT24;
+                return ParsingEngineImpl.Actions.SHIFT74;
             case RHS:
-                return ParsingEngineImpl.Actions.GOTO16;
+                return ParsingEngineImpl.Actions.GOTO15;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1855,12 +2290,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState58Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE14;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT46;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.SHIFT10;
+                return ParsingEngineImpl.Actions.REDUCE14;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT52;
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE14;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1868,12 +2305,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState59Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE16;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE16;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE16;
+            case PRECKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT118;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1882,11 +2315,15 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState60Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE25;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE25;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE25;
             case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+                return ParsingEngineImpl.Actions.REDUCE25;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.REDUCE25;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1894,12 +2331,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState61Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT46;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.SHIFT15;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT52;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT88;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT35;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT94;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT93;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO58;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT123;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO98;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE30;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1908,11 +2361,9 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState62Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE18;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE18;
+                return ParsingEngineImpl.Actions.REDUCE29;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE29;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1920,12 +2371,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState63Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE31;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT76;
+                return ParsingEngineImpl.Actions.REDUCE31;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT34;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT51;
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1933,12 +2386,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState64Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE19;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE19;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE11;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE11;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE11;
+            case BANG:
+                return ParsingEngineImpl.Actions.REDUCE11;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1947,25 +2402,14 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState65Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE8;
+                return ParsingEngineImpl.Actions.REDUCE2;
             case EOF:
-                return ParsingEngineImpl.Actions.REDUCE8;
+                return ParsingEngineImpl.Actions.REDUCE2;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE8;
+                return ParsingEngineImpl.Actions.SHIFT24;
             case BANG:
-                return ParsingEngineImpl.Actions.REDUCE8;
-            default:
-                return ParsingEngineImpl.Actions.ERROR;
-        }
-    }
-
-    private ParsingEngineImpl.Actions getState0Action(Node<Visitor> lookahead) {
-        switch (((Symbols) lookahead.symbol())) {
-            case SPECIAL:
-                return ParsingEngineImpl.Actions.SHIFT42;
-            case GRAMMAR:
-                return ParsingEngineImpl.Actions.GOTO23;
-            case BLOCK:
+                return ParsingEngineImpl.Actions.SHIFT21;
+            case TOKENDECL:
                 return ParsingEngineImpl.Actions.GOTO44;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
@@ -1975,11 +2419,17 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState66Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
-            case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE11;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT108;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT46;
+            case SYMBOLLIST:
+                return ParsingEngineImpl.Actions.GOTO52;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO9;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1987,8 +2437,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState67Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case DEFINITION:
-                return ParsingEngineImpl.Actions.SHIFT1;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE3;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE3;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT26;
+            case RULEDECL:
+                return ParsingEngineImpl.Actions.GOTO45;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -1996,25 +2452,13 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState68Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE17;
             case CONCATENATION:
                 return ParsingEngineImpl.Actions.REDUCE17;
             case ALTERNATION:
                 return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT28;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT20;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT37;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT56;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO69;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT72;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO4;
-            case ENDGROUPING:
+            case ENDREPETITION:
                 return ParsingEngineImpl.Actions.REDUCE17;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
@@ -2023,12 +2467,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState69Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE11;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.SHIFT7;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2036,12 +2476,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState70Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE15;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE15;
             case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE15;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2050,11 +2492,11 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState71Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE7;
+                return ParsingEngineImpl.Actions.SHIFT38;
             case EOF:
-                return ParsingEngineImpl.Actions.REDUCE7;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE7;
+                return ParsingEngineImpl.Actions.ACCEPT;
+            case BLOCK:
+                return ParsingEngineImpl.Actions.GOTO28;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2063,25 +2505,9 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState72Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT39;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT91;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT64;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT18;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO3;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT24;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO6;
+                return ParsingEngineImpl.Actions.SHIFT81;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.SHIFT129;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2090,13 +2516,15 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState73Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE3;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE3;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT86;
-            case RULEDECL:
-                return ParsingEngineImpl.Actions.GOTO71;
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE19;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO109;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2104,12 +2532,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState74Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE11;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT117;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT126;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT105;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT84;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO22;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT74;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO5;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2117,12 +2561,18 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState75Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT77;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT26;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE15;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE10;
+            case NONKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE10;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE10;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE10;
+            case LEFTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE10;
+            case RIGHTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE10;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2130,26 +2580,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState76Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT28;
+                return ParsingEngineImpl.Actions.SHIFT63;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT20;
+                return ParsingEngineImpl.Actions.SHIFT17;
             case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT37;
+                return ParsingEngineImpl.Actions.SHIFT16;
             case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT56;
+                return ParsingEngineImpl.Actions.SHIFT61;
             case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO69;
+                return ParsingEngineImpl.Actions.GOTO97;
             case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT72;
+                return ParsingEngineImpl.Actions.SHIFT111;
             case RHS:
-                return ParsingEngineImpl.Actions.GOTO36;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.GOTO90;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2158,25 +2610,9 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState77Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT49;
+                return ParsingEngineImpl.Actions.SHIFT81;
             case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT29;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT60;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT92;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO74;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT48;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO54;
+                return ParsingEngineImpl.Actions.SHIFT86;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2184,12 +2620,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState78Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.SHIFT91;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.SHIFT20;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.REDUCE12;
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2197,12 +2637,8 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState79Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT76;
-            case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT34;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT70;
+            case STARTBLOCK:
+                return ParsingEngineImpl.Actions.SHIFT4;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2210,12 +2646,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState80Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT76;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT34;
-            case ENDGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT82;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT32;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO116;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2223,8 +2675,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState81Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case STARTBLOCK:
-                return ParsingEngineImpl.Actions.SHIFT25;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT108;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT46;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO62;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2232,12 +2692,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState82Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE17;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE17;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE17;
             case ENDGROUPING:
-                return ParsingEngineImpl.Actions.REDUCE14;
+                return ParsingEngineImpl.Actions.REDUCE17;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2245,12 +2707,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState83Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE13;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT32;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO78;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2259,15 +2737,27 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState84Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE2;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE2;
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT67;
-            case BANG:
-                return ParsingEngineImpl.Actions.SHIFT85;
-            case TOKENDECL:
-                return ParsingEngineImpl.Actions.GOTO53;
+                return ParsingEngineImpl.Actions.SHIFT88;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT35;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT94;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT93;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO58;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT123;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO6;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE30;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2275,8 +2765,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState85Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT50;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT59;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT43;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT57;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT54;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO109;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2284,8 +2782,18 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState86Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case DEFINITION:
-                return ParsingEngineImpl.Actions.SHIFT45;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE22;
+            case NONKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE22;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE22;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE22;
+            case LEFTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE22;
+            case RIGHTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE22;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2293,12 +2801,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState87Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE20;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT77;
+                return ParsingEngineImpl.Actions.REDUCE20;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT26;
+                return ParsingEngineImpl.Actions.REDUCE20;
             case TERMINATION:
-                return ParsingEngineImpl.Actions.SHIFT30;
+                return ParsingEngineImpl.Actions.REDUCE20;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2306,8 +2816,14 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState88Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
-            case TERMINATION:
-                return ParsingEngineImpl.Actions.SHIFT65;
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE31;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2316,13 +2832,13 @@ public class ParsingEngineImpl
     private ParsingEngineImpl.Actions getState89Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
             case SPECIAL:
-                return ParsingEngineImpl.Actions.REDUCE9;
-            case EOF:
-                return ParsingEngineImpl.Actions.REDUCE9;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.REDUCE9;
-            case BANG:
-                return ParsingEngineImpl.Actions.REDUCE9;
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE20;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2330,12 +2846,16 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState90Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT23;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.SHIFT19;
+                return ParsingEngineImpl.Actions.SHIFT41;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.SHIFT55;
-            case ENDREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT21;
+                return ParsingEngineImpl.Actions.SHIFT39;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.SHIFT102;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO87;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2343,26 +2863,28 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState91Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
             case CONCATENATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ENDOPTION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case ALTERNATION:
-                return ParsingEngineImpl.Actions.REDUCE17;
+                return ParsingEngineImpl.Actions.REDUCE30;
             case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT62;
+                return ParsingEngineImpl.Actions.SHIFT106;
             case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT13;
+                return ParsingEngineImpl.Actions.SHIFT32;
             case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT22;
+                return ParsingEngineImpl.Actions.SHIFT8;
             case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT68;
+                return ParsingEngineImpl.Actions.SHIFT47;
             case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO66;
+                return ParsingEngineImpl.Actions.GOTO128;
             case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT57;
+                return ParsingEngineImpl.Actions.SHIFT56;
             case RHS:
-                return ParsingEngineImpl.Actions.GOTO61;
+                return ParsingEngineImpl.Actions.GOTO3;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2370,26 +2892,672 @@ public class ParsingEngineImpl
 
     private ParsingEngineImpl.Actions getState92Action(Node<Visitor> lookahead) {
         switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT91;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.SHIFT70;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState93Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT88;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT35;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT94;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT93;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO58;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT123;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO1;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState94Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState95Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT91;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.SHIFT18;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState96Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT63;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT16;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO122;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState97Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState98Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT29;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT34;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT12;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO103;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT119;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState99Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE5;
+            case TOKENDECLLIST:
+                return ParsingEngineImpl.Actions.GOTO65;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE5;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE5;
+            case BANG:
+                return ParsingEngineImpl.Actions.REDUCE5;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState100Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT91;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.SHIFT37;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState101Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case STARTBLOCK:
+                return ParsingEngineImpl.Actions.SHIFT99;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState102Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE13;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE13;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE13;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState103Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState104Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT29;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT34;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT12;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO103;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT113;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState105Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE32;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState0Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT38;
+            case GRAMMAR:
+                return ParsingEngineImpl.Actions.GOTO71;
+            case BLOCK:
+                return ParsingEngineImpl.Actions.GOTO50;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState106Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState107Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE4;
+            case NONKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT127;
+            case DIRECTIVE:
+                return ParsingEngineImpl.Actions.GOTO75;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE4;
+            case INT:
+                return ParsingEngineImpl.Actions.SHIFT66;
+            case LEFTKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT60;
+            case ASSOC:
+                return ParsingEngineImpl.Actions.GOTO124;
+            case RIGHTKEYWORD:
+                return ParsingEngineImpl.Actions.SHIFT30;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState108Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState109Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE20;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState110Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT121;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState111Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT117;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT126;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT105;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT84;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO22;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT74;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO85;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState112Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT88;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT94;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO42;
+            case ENDGROUPING:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState113Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE17;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE17;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE17;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE17;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState114Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT59;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT43;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT57;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT48;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO109;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState115Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE7;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE7;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE7;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState116Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.SHIFT53;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.SHIFT91;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.SHIFT37;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.SHIFT51;
+            case PRECDECL:
+                return ParsingEngineImpl.Actions.GOTO89;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState117Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE31;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState118Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT117;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT105;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO40;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState119Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE17;
             case CONCATENATION:
                 return ParsingEngineImpl.Actions.REDUCE17;
             case ALTERNATION:
                 return ParsingEngineImpl.Actions.REDUCE17;
-            case IDENTIFIER:
-                return ParsingEngineImpl.Actions.SHIFT28;
-            case STARTOPTION:
-                return ParsingEngineImpl.Actions.SHIFT20;
-            case TERMINALSTRING:
-                return ParsingEngineImpl.Actions.SHIFT37;
-            case STARTGROUPING:
-                return ParsingEngineImpl.Actions.SHIFT56;
-            case SYMBOL:
-                return ParsingEngineImpl.Actions.GOTO69;
-            case STARTREPETITION:
-                return ParsingEngineImpl.Actions.SHIFT72;
-            case RHS:
-                return ParsingEngineImpl.Actions.GOTO79;
-            case ENDGROUPING:
+            case TERMINATION:
                 return ParsingEngineImpl.Actions.REDUCE17;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState120Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE16;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE16;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE16;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE16;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState121Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.SHIFT64;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState122Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE21;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState123Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT117;
+            case ENDREPETITION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT126;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT105;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT84;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO22;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT74;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO114;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState124Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT108;
+            case INT:
+                return ParsingEngineImpl.Actions.SHIFT36;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT46;
+            case SYMBOLLIST:
+                return ParsingEngineImpl.Actions.GOTO72;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO9;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState125Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE9;
+            case NONKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE9;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE9;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE9;
+            case LEFTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE9;
+            case DIRECTIVELIST:
+                return ParsingEngineImpl.Actions.GOTO107;
+            case RIGHTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE9;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState126Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE30;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.SHIFT106;
+            case STARTOPTION:
+                return ParsingEngineImpl.Actions.SHIFT32;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.SHIFT8;
+            case STARTGROUPING:
+                return ParsingEngineImpl.Actions.SHIFT47;
+            case SYMBOL:
+                return ParsingEngineImpl.Actions.GOTO128;
+            case STARTREPETITION:
+                return ParsingEngineImpl.Actions.SHIFT56;
+            case RHS:
+                return ParsingEngineImpl.Actions.GOTO95;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState127Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE27;
+            case IDENTIFIER:
+                return ParsingEngineImpl.Actions.REDUCE27;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE27;
+            case TERMINATION:
+                return ParsingEngineImpl.Actions.REDUCE27;
+            case TERMINALSTRING:
+                return ParsingEngineImpl.Actions.REDUCE27;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState128Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case CONCATENATION:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case ENDOPTION:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            case ALTERNATION:
+                return ParsingEngineImpl.Actions.REDUCE14;
+            default:
+                return ParsingEngineImpl.Actions.ERROR;
+        }
+    }
+
+    private ParsingEngineImpl.Actions getState129Action(Node<Visitor> lookahead) {
+        switch (((Symbols) lookahead.symbol())) {
+            case SPECIAL:
+                return ParsingEngineImpl.Actions.REDUCE23;
+            case NONKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE23;
+            case EOF:
+                return ParsingEngineImpl.Actions.REDUCE23;
+            case INT:
+                return ParsingEngineImpl.Actions.REDUCE23;
+            case LEFTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE23;
+            case RIGHTKEYWORD:
+                return ParsingEngineImpl.Actions.REDUCE23;
             default:
                 return ParsingEngineImpl.Actions.ERROR;
         }
@@ -2397,120 +3565,170 @@ public class ParsingEngineImpl
 
     private static enum Actions {
 
-        SHIFT88,
-        ERROR,
-        SHIFT46,
-        REDUCE15,
-        SHIFT52,
-        REDUCE11,
-        SHIFT76,
-        SHIFT34,
-        SHIFT47,
-        SHIFT19,
-        SHIFT55,
-        SHIFT40,
-        SHIFT77,
-        SHIFT26,
-        SHIFT31,
-        SHIFT9,
-        REDUCE4,
-        GOTO84,
-        REDUCE12,
-        SHIFT35,
-        REDUCE17,
-        SHIFT62,
-        SHIFT13,
-        SHIFT22,
-        SHIFT68,
-        GOTO66,
-        SHIFT57,
-        GOTO32,
-        SHIFT49,
         SHIFT29,
-        SHIFT60,
-        SHIFT92,
-        GOTO74,
-        SHIFT48,
-        GOTO87,
-        SHIFT83,
-        REDUCE6,
-        SHIFT28,
-        SHIFT20,
-        SHIFT37,
-        SHIFT56,
-        GOTO69,
-        SHIFT72,
-        GOTO63,
-        SHIFT39,
-        SHIFT91,
-        SHIFT64,
-        SHIFT18,
-        GOTO3,
-        SHIFT24,
-        GOTO59,
-        GOTO58,
-        REDUCE13,
-        REDUCE19,
-        SHIFT42,
-        ACCEPT,
-        GOTO38,
-        GOTO90,
-        GOTO73,
-        SHIFT43,
-        GOTO17,
-        GOTO75,
-        SHIFT78,
-        REDUCE18,
-        GOTO27,
-        REDUCE10,
-        SHIFT33,
-        GOTO5,
-        REDUCE16,
-        REDUCE1,
-        SHIFT8,
-        SHIFT81,
-        SHIFT14,
-        REDUCE0,
-        GOTO7,
-        GOTO41,
-        REDUCE14,
-        GOTO11,
-        SHIFT89,
-        GOTO2,
-        REDUCE5,
-        GOTO12,
-        GOTO80,
-        GOTO16,
-        SHIFT10,
-        SHIFT15,
-        SHIFT51,
-        REDUCE8,
-        GOTO23,
-        GOTO44,
-        SHIFT1,
-        GOTO4,
-        REDUCE7,
-        GOTO6,
-        REDUCE3,
-        SHIFT86,
-        GOTO71,
-        GOTO36,
-        GOTO54,
-        SHIFT70,
+        SHIFT34,
+        SHIFT12,
+        GOTO103,
         SHIFT82,
-        SHIFT25,
+        ERROR,
+        SHIFT125,
+        REDUCE19,
+        GOTO89,
+        GOTO67,
+        SHIFT26,
+        GOTO115,
+        SHIFT59,
+        SHIFT43,
+        SHIFT57,
+        SHIFT120,
+        GOTO109,
+        SHIFT68,
+        REDUCE12,
+        REDUCE32,
+        REDUCE28,
+        REDUCE21,
+        GOTO87,
+        REDUCE30,
+        SHIFT88,
+        SHIFT80,
+        SHIFT94,
+        SHIFT93,
+        GOTO58,
+        SHIFT123,
+        GOTO55,
+        SHIFT53,
+        SHIFT91,
+        REDUCE18,
+        SHIFT51,
+        SHIFT23,
+        SHIFT41,
+        SHIFT39,
+        SHIFT106,
+        SHIFT32,
+        SHIFT8,
+        SHIFT47,
+        GOTO128,
+        SHIFT56,
+        GOTO92,
+        REDUCE15,
+        SHIFT69,
+        REDUCE14,
+        SHIFT96,
+        SHIFT110,
+        SHIFT49,
+        SHIFT76,
+        SHIFT20,
+        REDUCE1,
+        SHIFT112,
+        REDUCE26,
+        REDUCE24,
+        GOTO27,
+        GOTO10,
+        SHIFT35,
+        GOTO19,
+        GOTO100,
+        SHIFT108,
+        SHIFT46,
+        GOTO77,
+        GOTO9,
+        SHIFT101,
+        SHIFT2,
+        SHIFT79,
+        SHIFT63,
+        SHIFT17,
+        SHIFT16,
+        SHIFT61,
+        GOTO97,
+        SHIFT111,
+        GOTO14,
+        GOTO11,
+        SHIFT117,
+        SHIFT126,
+        SHIFT105,
+        SHIFT84,
+        GOTO22,
+        SHIFT74,
+        GOTO73,
+        REDUCE6,
+        REDUCE8,
+        GOTO104,
+        REDUCE16,
+        REDUCE0,
+        SHIFT83,
+        GOTO13,
+        SHIFT81,
+        SHIFT31,
+        SHIFT33,
+        GOTO25,
+        GOTO15,
+        SHIFT118,
+        REDUCE25,
+        GOTO98,
+        REDUCE29,
+        REDUCE31,
+        REDUCE11,
         REDUCE2,
-        SHIFT67,
-        SHIFT85,
-        GOTO53,
-        SHIFT50,
-        SHIFT45,
-        SHIFT30,
-        SHIFT65,
-        REDUCE9,
+        SHIFT24,
         SHIFT21,
-        GOTO61,
-        GOTO79;
+        GOTO44,
+        GOTO52,
+        REDUCE3,
+        GOTO45,
+        REDUCE17,
+        SHIFT7,
+        SHIFT38,
+        ACCEPT,
+        GOTO28,
+        SHIFT129,
+        GOTO5,
+        REDUCE10,
+        GOTO90,
+        SHIFT86,
+        SHIFT4,
+        GOTO116,
+        GOTO62,
+        GOTO78,
+        GOTO6,
+        SHIFT54,
+        REDUCE22,
+        REDUCE20,
+        SHIFT102,
+        GOTO3,
+        SHIFT70,
+        GOTO1,
+        SHIFT18,
+        GOTO122,
+        SHIFT119,
+        REDUCE5,
+        GOTO65,
+        SHIFT37,
+        SHIFT99,
+        REDUCE13,
+        SHIFT113,
+        GOTO71,
+        GOTO50,
+        REDUCE4,
+        SHIFT127,
+        GOTO75,
+        SHIFT66,
+        SHIFT60,
+        GOTO124,
+        SHIFT30,
+        SHIFT121,
+        GOTO85,
+        GOTO42,
+        SHIFT48,
+        REDUCE7,
+        GOTO40,
+        SHIFT64,
+        GOTO114,
+        SHIFT36,
+        GOTO72,
+        REDUCE9,
+        GOTO107,
+        GOTO95,
+        REDUCE27,
+        REDUCE23;
 
     }
 

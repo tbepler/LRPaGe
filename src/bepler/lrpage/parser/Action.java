@@ -103,6 +103,12 @@ public class Action {
 	
 	@Override
 	public String toString(){
+		switch(id){
+		case ACCEPT: return id.toString();
+		case GOTO: return id.toString();
+		case REDUCE: return id.toString() + " " +rule;
+		case SHIFT: return id.toString() + " " +shift;
+		}
 		return id.toString();
 	}
 	
