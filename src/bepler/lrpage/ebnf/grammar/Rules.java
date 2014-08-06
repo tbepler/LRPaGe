@@ -6,6 +6,13 @@ import java.util.List;
 import bepler.lrpage.grammar.Assoc;
 import bepler.lrpage.grammar.Rule;
 
+/**
+ * Rules for the EBNF grammar slightly modified to allow precedence declarations.
+ * 
+ * 
+ * @author Tristan Bepler
+ *
+ */
 public enum Rules implements Rule {
 	
 	GrammarStartBlock ( "Grammar", "Block" ),

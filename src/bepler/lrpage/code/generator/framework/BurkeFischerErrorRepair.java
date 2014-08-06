@@ -42,6 +42,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		Repair<V> best = null;
 		Repair<V> insertion = tryInsertions(revert, history, lexer, eng);
 		if(meetsStopCriteria(insertion)){
+			lexer.unmark();
 			return acceptRepair(insertion, history, lexer);
 		}
 		if(insertion.dist > 0 && insertion.compareTo(best) > 0){
@@ -49,6 +50,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		}
 		Repair<V> deletion = tryDeletions(revert, history, lexer, eng);
 		if(meetsStopCriteria(deletion)){
+			lexer.unmark();
 			return acceptRepair(deletion, history, lexer);
 		}
 		if(deletion.dist > 0 && deletion.compareTo(best) > 0){
@@ -56,6 +58,7 @@ public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 		}
 		Repair<V> replacement = tryReplacements(revert, history, lexer, eng);
 		if(meetsStopCriteria(replacement)){
+			lexer.unmark();
 			return acceptRepair(replacement, history, lexer);
 		}
 		if(replacement.dist > 0 && replacement.compareTo(best) > 0){
