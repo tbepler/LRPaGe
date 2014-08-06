@@ -2,7 +2,11 @@
 package bepler.lrpage.ebnf.parser;
 
 import bepler.lrpage.ebnf.parser.nodes.AltRHS;
+import bepler.lrpage.ebnf.parser.nodes.AssocDirective;
+import bepler.lrpage.ebnf.parser.nodes.BothDirective;
 import bepler.lrpage.ebnf.parser.nodes.ConcatRHS;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveList;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveListHead;
 import bepler.lrpage.ebnf.parser.nodes.EmptySymbol;
 import bepler.lrpage.ebnf.parser.nodes.ErrorToken;
 import bepler.lrpage.ebnf.parser.nodes.GrammarAppendBlock;
@@ -10,11 +14,21 @@ import bepler.lrpage.ebnf.parser.nodes.GrammarStartBlock;
 import bepler.lrpage.ebnf.parser.nodes.IdSymbol;
 import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
 import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
+import bepler.lrpage.ebnf.parser.nodes.IntToken;
+import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
+import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
+import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
+import bepler.lrpage.ebnf.parser.nodes.PrecDirectiveBlock;
+import bepler.lrpage.ebnf.parser.nodes.PrecRHS;
+import bepler.lrpage.ebnf.parser.nodes.PriorityDirective;
+import bepler.lrpage.ebnf.parser.nodes.RightAssoc;
 import bepler.lrpage.ebnf.parser.nodes.RuleDecl;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclBlock;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclList;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclListHead;
+import bepler.lrpage.ebnf.parser.nodes.SymbolList;
+import bepler.lrpage.ebnf.parser.nodes.SymbolListHead;
 import bepler.lrpage.ebnf.parser.nodes.SymbolRHS;
 import bepler.lrpage.ebnf.parser.nodes.TerminalStringToken;
 import bepler.lrpage.ebnf.parser.nodes.TokenDecl;
@@ -42,6 +56,11 @@ public class PrintVisitor
             System.out.print(DELIM);
         }
         System.out.println(obj);
+    }
+
+    @Override
+    public void visit(IntToken node) {
+        this.print(node);
     }
 
     @Override
@@ -101,6 +120,16 @@ public class PrintVisitor
     }
 
     @Override
+    public void visit(PrecDirectiveBlock node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.directivelist0 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
     public void visit(TokenDeclListHead node) {
         this.print(node);
         this.print("{");
@@ -137,6 +166,26 @@ public class PrintVisitor
         depth = (depth + 1);
         node.ruledecllist0 .accept(this);
         node.ruledecl1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(DirectiveListHead node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(DirectiveList node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.directivelist0 .accept(this);
+        node.directive1 .accept(this);
         depth = (depth- 1);
         this.print("}");
     }
@@ -201,6 +250,109 @@ public class PrintVisitor
         depth = (depth + 1);
         node.rhs0 .accept(this);
         node.rhs1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(PrecRHS node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.rhs0 .accept(this);
+        node.precdecl1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(PrecDecl node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.symbol0 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(BothDirective node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.assoc0 .accept(this);
+        node.int1 .accept(this);
+        node.symbollist2 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(AssocDirective node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.assoc0 .accept(this);
+        node.symbollist1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(PriorityDirective node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.int0 .accept(this);
+        node.symbollist1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(LeftAssoc node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(RightAssoc node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(NonAssoc node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(SymbolListHead node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.symbol0 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(SymbolList node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.symbollist0 .accept(this);
+        node.symbol1 .accept(this);
         depth = (depth- 1);
         this.print("}");
     }

@@ -16,12 +16,18 @@ public enum Rules implements Rule {
 			
 	RuleDeclBlock ( "Block", Terminals.Special.toString(), Terminals.RulesKeyword.toString(),
 			Terminals.StartBlock.toString(), "RuleDeclList" ),
+			
+	PrecDirectiveBlock ( "Block", Terminals.Special.toString(), Terminals.PrecedenceKeyword.toString(), 
+			Terminals.StartBlock.toString(), "DirectiveList" ),
 	
 	TokenDeclListHead ("TokenDeclList"),
 	TokenDeclList ( "TokenDeclList", "TokenDeclList", "TokenDecl" ),
 	
 	RuleDeclListHead ( "RuleDeclList", "RuleDecl" ),
 	RuleDeclList ( "RuleDeclList", "RuleDeclList", "RuleDecl" ),
+	
+	DirectiveListHead ( "DirectiveList" ),
+	DirectiveList ( "DirectiveList", "DirectiveList", "Directive" ),
 	
 	TokenDecl ( "TokenDecl", Terminals.Identifier.toString(), Terminals.Definition.toString(),
 			Terminals.TerminalString.toString(), Terminals.Termination.toString() ),
@@ -37,8 +43,26 @@ public enum Rules implements Rule {
 	GroupRHS ( "RHS", Terminals.StartGrouping.toString(), "RHS", Terminals.EndGrouping.toString() ),
 	AltRHS ( Assoc.RIGHT, "RHS", "RHS", Terminals.Alternation.toString(), "RHS" ),
 	ConcatRHS ( Assoc.LEFT, "RHS", "RHS", Terminals.Concatenation.toString(), "RHS" ),
+	PrecRHS ( "RHS", "RHS", "PrecDecl" ),
 	
-	EmptySymbol ( "Symbol" ),
+	PrecDecl ( "PrecDecl", Terminals.Special.toString(), Terminals.PrecKeyword.toString(), "Symbol" ),
+	
+	BothDirective ( "Directive", "Assoc", Terminals.Int.toString(),
+			"SymbolList", Terminals.Termination.toString() ),
+	AssocDirective ( "Directive", "Assoc", "SymbolList", Terminals.Termination.toString() ),
+	PriorityDirective ( "Directive", Terminals.Int.toString(), "SymbolList", Terminals.Termination.toString() ),
+	
+	//AssocDecl ( "AssocDecl", Terminals.Special.toString(), "Assoc" ),
+	//PriorityDecl ( "PriorityDecl", Terminals.Special.toString(), Terminals.Int.toString() ),
+	
+	LeftAssoc ( "Assoc", Terminals.LeftKeyword.toString() ),
+	RightAssoc ( "Assoc", Terminals.RightKeyword.toString() ),
+	NonAssoc ( "Assoc", Terminals.NonKeyword.toString() ),
+	
+	SymbolListHead ( "SymbolList", "Symbol" ),
+	SymbolList ( "SymbolList", "SymbolList", Terminals.Concatenation.toString(), "Symbol" ),
+	
+	EmptySymbol (Assoc.RIGHT, "Symbol" ),
 	IdSymbol ( "Symbol", Terminals.Identifier.toString() ),
 	LitSymbol ( "Symbol", Terminals.TerminalString.toString() )
 	;

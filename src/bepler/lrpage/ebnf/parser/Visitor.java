@@ -2,7 +2,11 @@
 package bepler.lrpage.ebnf.parser;
 
 import bepler.lrpage.ebnf.parser.nodes.AltRHS;
+import bepler.lrpage.ebnf.parser.nodes.AssocDirective;
+import bepler.lrpage.ebnf.parser.nodes.BothDirective;
 import bepler.lrpage.ebnf.parser.nodes.ConcatRHS;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveList;
+import bepler.lrpage.ebnf.parser.nodes.DirectiveListHead;
 import bepler.lrpage.ebnf.parser.nodes.EmptySymbol;
 import bepler.lrpage.ebnf.parser.nodes.ErrorToken;
 import bepler.lrpage.ebnf.parser.nodes.GrammarAppendBlock;
@@ -10,11 +14,21 @@ import bepler.lrpage.ebnf.parser.nodes.GrammarStartBlock;
 import bepler.lrpage.ebnf.parser.nodes.IdSymbol;
 import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
 import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
+import bepler.lrpage.ebnf.parser.nodes.IntToken;
+import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
+import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
+import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
+import bepler.lrpage.ebnf.parser.nodes.PrecDirectiveBlock;
+import bepler.lrpage.ebnf.parser.nodes.PrecRHS;
+import bepler.lrpage.ebnf.parser.nodes.PriorityDirective;
+import bepler.lrpage.ebnf.parser.nodes.RightAssoc;
 import bepler.lrpage.ebnf.parser.nodes.RuleDecl;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclBlock;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclList;
 import bepler.lrpage.ebnf.parser.nodes.RuleDeclListHead;
+import bepler.lrpage.ebnf.parser.nodes.SymbolList;
+import bepler.lrpage.ebnf.parser.nodes.SymbolListHead;
 import bepler.lrpage.ebnf.parser.nodes.SymbolRHS;
 import bepler.lrpage.ebnf.parser.nodes.TerminalStringToken;
 import bepler.lrpage.ebnf.parser.nodes.TokenDecl;
@@ -33,6 +47,8 @@ import bepler.lrpage.ebnf.parser.nodes.TokenDeclListHead;
 public interface Visitor {
 
 
+    public void visit(IntToken node);
+
     public void visit(IdentifierToken node);
 
     public void visit(TerminalStringToken node);
@@ -47,6 +63,8 @@ public interface Visitor {
 
     public void visit(RuleDeclBlock node);
 
+    public void visit(PrecDirectiveBlock node);
+
     public void visit(TokenDeclListHead node);
 
     public void visit(TokenDeclList node);
@@ -54,6 +72,10 @@ public interface Visitor {
     public void visit(RuleDeclListHead node);
 
     public void visit(RuleDeclList node);
+
+    public void visit(DirectiveListHead node);
+
+    public void visit(DirectiveList node);
 
     public void visit(TokenDecl node);
 
@@ -66,6 +88,26 @@ public interface Visitor {
     public void visit(AltRHS node);
 
     public void visit(ConcatRHS node);
+
+    public void visit(PrecRHS node);
+
+    public void visit(PrecDecl node);
+
+    public void visit(BothDirective node);
+
+    public void visit(AssocDirective node);
+
+    public void visit(PriorityDirective node);
+
+    public void visit(LeftAssoc node);
+
+    public void visit(RightAssoc node);
+
+    public void visit(NonAssoc node);
+
+    public void visit(SymbolListHead node);
+
+    public void visit(SymbolList node);
 
     public void visit(EmptySymbol node);
 

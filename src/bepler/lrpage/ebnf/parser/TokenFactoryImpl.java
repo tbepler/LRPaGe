@@ -7,6 +7,7 @@ import bepler.lrpage.ebnf.parser.framework.TokenFactory;
 import bepler.lrpage.ebnf.parser.nodes.AlternationToken;
 import bepler.lrpage.ebnf.parser.nodes.BangToken;
 import bepler.lrpage.ebnf.parser.nodes.ConcatenationToken;
+import bepler.lrpage.ebnf.parser.nodes.DefaultKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.DefinitionToken;
 import bepler.lrpage.ebnf.parser.nodes.EOFToken;
 import bepler.lrpage.ebnf.parser.nodes.EndGroupingToken;
@@ -15,6 +16,12 @@ import bepler.lrpage.ebnf.parser.nodes.EndRepetitionToken;
 import bepler.lrpage.ebnf.parser.nodes.ErrorToken;
 import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
 import bepler.lrpage.ebnf.parser.nodes.IgnoreKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.IntToken;
+import bepler.lrpage.ebnf.parser.nodes.LeftKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.NonKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.PrecKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.PrecedenceKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.RightKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.RulesKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.SpecialToken;
 import bepler.lrpage.ebnf.parser.nodes.StartBlockToken;
@@ -37,7 +44,7 @@ public class TokenFactoryImpl
     implements TokenFactory<Visitor>
 {
 
-    private final static Pattern[] PATTERNS = new Pattern[] {Pattern.compile("="), Pattern.compile(","), Pattern.compile(";"), Pattern.compile("\\|"), Pattern.compile("\\["), Pattern.compile("\\]"), Pattern.compile("\\{"), Pattern.compile("\\}"), Pattern.compile("\\("), Pattern.compile("\\)"), Pattern.compile("!"), Pattern.compile("#"), Pattern.compile("Tokens"), Pattern.compile("Ignore"), Pattern.compile("Rules"), Pattern.compile(":"), Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*"), Pattern.compile("(['\"])(?:\\\\.|(?!\\1).)*\\1"), Pattern.compile("\\(\\*.*\\*\\)"), Pattern.compile("\\s+"), Pattern.compile(".")};
+    private final static Pattern[] PATTERNS = new Pattern[] {Pattern.compile("="), Pattern.compile(","), Pattern.compile(";"), Pattern.compile("\\|"), Pattern.compile("\\["), Pattern.compile("\\]"), Pattern.compile("\\{"), Pattern.compile("\\}"), Pattern.compile("\\("), Pattern.compile("\\)"), Pattern.compile("!"), Pattern.compile("#"), Pattern.compile("LEFT"), Pattern.compile("RIGHT"), Pattern.compile("NON"), Pattern.compile("prec"), Pattern.compile("default"), Pattern.compile("Precedence"), Pattern.compile("Tokens"), Pattern.compile("Ignore"), Pattern.compile("Rules"), Pattern.compile(":"), Pattern.compile("-?[0-9]+"), Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*"), Pattern.compile("(['\"])(?:\\\\.|(?!\\1).)*\\1"), Pattern.compile("(\\(\\*)((?!\\*\\)).)*\\*\\)"), Pattern.compile("\\s+"), Pattern.compile(".")};
 
     @Override
     public Token<Visitor> build(int index) {
@@ -67,22 +74,36 @@ public class TokenFactoryImpl
             case  11 :
                 return new SpecialToken();
             case  12 :
-                return new TokensKeywordToken();
+                return new LeftKeywordToken();
             case  13 :
-                return new IgnoreKeywordToken();
+                return new RightKeywordToken();
             case  14 :
-                return new RulesKeywordToken();
+                return new NonKeywordToken();
             case  15 :
-                return new StartBlockToken();
+                return new PrecKeywordToken();
             case  16 :
-                return new IdentifierToken();
+                return new DefaultKeywordToken();
             case  17 :
-                return new TerminalStringToken();
+                return new PrecedenceKeywordToken();
             case  18 :
-                return null;
+                return new TokensKeywordToken();
             case  19 :
-                return null;
+                return new IgnoreKeywordToken();
             case  20 :
+                return new RulesKeywordToken();
+            case  21 :
+                return new StartBlockToken();
+            case  22 :
+                return new IntToken();
+            case  23 :
+                return new IdentifierToken();
+            case  24 :
+                return new TerminalStringToken();
+            case  25 :
+                return null;
+            case  26 :
+                return null;
+            case  27 :
                 return new ErrorToken();
             default:
                 throw new RuntimeException("Index out of bounds");
@@ -117,22 +138,36 @@ public class TokenFactoryImpl
             case  11 :
                 return new SpecialToken(text, line, pos);
             case  12 :
-                return new TokensKeywordToken(text, line, pos);
+                return new LeftKeywordToken(text, line, pos);
             case  13 :
-                return new IgnoreKeywordToken(text, line, pos);
+                return new RightKeywordToken(text, line, pos);
             case  14 :
-                return new RulesKeywordToken(text, line, pos);
+                return new NonKeywordToken(text, line, pos);
             case  15 :
-                return new StartBlockToken(text, line, pos);
+                return new PrecKeywordToken(text, line, pos);
             case  16 :
-                return new IdentifierToken(text, line, pos);
+                return new DefaultKeywordToken(text, line, pos);
             case  17 :
-                return new TerminalStringToken(text, line, pos);
+                return new PrecedenceKeywordToken(text, line, pos);
             case  18 :
-                return null;
+                return new TokensKeywordToken(text, line, pos);
             case  19 :
-                return null;
+                return new IgnoreKeywordToken(text, line, pos);
             case  20 :
+                return new RulesKeywordToken(text, line, pos);
+            case  21 :
+                return new StartBlockToken(text, line, pos);
+            case  22 :
+                return new IntToken(text, line, pos);
+            case  23 :
+                return new IdentifierToken(text, line, pos);
+            case  24 :
+                return new TerminalStringToken(text, line, pos);
+            case  25 :
+                return null;
+            case  26 :
+                return null;
+            case  27 :
                 return new ErrorToken(text, line, pos);
             default:
                 throw new RuntimeException("Index out of bounds");
@@ -151,7 +186,7 @@ public class TokenFactoryImpl
 
     @Override
     public int size() {
-        return  21;
+        return  28;
     }
 
 }
