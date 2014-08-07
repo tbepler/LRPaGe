@@ -56,7 +56,11 @@ public class CommandLine implements CommandLineParams{
 	
 	@Override
 	public void printHelp(PrintStream out){
-		out.println("Argument input:\nRoot path <STRING>\nOutput path <STRING>\nRules file <STRING>\n");
+		out.println("Usage:\nlrpage [-g] [-o] [-p] [-h]\n");
+		out.println("Options:");
+		out.println("-g\tEBNF grammar file");
+		out.println("-p\tpath to output package");
+		out.println("-h\thelp statement");
 	}
 	
 	private InputStream parseGrammarArg(String s) throws FileNotFoundException {
@@ -85,6 +89,7 @@ public class CommandLine implements CommandLineParams{
 	public boolean help() {
 		return help;
 	}
+
 
 	
 }
