@@ -51,6 +51,9 @@ public enum Rules implements Rule {
 	AltRHS ( Assoc.RIGHT, "RHS", "RHS", Terminals.Alternation.toString(), "RHS" ),
 	ConcatRHS ( Assoc.LEFT, "RHS", "RHS", Terminals.Concatenation.toString(), "RHS" ),
 	PrecRHS ( "RHS", "RHS", "PrecDecl" ),
+	NamedRHS ( "RHS", "RHS", "NameDecl" ),
+	
+	NameDecl ( "NameDecl", Terminals.Special.toString(), Terminals.NameKeyword.toString(), Terminals.Identifier.toString() ),
 	
 	PrecDecl ( "PrecDecl", Terminals.Special.toString(), Terminals.PrecKeyword.toString(), "Symbol" ),
 	

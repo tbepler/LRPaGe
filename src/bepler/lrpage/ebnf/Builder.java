@@ -29,6 +29,8 @@ import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
 import bepler.lrpage.ebnf.parser.nodes.IntToken;
 import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
+import bepler.lrpage.ebnf.parser.nodes.NameDecl;
+import bepler.lrpage.ebnf.parser.nodes.NamedRHS;
 import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
 import bepler.lrpage.ebnf.parser.nodes.OptionRHS;
 import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
@@ -225,18 +227,29 @@ public class Builder implements Visitor{
 	public void visit(RepRHS node) {
 		node.rhs0.accept(this);
 		List<RuleBuilder> list = (List<RuleBuilder>) memory.pop();
-		String symbol = "List"+(reps++);
+		String symbol = "";
+		boolean first = true;
+		for(RuleBuilder r : list){
+			if(first){
+				first = false;
+			}else{
+				symbol += "Or";
+			}
+			symbol += r.getName();
+		}
+		symbol += "List";
+		//String symbol = "List"+(reps++);
 		RuleBuilder start = new RuleBuilder();
 		start.appendLHS(symbol);
 		start.appendName(symbol+"Start");
 		env.appendRule(start);
 		RuleBuilder appendElement = new RuleBuilder();
 		appendElement.appendLHS(symbol);
-		appendElement.appendName(symbol+"Element");
 		appendElement.appendRHS(symbol);
 		for(RuleBuilder r : list){
 			RuleBuilder appendRule = appendElement.clone();
 			appendRule.appendRHS(r);
+			appendRule.appendName(symbol+"Append"+r.getName());
 			env.appendRule(appendRule);
 		}
 		RuleBuilder substRule = new RuleBuilder();
@@ -260,6 +273,26 @@ public class Builder implements Visitor{
 		for(RuleBuilder r : list){
 			r.appendPrecedence(precSymbol);
 		}
+	}
+	
+	@Override
+	public void visit(NamedRHS node) {
+		node.rhs0.accept(this);
+		node.namedecl1.accept(this);
+		String name = (String) memory.pop();
+		List<RuleBuilder> list = (List<RuleBuilder>) memory.peek();
+		if(list.size() == 1){
+			list.get(0).appendName(name);
+		}else{
+			for( int i = 0 ; i < list.size() ; ++i ){
+				list.get(i).appendName(name+i);
+			}
+		}
+	}
+
+	@Override
+	public void visit(NameDecl node) {
+		node.identifier0.accept(this);
 	}
 
 	@Override

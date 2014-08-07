@@ -18,6 +18,7 @@ import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
 import bepler.lrpage.ebnf.parser.nodes.IgnoreKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.IntToken;
 import bepler.lrpage.ebnf.parser.nodes.LeftKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.NameKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.NonKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.PrecKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.PrecedenceKeywordToken;
@@ -44,7 +45,7 @@ public class TokenFactoryImpl
     implements TokenFactory<Visitor>
 {
 
-    private final static Pattern[] PATTERNS = new Pattern[] {Pattern.compile("="), Pattern.compile(","), Pattern.compile(";"), Pattern.compile("\\|"), Pattern.compile("\\["), Pattern.compile("\\]"), Pattern.compile("\\{"), Pattern.compile("\\}"), Pattern.compile("\\("), Pattern.compile("\\)"), Pattern.compile("!"), Pattern.compile("#"), Pattern.compile("LEFT"), Pattern.compile("RIGHT"), Pattern.compile("NON"), Pattern.compile("prec"), Pattern.compile("default"), Pattern.compile("Precedence"), Pattern.compile("Tokens"), Pattern.compile("Ignore"), Pattern.compile("Rules"), Pattern.compile(":"), Pattern.compile("-?[0-9]+"), Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*"), Pattern.compile("(['\"])(?:\\\\.|(?!\\1).)*\\1"), Pattern.compile("(\\(\\*)((?!\\*\\)).)*\\*\\)"), Pattern.compile("\\s+"), Pattern.compile(".")};
+    private final static Pattern[] PATTERNS = new Pattern[] {Pattern.compile("="), Pattern.compile(","), Pattern.compile(";"), Pattern.compile("\\|"), Pattern.compile("\\["), Pattern.compile("\\]"), Pattern.compile("\\{"), Pattern.compile("\\}"), Pattern.compile("\\("), Pattern.compile("\\)"), Pattern.compile("!"), Pattern.compile("#"), Pattern.compile("LEFT"), Pattern.compile("RIGHT"), Pattern.compile("NON"), Pattern.compile("prec"), Pattern.compile("name"), Pattern.compile("default"), Pattern.compile("Precedence"), Pattern.compile("Tokens"), Pattern.compile("Ignore"), Pattern.compile("Rules"), Pattern.compile(":"), Pattern.compile("-?[0-9]+"), Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*"), Pattern.compile("(['\"])(?:\\\\.|(?!\\1).)*\\1"), Pattern.compile("(\\(\\*)((?!\\*\\)).)*\\*\\)"), Pattern.compile("\\s+"), Pattern.compile(".")};
 
     @Override
     public Token<Visitor> build(int index) {
@@ -82,28 +83,30 @@ public class TokenFactoryImpl
             case  15 :
                 return new PrecKeywordToken();
             case  16 :
-                return new DefaultKeywordToken();
+                return new NameKeywordToken();
             case  17 :
-                return new PrecedenceKeywordToken();
+                return new DefaultKeywordToken();
             case  18 :
-                return new TokensKeywordToken();
+                return new PrecedenceKeywordToken();
             case  19 :
-                return new IgnoreKeywordToken();
+                return new TokensKeywordToken();
             case  20 :
-                return new RulesKeywordToken();
+                return new IgnoreKeywordToken();
             case  21 :
-                return new StartBlockToken();
+                return new RulesKeywordToken();
             case  22 :
-                return new IntToken();
+                return new StartBlockToken();
             case  23 :
-                return new IdentifierToken();
+                return new IntToken();
             case  24 :
-                return new TerminalStringToken();
+                return new IdentifierToken();
             case  25 :
-                return null;
+                return new TerminalStringToken();
             case  26 :
                 return null;
             case  27 :
+                return null;
+            case  28 :
                 return new ErrorToken();
             default:
                 throw new RuntimeException("Index out of bounds");
@@ -146,28 +149,30 @@ public class TokenFactoryImpl
             case  15 :
                 return new PrecKeywordToken(text, line, pos);
             case  16 :
-                return new DefaultKeywordToken(text, line, pos);
+                return new NameKeywordToken(text, line, pos);
             case  17 :
-                return new PrecedenceKeywordToken(text, line, pos);
+                return new DefaultKeywordToken(text, line, pos);
             case  18 :
-                return new TokensKeywordToken(text, line, pos);
+                return new PrecedenceKeywordToken(text, line, pos);
             case  19 :
-                return new IgnoreKeywordToken(text, line, pos);
+                return new TokensKeywordToken(text, line, pos);
             case  20 :
-                return new RulesKeywordToken(text, line, pos);
+                return new IgnoreKeywordToken(text, line, pos);
             case  21 :
-                return new StartBlockToken(text, line, pos);
+                return new RulesKeywordToken(text, line, pos);
             case  22 :
-                return new IntToken(text, line, pos);
+                return new StartBlockToken(text, line, pos);
             case  23 :
-                return new IdentifierToken(text, line, pos);
+                return new IntToken(text, line, pos);
             case  24 :
-                return new TerminalStringToken(text, line, pos);
+                return new IdentifierToken(text, line, pos);
             case  25 :
-                return null;
+                return new TerminalStringToken(text, line, pos);
             case  26 :
                 return null;
             case  27 :
+                return null;
+            case  28 :
                 return new ErrorToken(text, line, pos);
             default:
                 throw new RuntimeException("Index out of bounds");
@@ -186,7 +191,7 @@ public class TokenFactoryImpl
 
     @Override
     public int size() {
-        return  28;
+        return  29;
     }
 
 }

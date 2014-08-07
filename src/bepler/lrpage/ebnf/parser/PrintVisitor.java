@@ -18,6 +18,8 @@ import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
 import bepler.lrpage.ebnf.parser.nodes.IntToken;
 import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
+import bepler.lrpage.ebnf.parser.nodes.NameDecl;
+import bepler.lrpage.ebnf.parser.nodes.NamedRHS;
 import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
 import bepler.lrpage.ebnf.parser.nodes.OptionRHS;
 import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
@@ -294,6 +296,27 @@ public class PrintVisitor
         depth = (depth + 1);
         node.rhs0 .accept(this);
         node.precdecl1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(NamedRHS node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.rhs0 .accept(this);
+        node.namedecl1 .accept(this);
+        depth = (depth- 1);
+        this.print("}");
+    }
+
+    @Override
+    public void visit(NameDecl node) {
+        this.print(node);
+        this.print("{");
+        depth = (depth + 1);
+        node.identifier0 .accept(this);
         depth = (depth- 1);
         this.print("}");
     }

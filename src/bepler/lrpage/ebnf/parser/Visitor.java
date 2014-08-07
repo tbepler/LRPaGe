@@ -18,6 +18,8 @@ import bepler.lrpage.ebnf.parser.nodes.IgnoreTokenDecl;
 import bepler.lrpage.ebnf.parser.nodes.IntToken;
 import bepler.lrpage.ebnf.parser.nodes.LeftAssoc;
 import bepler.lrpage.ebnf.parser.nodes.LitSymbol;
+import bepler.lrpage.ebnf.parser.nodes.NameDecl;
+import bepler.lrpage.ebnf.parser.nodes.NamedRHS;
 import bepler.lrpage.ebnf.parser.nodes.NonAssoc;
 import bepler.lrpage.ebnf.parser.nodes.OptionRHS;
 import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
@@ -99,6 +101,10 @@ public interface Visitor {
     public void visit(ConcatRHS node);
 
     public void visit(PrecRHS node);
+
+    public void visit(NamedRHS node);
+
+    public void visit(NameDecl node);
 
     public void visit(PrecDecl node);
 

@@ -42,6 +42,24 @@ public class RuleBuilder {
 		return this;
 	}
 	
+	public String getName(){
+		if(name == null){
+			String s = "";
+			if(rhs.isEmpty()){
+				s+="Empty";
+			}else{
+				for(String symbol : rhs){
+					s += symbol;
+				}
+			}
+			if(lhs != null){
+				s+=lhs;
+			}
+			return s;
+		}
+		return name;
+	}
+	
 	public Rule build(Environment env){
 		//assert that all rhs symbols are defined
 		for(String s : rhs){
@@ -50,24 +68,8 @@ public class RuleBuilder {
 			}
 		}
 		Precedence prec = this.assignPrec(env);
-		String n = this.assignName();
+		String n = this.getName();
 		return new ConcreteRule(lhs, rhs.toArray(new String[rhs.size()]), prec.getPriority(), prec.getAssoc(), n);
-	}
-	
-	private String assignName(){
-		String s = name;
-		if(s == null){
-			s = "";
-			if(rhs.size() > 0){
-				for(String symbol : rhs){
-					s += symbol;
-				}
-			}else{
-				s += "Empty";
-			}
-			s += lhs;
-		}
-		return s;
 	}
 	
 	private Precedence assignPrec(Environment env){

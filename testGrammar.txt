@@ -9,12 +9,12 @@ prog = {stmt};
 stmt = exp, ";";
 exp = id
 	| int
-	| exp, "+", exp
-	| exp, "-", exp
-	| exp, "*", exp
-	| exp, "/", exp
-	| exp, "^", exp
-	| "-", exp #prec UMINUS;
+	| exp, "+", exp #name Addition
+	| exp, "-", exp #name Subtraction
+	| exp, "*", exp #name Multiplication
+	| exp, "/", exp #name Division
+	| exp, "^", exp #name Exponentiation
+	| "-", exp #prec UMINUS #name UMinus;
 
 #Precedence:
 LEFT 100 "+", "-";

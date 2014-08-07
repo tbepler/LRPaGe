@@ -30,6 +30,7 @@ public enum Terminals implements Terminal{
 	RightKeyword ( "RIGHT",  true, "Right" ),
 	NonKeyword ( "NON", true, "Non" ),
 	PrecKeyword ( "prec", true, "prec"),
+	NameKeyword ( "name", true, "name"),
 	DefaultKeyword ( "default" , true, "default" ),
 	PrecedenceKeyword( "Precedence", true, "Precedence" ),
 	TokensKeyword ( "Tokens" , true, "Tokens" ),
