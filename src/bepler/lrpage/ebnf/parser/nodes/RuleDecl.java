@@ -38,4 +38,33 @@ public class RuleDecl
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + identifier0 .hashCode()));
+        hash = (hash*(13 + rhs1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof RuleDecl)) {
+            return false;
+        }
+        RuleDecl castResult = ((RuleDecl) o);
+        if (!this.identifier0 .equals(castResult.identifier0)) {
+            return false;
+        }
+        if (!this.rhs1 .equals(castResult.rhs1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

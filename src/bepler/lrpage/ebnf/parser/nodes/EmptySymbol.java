@@ -34,4 +34,25 @@ public class EmptySymbol
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof EmptySymbol)) {
+            return false;
+        }
+        EmptySymbol castResult = ((EmptySymbol) o);
+        return true;
+    }
+
 }

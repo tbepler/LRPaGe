@@ -2,6 +2,8 @@
 bin/**
 src/bepler/lrpage/test/**
 
+output/**
+
 .externalToolBuilders/**
 /.settings
 .classpath

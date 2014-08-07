@@ -369,7 +369,7 @@ public class NodeGenerator {
 		//int[] ignore= r.ignoreSymbols();
 		JVar firstField = null;
 		int fields = 0;
-		String firstSymbol = null;
+		//String firstSymbol = null;
 		for(int i=0;i<rhs.length;i++){
 			String symbol = rhs[i];
 			JDefinedClass clazz= lookupNodeClass(symbol);
@@ -379,7 +379,7 @@ public class NodeGenerator {
 				JVar field= concreteNode.field(JMod.PUBLIC+JMod.FINAL, clazz, symbol.toLowerCase()+(fields++));
 				if(firstField == null){
 					firstField = field;
-					firstSymbol = symbol;
+					//firstSymbol = symbol;
 				}
 				cons.body().assign(JExpr._this().ref(field), param);
 			}
@@ -394,12 +394,15 @@ public class NodeGenerator {
 		pos.annotate(Override.class);
 		pos.body()._return(JExpr.invoke(firstField, "getPos"));
 		
-		boolean replace = fields == 1 && lhs.equals(firstSymbol);
+		//boolean replace = fields == 1 && lhs.equals(firstSymbol);
 		
 		//define accept method
 		JMethod accept= concreteNode.method(JMod.PUBLIC, void.class, ACCEPT);
 		accept.annotate(Override.class);
 		JVar visitor= accept.param(visitorInterface, "visitor");
+		JMethod visit= addVisitableNode(concreteNode);
+		accept.body().invoke(visitor, visit).arg(JExpr._this());
+		/*
 		if(!replace){ //if not replaced, define visit method on visitor and accept to call that method
 			JMethod visit= addVisitableNode(concreteNode);
 			accept.body().invoke(visitor, visit).arg(JExpr._this());
@@ -410,6 +413,7 @@ public class NodeGenerator {
 			replaceMethod.annotate(Override.class);
 			replaceMethod.body()._return(firstField);
 		}
+		*/
 		
 		HashCodeGenerator h= new HashCodeGenerator();
 		EqualsGenerator e= new EqualsGenerator();

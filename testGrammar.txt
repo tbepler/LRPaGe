@@ -1,0 +1,23 @@
+#Tokens:
+id = "[a-zA-Z][a-zA-Z0-9_]*";
+int = "-?[0-9]+";
+!"\\s+";
+error = ".";
+
+#Rules:
+prog = {stmt};
+stmt = exp, ";";
+exp = id
+	| int
+	| exp, "+", exp
+	| exp, "-", exp
+	| exp, "*", exp
+	| exp, "/", exp
+	| exp, "^", exp
+	| "-", exp #prec UMINUS;
+
+#Precedence:
+LEFT 100 "+", "-";
+LEFT 90 "*", "/";
+RIGHT 80 "^";
+LEFT 70 UMINUS;

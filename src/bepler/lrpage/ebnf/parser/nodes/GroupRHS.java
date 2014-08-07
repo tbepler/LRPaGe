@@ -33,12 +33,32 @@ public class GroupRHS
 
     @Override
     public void accept(Visitor visitor) {
-        //do nothing
+        visitor.visit(this);
     }
 
     @Override
-    public RHSAbstractNode replace() {
-        return rhs0;
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + rhs0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof GroupRHS)) {
+            return false;
+        }
+        GroupRHS castResult = ((GroupRHS) o);
+        if (!this.rhs0 .equals(castResult.rhs0)) {
+            return false;
+        }
+        return true;
     }
 
 }

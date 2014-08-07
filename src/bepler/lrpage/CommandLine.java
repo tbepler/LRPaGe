@@ -5,82 +5,85 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
+import java.io.PrintStream;
 
 public class CommandLine implements CommandLineParams{
+	
+	private static final String DEFAULT_OUTPUT_DIR = "lrpage_output";
+	private static final String DEFAULT_PACKAGE = "bepler.lrgpage.output";
+	
+	private static final String GRAMMAR_TAG = "-g";
+	private static final String OUTPUT_TAG = "-o";
+	private static final String PACKAGE_TAG = "-p";
+	private static final String HELP_TAG = "-h";
 
-	public String root;
-	public String output;
-	public InputStream rules;
-	
-	CommandLine(String root, String output, String rules) throws FileNotFoundException{
-		setRules(rules);
-		setRootDir(root);
-		setOutputDir(output);
-		
-	}
-	
-	public void printHelp(){
-		System.out.println("Argument input:\nRoot path <STRING>\nOutput path <STRING>\nRules file <STRING>\n");
-	}
+	private String root = DEFAULT_PACKAGE;
+	private File output = new File(DEFAULT_OUTPUT_DIR);
+	private InputStream grammar = System.in;
+	private boolean help = false;
 	
 	@Override
-	public void setRules(String s) throws FileNotFoundException {
-		InputStream fis;
-		try {
-			System.out.println(s);
-			fis = new BufferedInputStream( new FileInputStream(new File(s)));
-			rules=fis;
-		} catch (FileNotFoundException e) {
-			printHelp();
-			e.printStackTrace();
-			System.exit(1);
+	public void parse(String ... args) throws Exception{
+		for( int i = 0 ; i < args.length ; ++i ){
+			String cur = args[i];
+			switch(cur){
+			case GRAMMAR_TAG: 
+				assertNextArg(GRAMMAR_TAG, i, args);
+				grammar = parseGrammarArg(args[++i]);
+				break;
+			case OUTPUT_TAG:
+				assertNextArg(OUTPUT_TAG, i, args);
+				output = new File(args[++i]);
+				break;
+			case PACKAGE_TAG:
+				assertNextArg(PACKAGE_TAG, i, args);
+				root = args[++i];
+				break;
+			case HELP_TAG:
+				help = true;
+				return;
+			default:
+				throw new Exception("Unrecognized flag: "+cur);
+			}
 		}
 	}
-	@Override
-	public InputStream getRules() {
-		return rules;
-	}
 	
-	@Override
-	public void setRootDir(String s) {
-
-		try {
-			System.out.println(s);
-			InputStream f= new FileInputStream(new File(s+"test.txt"));
-			root=s;
-		} catch (FileNotFoundException e) {
-			printHelp();
-			e.printStackTrace();
-			System.exit(2);
+	private void assertNextArg(String flag, int index, String ... args) throws Exception{
+		if( index + 1 >= args.length){
+			throw new Exception("Flag `"+flag+"' requires an argument.");
 		}
+	}
 	
+	@Override
+	public void printHelp(PrintStream out){
+		out.println("Argument input:\nRoot path <STRING>\nOutput path <STRING>\nRules file <STRING>\n");
+	}
+	
+	private InputStream parseGrammarArg(String s) throws FileNotFoundException {
+		return new BufferedInputStream( new FileInputStream(new File(s)));
+	}
+	
+	@Override
+	public InputStream getGrammarInput() {
+		return grammar;
+	}
+	
+	@Override
+	public File getOutputDir() {
+		if(!output.exists()){
+			output.mkdirs();
+		}
+		return output;
 	}
 
 	@Override
-	public String getRootDir() {
+	public String getRootPackage() {
 		return root;
 	}
 
 	@Override
-	public void setOutputDir(String s) {
-		try {
-			System.out.println(s);
-			InputStream f = new FileInputStream(new File(s+"test.txt"));
-			output=s;
-		} catch (FileNotFoundException e) {
-			printHelp();
-			e.printStackTrace();
-			System.exit(3);
-		}
-		
-	}
-	
-	@Override
-	public String getOutputDir() {
-		return output;
+	public boolean help() {
+		return help;
 	}
 
 	

@@ -40,4 +40,37 @@ public class BothDirective
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + assoc0 .hashCode()));
+        hash = (hash*(13 + int1 .hashCode()));
+        hash = (hash*(13 + symbollist2 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof BothDirective)) {
+            return false;
+        }
+        BothDirective castResult = ((BothDirective) o);
+        if (!this.assoc0 .equals(castResult.assoc0)) {
+            return false;
+        }
+        if (!this.int1 .equals(castResult.int1)) {
+            return false;
+        }
+        if (!this.symbollist2 .equals(castResult.symbollist2)) {
+            return false;
+        }
+        return true;
+    }
+
 }

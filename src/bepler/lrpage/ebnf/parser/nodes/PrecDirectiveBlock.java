@@ -36,4 +36,29 @@ public class PrecDirectiveBlock
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + directivelist0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof PrecDirectiveBlock)) {
+            return false;
+        }
+        PrecDirectiveBlock castResult = ((PrecDirectiveBlock) o);
+        if (!this.directivelist0 .equals(castResult.directivelist0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

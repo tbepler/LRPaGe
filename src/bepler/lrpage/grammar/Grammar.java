@@ -12,5 +12,7 @@ public interface Grammar{
 	
 	public String getPseudonym(String symbol);
 	
+	public String getStartSymbol();
+	
 	
 }

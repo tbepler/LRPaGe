@@ -36,4 +36,29 @@ public class IgnoreTokenDecl
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + terminalstring0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof IgnoreTokenDecl)) {
+            return false;
+        }
+        IgnoreTokenDecl castResult = ((IgnoreTokenDecl) o);
+        if (!this.terminalstring0 .equals(castResult.terminalstring0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

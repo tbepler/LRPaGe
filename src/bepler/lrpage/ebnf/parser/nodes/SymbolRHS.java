@@ -36,4 +36,29 @@ public class SymbolRHS
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + symbol0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof SymbolRHS)) {
+            return false;
+        }
+        SymbolRHS castResult = ((SymbolRHS) o);
+        if (!this.symbol0 .equals(castResult.symbol0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

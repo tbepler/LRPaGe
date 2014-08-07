@@ -36,4 +36,29 @@ public class IdSymbol
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + identifier0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof IdSymbol)) {
+            return false;
+        }
+        IdSymbol castResult = ((IdSymbol) o);
+        if (!this.identifier0 .equals(castResult.identifier0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

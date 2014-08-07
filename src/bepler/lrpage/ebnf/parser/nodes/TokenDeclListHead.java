@@ -34,4 +34,25 @@ public class TokenDeclListHead
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof TokenDeclListHead)) {
+            return false;
+        }
+        TokenDeclListHead castResult = ((TokenDeclListHead) o);
+        return true;
+    }
+
 }

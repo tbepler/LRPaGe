@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="lrpage" default="run" basedir=".">
+<project name="lrpage" default="jar" basedir=".">
 	<property name="source.dir" value="src/"/>
 	<property name="class.dir" value="bin/"/>
 	<property name="resource.dir" value="src/bepler/lrpage/code/generator/framework/"/>
 	<property name="jar.dir" value="dist/"/>
 	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar"/>
-	<property name="main-class" value="bepler.lrpage.Main"/>
+	<property name="main-class" value="bepler.lrpage.Launcher"/>
 	<property name="args" value="src"/>
 	
 	<path id="resources.path">

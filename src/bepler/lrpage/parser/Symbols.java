@@ -8,6 +8,8 @@ import bepler.lrpage.grammar.Terminal;
 
 public class Symbols{
 	
+	private final String start;
+	
 	private final List<Rule> rules;
 	private final Map<String, List<Rule>> producers = new HashMap<String, List<Rule>>();
 	
@@ -22,6 +24,7 @@ public class Symbols{
 	
 	public Symbols(Grammar g, String eof){
 		assert(g != null && eof != null);
+		this.start = g.getStartSymbol();
 		defaultPriority = g.defaultPriority();
 		this.eof = eof;
 		this.rules = Collections.unmodifiableList(g.getRules());
@@ -49,6 +52,10 @@ public class Symbols{
 		}
 		allSymbols.add(eof);
 		terminals.add(eof);
+	}
+	
+	public String getStartSymbol(){
+		return start;
 	}
 	
 	public Set<String> getAllSymbols(){

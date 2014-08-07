@@ -38,4 +38,33 @@ public class AssocDirective
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + assoc0 .hashCode()));
+        hash = (hash*(13 + symbollist1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof AssocDirective)) {
+            return false;
+        }
+        AssocDirective castResult = ((AssocDirective) o);
+        if (!this.assoc0 .equals(castResult.assoc0)) {
+            return false;
+        }
+        if (!this.symbollist1 .equals(castResult.symbollist1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -112,6 +112,10 @@ public enum Rules implements Rule {
 		this(0, lhs, rhs);
 	}
 	
+	public static String startSymbol(){
+		return GrammarStartBlock.lhs;
+	}
+	
 	public static List<Rule> asList(){
 		return Arrays.<Rule>asList(Rules.values());
 	}
