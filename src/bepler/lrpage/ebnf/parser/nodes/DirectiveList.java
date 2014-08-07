@@ -38,4 +38,33 @@ public class DirectiveList
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + directivelist0 .hashCode()));
+        hash = (hash*(13 + directive1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof DirectiveList)) {
+            return false;
+        }
+        DirectiveList castResult = ((DirectiveList) o);
+        if (!this.directivelist0 .equals(castResult.directivelist0)) {
+            return false;
+        }
+        if (!this.directive1 .equals(castResult.directive1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

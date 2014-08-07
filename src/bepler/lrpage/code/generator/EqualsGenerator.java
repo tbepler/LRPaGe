@@ -34,7 +34,7 @@ public class EqualsGenerator {
 	
 	
 	public JMethod define(JDefinedClass clazz){
-		JCodeModel model= clazz.owner(
+		JCodeModel model= clazz.owner();
 		JMethod equals= clazz.method(JMod.PUBLIC, boolean.class, "equals");
 		equals.annotate(Override.class);
 		JVar o = equals.param(Object.class, "o");

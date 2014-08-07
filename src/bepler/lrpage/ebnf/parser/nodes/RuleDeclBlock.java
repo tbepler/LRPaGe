@@ -36,4 +36,29 @@ public class RuleDeclBlock
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + ruledecllist0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof RuleDeclBlock)) {
+            return false;
+        }
+        RuleDeclBlock castResult = ((RuleDeclBlock) o);
+        if (!this.ruledecllist0 .equals(castResult.ruledecllist0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -38,4 +38,33 @@ public class SymbolList
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + symbollist0 .hashCode()));
+        hash = (hash*(13 + symbol1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof SymbolList)) {
+            return false;
+        }
+        SymbolList castResult = ((SymbolList) o);
+        if (!this.symbollist0 .equals(castResult.symbollist0)) {
+            return false;
+        }
+        if (!this.symbol1 .equals(castResult.symbol1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

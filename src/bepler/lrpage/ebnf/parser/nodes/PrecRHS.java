@@ -38,4 +38,33 @@ public class PrecRHS
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + rhs0 .hashCode()));
+        hash = (hash*(13 + precdecl1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof PrecRHS)) {
+            return false;
+        }
+        PrecRHS castResult = ((PrecRHS) o);
+        if (!this.rhs0 .equals(castResult.rhs0)) {
+            return false;
+        }
+        if (!this.precdecl1 .equals(castResult.precdecl1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

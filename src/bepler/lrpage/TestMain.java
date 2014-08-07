@@ -13,7 +13,7 @@ import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Rule;
 import bepler.lrpage.grammar.Terminal;
 
-public class Main {
+public class TestMain {
 	
 	public static class True implements Terminal{
 
@@ -289,6 +289,11 @@ public class Main {
 			case "Semicolon": return "';'";
 			default: return null;
 			}
+		}
+
+		@Override
+		public String getStartSymbol() {
+			return "Stmt";
 		}
 		
 	}

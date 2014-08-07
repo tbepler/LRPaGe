@@ -36,4 +36,29 @@ public class TokenDeclBlock
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + tokendecllist0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof TokenDeclBlock)) {
+            return false;
+        }
+        TokenDeclBlock castResult = ((TokenDeclBlock) o);
+        if (!this.tokendecllist0 .equals(castResult.tokendecllist0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

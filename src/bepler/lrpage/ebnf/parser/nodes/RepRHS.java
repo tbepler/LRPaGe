@@ -36,4 +36,29 @@ public class RepRHS
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + rhs0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof RepRHS)) {
+            return false;
+        }
+        RepRHS castResult = ((RepRHS) o);
+        if (!this.rhs0 .equals(castResult.rhs0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

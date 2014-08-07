@@ -26,8 +26,7 @@ public class EBNFGrammarParser implements GrammarParser{
 		if(astRoot == null){
 			return null;
 		}
-		//TODO
-		return null;
+		return new Builder().build(astRoot);
 	}
 
 }

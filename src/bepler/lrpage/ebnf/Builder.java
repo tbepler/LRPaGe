@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Stack;
 
 import bepler.lrpage.ebnf.environment.Environment;
+import bepler.lrpage.ebnf.environment.Precedence;
 import bepler.lrpage.ebnf.environment.RuleBuilder;
+import bepler.lrpage.ebnf.environment.TerminalBuilder;
 import bepler.lrpage.ebnf.parser.Visitor;
+import bepler.lrpage.ebnf.parser.framework.Node;
 import bepler.lrpage.ebnf.parser.nodes.AltRHS;
 import bepler.lrpage.ebnf.parser.nodes.AssocDirective;
 import bepler.lrpage.ebnf.parser.nodes.BothDirective;
@@ -46,21 +49,16 @@ import bepler.lrpage.ebnf.parser.nodes.TokenDecl;
 import bepler.lrpage.ebnf.parser.nodes.TokenDeclBlock;
 import bepler.lrpage.ebnf.parser.nodes.TokenDeclList;
 import bepler.lrpage.ebnf.parser.nodes.TokenDeclListHead;
+import bepler.lrpage.grammar.Assoc;
+import bepler.lrpage.grammar.Grammar;
 import bepler.lrpage.grammar.Rule;
 
 public class Builder implements Visitor{
 	
 	private final Environment env = new Environment();
 	private final Deque<Object> memory = new ArrayDeque<Object>();
-	private final List<TerminalImpl> tokens = new ArrayList<TerminalImpl>();
-	private final List<Rule> rules = new ArrayList<Rule>();
 	
 	private int reps = 0;
-	
-	private static class RHS extends ArrayList<String>{
-		private static final long serialVersionUID = 1L;
-		public String precId = null;	
-	}
 	
 	/*
 	public List<String> getSymbols(){
@@ -72,15 +70,16 @@ public class Builder implements Visitor{
 	}
 	*/
 	
-	public List<Rule> getRules(){
-		return this.rules;
-	}
-	
 	/*
 	public Stack<Object> getMemory(){
 		return this.memory;
 	}
 	*/
+	
+	public Grammar build(Node<Visitor> root){
+		root.accept(this);
+		return env.build();
+	}
 
 	@Override
 	public void visit(IdentifierToken node) {
@@ -120,7 +119,7 @@ public class Builder implements Visitor{
 
 	@Override
 	public void visit(TokenDeclListHead node) {
-		node.accept(this);
+		//do nothing - this node is empty
 	}
 
 	@Override
@@ -149,16 +148,14 @@ public class Builder implements Visitor{
 		node.terminalstring1.accept(this); //right
 		String regex = (String) memory.pop();
 		String symbol = (String) memory.pop();
-		TerminalImpl token = new TerminalImpl(symbol, regex);
-		tokens.add(token);
+		env.appendTerminal(new TerminalBuilder().appendSymbol(symbol).appendRegex(regex));
 	}
 
 	@Override
 	public void visit(IgnoreTokenDecl node) {
 		node.terminalstring0.accept(this);
 		String regex = (String) memory.pop();
-		TerminalImpl token = new TerminalImpl(regex);
-		tokens.add(token);
+		env.appendTerminal(new TerminalBuilder().appendRegex(regex));
 	}
 
 	
@@ -278,34 +275,27 @@ public class Builder implements Visitor{
 	@Override
 	public void visit(LitSymbol node) {
 		node.terminalstring0.accept(this);
+		String regex = (String) memory.pop();
+		String symbol = env.getPunctuationSymbol(regex);
+		memory.push(symbol);
 	}
 	
-	//TODO - needs to be implemented in a way that does not remove whitespace - Tristan
 	private String trimString(String s){
-		String curr;
-		String next;
 		if(s.length() <2){
 			return s;
 		}
 		
-		s = s.substring(1, s.length()-1);  // remove quotations 
-		
-		for(int i = 0; i <s.length(); i++){  //search through string for \\ replace the first \ with " "
-			curr = Character.toString(s.charAt(i));
-			if((i + 1) > s.length()){
-				next ="";
-			}else{
-				next = Character.toString(s.charAt(i+1));
+		StringBuilder b = new StringBuilder();
+		for(int i = 1 ; i < s.length() - 1 ; ++i ){
+			char cur = s.charAt(i);
+			if(cur == '\\'){
+				cur = s.charAt(++i);
+				assert(i < s.length() - 1);
 			}
-			if((curr+next) =="\\"){
-				StringBuilder sb = new StringBuilder(s);
-				sb.setCharAt(i, ' ');
-				s = sb.toString();
-			}
+			b.append(cur);
 		}
-		s.replaceAll("\\s+",""); //trim that string of all white spaces.
 		
-		return s;
+		return b.toString();
 	}
 
 	@Override
@@ -320,68 +310,88 @@ public class Builder implements Visitor{
 
 	@Override
 	public void visit(DirectiveListHead node) {
-		// TODO Auto-generated method stub
-		
+		//do nothing - node is empty
 	}
 
 	@Override
 	public void visit(DirectiveList node) {
-		// TODO Auto-generated method stub
-		
+		node.directivelist0.accept(this);
+		node.directive1.accept(this);
 	}
 
 	@Override
 	public void visit(PrecDecl node) {
-		// TODO Auto-generated method stub
-		
+		node.symbol0.accept(this);
 	}
 
 	@Override
 	public void visit(BothDirective node) {
-		// TODO Auto-generated method stub
-		
+		node.assoc0.accept(this);
+		node.int1.accept(this);
+		node.symbollist2.accept(this);
+		List<String> symbols = (List<String>) memory.pop();
+		Integer priority = (Integer) memory.pop();
+		Assoc assoc = (Assoc) memory.pop();
+		Precedence prec = new Precedence(assoc, priority);
+		for(String symbol : symbols){
+			env.putPrecedence(symbol, prec);
+		}
 	}
 
 	@Override
 	public void visit(AssocDirective node) {
-		// TODO Auto-generated method stub
-		
+		node.assoc0.accept(this);
+		node.symbollist1.accept(this);
+		List<String> symbols = (List<String>) memory.pop();
+		Assoc assoc = (Assoc) memory.pop();
+		Precedence prec = new Precedence(assoc, null);
+		for(String symbol : symbols){
+			env.putPrecedence(symbol, prec);
+		}
 	}
 
 	@Override
 	public void visit(PriorityDirective node) {
-		// TODO Auto-generated method stub
-		
+		node.int0.accept(this);
+		node.symbollist1.accept(this);
+		List<String> symbols = (List<String>) memory.pop();
+		Integer priority = (Integer) memory.pop();
+		Precedence prec = new Precedence(null, priority);
+		for(String symbol : symbols){
+			env.putPrecedence(symbol, prec);
+		}
 	}
 
 	@Override
 	public void visit(LeftAssoc node) {
-		// TODO Auto-generated method stub
-		
+		memory.push(Assoc.LEFT);
 	}
 
 	@Override
 	public void visit(RightAssoc node) {
-		// TODO Auto-generated method stub
-		
+		memory.push(Assoc.RIGHT);
 	}
 
 	@Override
 	public void visit(NonAssoc node) {
-		// TODO Auto-generated method stub
-		
+		memory.push(Assoc.NON);
 	}
 
 	@Override
 	public void visit(SymbolListHead node) {
-		// TODO Auto-generated method stub
-		
+		node.symbol0.accept(this);
+		List<String> symbols = new ArrayList<String>();
+		symbols.add((String) memory.pop());
+		memory.push(symbols);
 	}
 
 	@Override
 	public void visit(SymbolList node) {
-		// TODO Auto-generated method stub
-		
+		node.symbollist0.accept(this);
+		node.symbol1.accept(this);
+		String symbol = (String) memory.pop();
+		List<String> symbols = (List<String>) memory.peek();
+		symbols.add(symbol);
 	}
 
 

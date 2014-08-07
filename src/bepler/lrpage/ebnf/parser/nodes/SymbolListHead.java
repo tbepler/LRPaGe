@@ -36,4 +36,29 @@ public class SymbolListHead
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + symbol0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof SymbolListHead)) {
+            return false;
+        }
+        SymbolListHead castResult = ((SymbolListHead) o);
+        if (!this.symbol0 .equals(castResult.symbol0)) {
+            return false;
+        }
+        return true;
+    }
+
 }

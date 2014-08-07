@@ -34,4 +34,9 @@ public class EBNFGrammar implements Grammar{
 		return Terminals.pseudonym(symbol);
 	}
 
+	@Override
+	public String getStartSymbol() {
+		return Rules.startSymbol();
+	}
+
 }

@@ -38,4 +38,33 @@ public class PriorityDirective
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + int0 .hashCode()));
+        hash = (hash*(13 + symbollist1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof PriorityDirective)) {
+            return false;
+        }
+        PriorityDirective castResult = ((PriorityDirective) o);
+        if (!this.int0 .equals(castResult.int0)) {
+            return false;
+        }
+        if (!this.symbollist1 .equals(castResult.symbollist1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

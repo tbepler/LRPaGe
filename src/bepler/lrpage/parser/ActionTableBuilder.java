@@ -41,7 +41,7 @@ public class ActionTableBuilder {
 	}
 	
 	private Rule getAuxilStart(){
-		final String startSymbol = grammar.getRules().get(0).leftHandSide();
+		final String startSymbol = grammar.getStartSymbol();
 		return new Rule(){
 
 			@Override

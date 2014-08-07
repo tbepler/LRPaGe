@@ -1,19 +1,18 @@
 package bepler.lrpage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.PrintStream;
 
 public interface CommandLineParams {
 	
-	public void setRules(String s) throws FileNotFoundException;
-	public InputStream getRules();
+	public void parse(String ... args) throws Exception;
 	
-	public void setRootDir(String s);
-	public String getRootDir();
-	
-	public void setOutputDir(String s);
-	public String getOutputDir();
+	public void printHelp(PrintStream out);
+
+	public InputStream getGrammarInput();
+	public String getRootPackage();
+	public File getOutputDir();
+	public boolean help();
 	
 }

@@ -38,4 +38,33 @@ public class GrammarAppendBlock
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + grammar0 .hashCode()));
+        hash = (hash*(13 + block1 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof GrammarAppendBlock)) {
+            return false;
+        }
+        GrammarAppendBlock castResult = ((GrammarAppendBlock) o);
+        if (!this.grammar0 .equals(castResult.grammar0)) {
+            return false;
+        }
+        if (!this.block1 .equals(castResult.block1)) {
+            return false;
+        }
+        return true;
+    }
+
 }

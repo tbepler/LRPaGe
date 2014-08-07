@@ -36,4 +36,29 @@ public class GrammarStartBlock
         visitor.visit(this);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (hash*(13 + block0 .hashCode()));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.equals(o)) {
+            return true;
+        }
+        if (o.equals(null)) {
+            return false;
+        }
+        if (!(o instanceof GrammarStartBlock)) {
+            return false;
+        }
+        GrammarStartBlock castResult = ((GrammarStartBlock) o);
+        if (!this.block0 .equals(castResult.block0)) {
+            return false;
+        }
+        return true;
+    }
+
 }
