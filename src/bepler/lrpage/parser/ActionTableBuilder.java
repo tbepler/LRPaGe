@@ -159,10 +159,15 @@ public class ActionTableBuilder {
 		if(a1.id() == Actions.REDUCE && a2.id() == Actions.SHIFT){
 			return resolveShiftReduce(a2, a1);
 		}
-		System.err.println("Warning: ambiguous grammar ("+grammar+"). Conflict on actions: "+a1+", "+a2);
-		System.err.println(a1.production());
-		System.err.println(a2.production());
-		return null;
+		System.err.println("Warning: ambiguous grammar. Conflict on actions: "+a1+", "+a2);
+		int a1index = grammar.indexOf(a1.production());
+		int a2index = grammar.indexOf(a2.production());
+		Action resolve = a1index < a2index ? a1 : a2;
+		System.err.println("Resolving using action: "+resolve);
+		return resolve;
+		//System.err.println(a1.production());
+		//System.err.println(a2.production());
+		//return null;
 	}
 	
 	private Action resolveShiftReduce(Action shift, Action reduce){

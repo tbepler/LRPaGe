@@ -43,5 +43,21 @@ public class ConcreteRule implements Rule{
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String toString(){
+		return lhs + " -> " + rhsToString();
+	}
+	
+	private String rhsToString(){
+		String s = "";
+		for( int i = 0 ; i < rhs.length ; ++i ){
+			if(i != 0){
+				s += ", ";
+			}
+			s += rhs[i];
+		}
+		return s;
+	}
 
 }

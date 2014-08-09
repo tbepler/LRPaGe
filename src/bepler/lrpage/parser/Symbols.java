@@ -106,6 +106,10 @@ public class Symbols{
 	public List<Rule> getRules(String lhs){
 		return producers.get(lhs);
 	}
+	
+	public int indexOf(Rule r){
+		return rules.indexOf(r);
+	}
 
 	public List<Rule> getRules() {
 		return rules;
