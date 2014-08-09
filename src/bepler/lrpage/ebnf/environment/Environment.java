@@ -68,6 +68,18 @@ public class Environment {
 		return this;
 	}
 	
+	public Environment setDefaultAssoc(Assoc a){
+		assert(a != null);
+		defaultPrec = new Precedence(a, defaultPrec.getPriority());
+		return this;
+	}
+	
+	public Environment setDefaultPriority(Integer priority){
+		assert(priority != null);
+		defaultPrec = new Precedence(defaultPrec.getAssoc(), priority);
+		return this;
+	}
+	
 	public Precedence getPrecedence(String symbol){
 		return precedence.get(symbol);
 	}

@@ -16,6 +16,9 @@ import bepler.lrpage.ebnf.parser.nodes.AltRHS;
 import bepler.lrpage.ebnf.parser.nodes.AssocDirective;
 import bepler.lrpage.ebnf.parser.nodes.BothDirective;
 import bepler.lrpage.ebnf.parser.nodes.ConcatRHS;
+import bepler.lrpage.ebnf.parser.nodes.DefaultAssocDirective;
+import bepler.lrpage.ebnf.parser.nodes.DefaultDirective;
+import bepler.lrpage.ebnf.parser.nodes.DefaultPriorityDirective;
 import bepler.lrpage.ebnf.parser.nodes.DirectiveList;
 import bepler.lrpage.ebnf.parser.nodes.DirectiveListHead;
 import bepler.lrpage.ebnf.parser.nodes.EmptySymbol;
@@ -37,6 +40,10 @@ import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
 import bepler.lrpage.ebnf.parser.nodes.PrecDirectiveBlock;
 import bepler.lrpage.ebnf.parser.nodes.PrecRHS;
 import bepler.lrpage.ebnf.parser.nodes.PriorityDirective;
+import bepler.lrpage.ebnf.parser.nodes.PseudoDeclBlock;
+import bepler.lrpage.ebnf.parser.nodes.PseudoDeclList;
+import bepler.lrpage.ebnf.parser.nodes.PseudoDeclListHead;
+import bepler.lrpage.ebnf.parser.nodes.PseudonymDecl;
 import bepler.lrpage.ebnf.parser.nodes.RepRHS;
 import bepler.lrpage.ebnf.parser.nodes.RightAssoc;
 import bepler.lrpage.ebnf.parser.nodes.RuleDecl;
@@ -60,7 +67,7 @@ public class Builder implements Visitor{
 	private final Environment env = new Environment();
 	private final Deque<Object> memory = new ArrayDeque<Object>();
 	
-	private int reps = 0;
+	//private int reps = 0;
 	
 	/*
 	public List<String> getSymbols(){
@@ -425,6 +432,54 @@ public class Builder implements Visitor{
 		String symbol = (String) memory.pop();
 		List<String> symbols = (List<String>) memory.peek();
 		symbols.add(symbol);
+	}
+
+	@Override
+	public void visit(PseudoDeclBlock node) {
+		node.pseudodecllist0.accept(this);
+	}
+
+	@Override
+	public void visit(PseudoDeclListHead node) {
+		//do nothing
+	}
+
+	@Override
+	public void visit(PseudoDeclList node) {
+		node.pseudodecllist0.accept(this);
+		node.pseudodecl1.accept(this);
+	}
+
+	@Override
+	public void visit(PseudonymDecl node) {
+		node.symbol0.accept(this);
+		node.terminalstring1.accept(this);
+		String pseudo = (String) memory.pop();
+		String symbol = (String) memory.pop();
+		env.putPseudonym(symbol, pseudo);
+	}
+
+	@Override
+	public void visit(DefaultDirective node) {
+		node.assoc0.accept(this);
+		node.int1.accept(this);
+		Integer i = (Integer) memory.pop();
+		Assoc a = (Assoc) memory.pop();
+		env.setDefaultPrecedence(new Precedence(a,i));
+	}
+
+	@Override
+	public void visit(DefaultAssocDirective node) {
+		node.assoc0.accept(this);
+		Assoc a = (Assoc) memory.pop();
+		env.setDefaultAssoc(a);
+	}
+
+	@Override
+	public void visit(DefaultPriorityDirective node) {
+		node.int0.accept(this);
+		Integer i = (Integer) memory.pop();
+		env.setDefaultPriority(i);
 	}
 
 

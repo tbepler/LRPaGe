@@ -15,13 +15,13 @@ import bepler.lrpage.ebnf.parser.nodes.EndOptionToken;
 import bepler.lrpage.ebnf.parser.nodes.EndRepetitionToken;
 import bepler.lrpage.ebnf.parser.nodes.ErrorToken;
 import bepler.lrpage.ebnf.parser.nodes.IdentifierToken;
-import bepler.lrpage.ebnf.parser.nodes.IgnoreKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.IntToken;
 import bepler.lrpage.ebnf.parser.nodes.LeftKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.NameKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.NonKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.PrecKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.PrecedenceKeywordToken;
+import bepler.lrpage.ebnf.parser.nodes.PseudonymKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.RightKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.RulesKeywordToken;
 import bepler.lrpage.ebnf.parser.nodes.SpecialToken;
@@ -45,7 +45,7 @@ public class TokenFactoryImpl
     implements TokenFactory<Visitor>
 {
 
-    private final static Pattern[] PATTERNS = new Pattern[] {Pattern.compile("="), Pattern.compile(","), Pattern.compile(";"), Pattern.compile("\\|"), Pattern.compile("\\["), Pattern.compile("\\]"), Pattern.compile("\\{"), Pattern.compile("\\}"), Pattern.compile("\\("), Pattern.compile("\\)"), Pattern.compile("!"), Pattern.compile("#"), Pattern.compile("LEFT"), Pattern.compile("RIGHT"), Pattern.compile("NON"), Pattern.compile("prec"), Pattern.compile("name"), Pattern.compile("default"), Pattern.compile("Precedence"), Pattern.compile("Tokens"), Pattern.compile("Ignore"), Pattern.compile("Rules"), Pattern.compile(":"), Pattern.compile("-?[0-9]+"), Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*"), Pattern.compile("(['\"])(?:\\\\.|(?!\\1).)*\\1"), Pattern.compile("(\\(\\*)((?!\\*\\)).)*\\*\\)"), Pattern.compile("\\s+"), Pattern.compile(".")};
+    private final static Pattern[] PATTERNS = new Pattern[] {Pattern.compile("="), Pattern.compile(","), Pattern.compile(";"), Pattern.compile("\\|"), Pattern.compile("\\["), Pattern.compile("\\]"), Pattern.compile("\\{"), Pattern.compile("\\}"), Pattern.compile("\\("), Pattern.compile("\\)"), Pattern.compile("!"), Pattern.compile("#"), Pattern.compile("LEFT"), Pattern.compile("RIGHT"), Pattern.compile("NON"), Pattern.compile("prec"), Pattern.compile("name"), Pattern.compile("default"), Pattern.compile("Precedence"), Pattern.compile("Pseudonyms"), Pattern.compile("Tokens"), Pattern.compile("Rules"), Pattern.compile(":"), Pattern.compile("-?[0-9]+"), Pattern.compile("[a-zA-Z][a-zA-Z0-9_]*"), Pattern.compile("(['\"])(?:\\\\.|(?!\\1).)*\\1"), Pattern.compile("(\\(\\*)((?!\\*\\)).)*\\*\\)"), Pattern.compile("\\s+"), Pattern.compile(".")};
 
     @Override
     public Token<Visitor> build(int index) {
@@ -89,9 +89,9 @@ public class TokenFactoryImpl
             case  18 :
                 return new PrecedenceKeywordToken();
             case  19 :
-                return new TokensKeywordToken();
+                return new PseudonymKeywordToken();
             case  20 :
-                return new IgnoreKeywordToken();
+                return new TokensKeywordToken();
             case  21 :
                 return new RulesKeywordToken();
             case  22 :
@@ -155,9 +155,9 @@ public class TokenFactoryImpl
             case  18 :
                 return new PrecedenceKeywordToken(text, line, pos);
             case  19 :
-                return new TokensKeywordToken(text, line, pos);
+                return new PseudonymKeywordToken(text, line, pos);
             case  20 :
-                return new IgnoreKeywordToken(text, line, pos);
+                return new TokensKeywordToken(text, line, pos);
             case  21 :
                 return new RulesKeywordToken(text, line, pos);
             case  22 :

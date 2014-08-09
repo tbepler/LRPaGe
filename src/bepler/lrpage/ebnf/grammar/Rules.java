@@ -18,6 +18,9 @@ public enum Rules implements Rule {
 	GrammarStartBlock ( "Grammar", "Block" ),
 	GrammarAppendBlock ( "Grammar", "Grammar", "Block" ),
 	
+	PseudoDeclBlock ("Block", Terminals.Special.toString(), Terminals.PseudonymKeyword.toString(), 
+			Terminals.StartBlock.toString(), "PseudoDeclList" ),
+	
 	TokenDeclBlock ( "Block", Terminals.Special.toString(), Terminals.TokensKeyword.toString(),
 			Terminals.StartBlock.toString(), "TokenDeclList" ),
 			
@@ -27,6 +30,9 @@ public enum Rules implements Rule {
 	PrecDirectiveBlock ( "Block", Terminals.Special.toString(), Terminals.PrecedenceKeyword.toString(), 
 			Terminals.StartBlock.toString(), "DirectiveList" ),
 	
+	PseudoDeclListHead( "PseudoDeclList" ),
+	PseudoDeclList( "PseudoDeclList", "PseudoDeclList", "PseudoDecl" ),
+			
 	TokenDeclListHead ("TokenDeclList"),
 	TokenDeclList ( "TokenDeclList", "TokenDeclList", "TokenDecl" ),
 	
@@ -35,6 +41,9 @@ public enum Rules implements Rule {
 	
 	DirectiveListHead ( "DirectiveList" ),
 	DirectiveList ( "DirectiveList", "DirectiveList", "Directive" ),
+	
+	PseudonymDecl ("PseudoDecl", "Symbol", Terminals.Definition.toString(), Terminals.TerminalString.toString(),
+			Terminals.Termination.toString() ),
 	
 	TokenDecl ( "TokenDecl", Terminals.Identifier.toString(), Terminals.Definition.toString(),
 			Terminals.TerminalString.toString(), Terminals.Termination.toString() ),
@@ -57,6 +66,12 @@ public enum Rules implements Rule {
 	
 	PrecDecl ( "PrecDecl", Terminals.Special.toString(), Terminals.PrecKeyword.toString(), "Symbol" ),
 	
+	DefaultDirective ( "Directive", Terminals.DefaultKeyword.toString(), "Assoc", Terminals.Int.toString(),
+			Terminals.Termination.toString()),
+	DefaultAssocDirective ( "Directive", Terminals.DefaultKeyword.toString(), "Assoc",
+			Terminals.Termination.toString()),
+	DefaultPriorityDirective ( "Directive", Terminals.DefaultKeyword.toString(), Terminals.Int.toString(),
+			Terminals.Termination.toString()),
 	BothDirective ( "Directive", "Assoc", Terminals.Int.toString(),
 			"SymbolList", Terminals.Termination.toString() ),
 	AssocDirective ( "Directive", "Assoc", "SymbolList", Terminals.Termination.toString() ),

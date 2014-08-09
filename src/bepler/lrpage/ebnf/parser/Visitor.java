@@ -5,6 +5,9 @@ import bepler.lrpage.ebnf.parser.nodes.AltRHS;
 import bepler.lrpage.ebnf.parser.nodes.AssocDirective;
 import bepler.lrpage.ebnf.parser.nodes.BothDirective;
 import bepler.lrpage.ebnf.parser.nodes.ConcatRHS;
+import bepler.lrpage.ebnf.parser.nodes.DefaultAssocDirective;
+import bepler.lrpage.ebnf.parser.nodes.DefaultDirective;
+import bepler.lrpage.ebnf.parser.nodes.DefaultPriorityDirective;
 import bepler.lrpage.ebnf.parser.nodes.DirectiveList;
 import bepler.lrpage.ebnf.parser.nodes.DirectiveListHead;
 import bepler.lrpage.ebnf.parser.nodes.EmptySymbol;
@@ -26,6 +29,10 @@ import bepler.lrpage.ebnf.parser.nodes.PrecDecl;
 import bepler.lrpage.ebnf.parser.nodes.PrecDirectiveBlock;
 import bepler.lrpage.ebnf.parser.nodes.PrecRHS;
 import bepler.lrpage.ebnf.parser.nodes.PriorityDirective;
+import bepler.lrpage.ebnf.parser.nodes.PseudoDeclBlock;
+import bepler.lrpage.ebnf.parser.nodes.PseudoDeclList;
+import bepler.lrpage.ebnf.parser.nodes.PseudoDeclListHead;
+import bepler.lrpage.ebnf.parser.nodes.PseudonymDecl;
 import bepler.lrpage.ebnf.parser.nodes.RepRHS;
 import bepler.lrpage.ebnf.parser.nodes.RightAssoc;
 import bepler.lrpage.ebnf.parser.nodes.RuleDecl;
@@ -64,11 +71,17 @@ public interface Visitor {
 
     public void visit(GrammarAppendBlock node);
 
+    public void visit(PseudoDeclBlock node);
+
     public void visit(TokenDeclBlock node);
 
     public void visit(RuleDeclBlock node);
 
     public void visit(PrecDirectiveBlock node);
+
+    public void visit(PseudoDeclListHead node);
+
+    public void visit(PseudoDeclList node);
 
     public void visit(TokenDeclListHead node);
 
@@ -81,6 +94,8 @@ public interface Visitor {
     public void visit(DirectiveListHead node);
 
     public void visit(DirectiveList node);
+
+    public void visit(PseudonymDecl node);
 
     public void visit(TokenDecl node);
 
@@ -107,6 +122,12 @@ public interface Visitor {
     public void visit(NameDecl node);
 
     public void visit(PrecDecl node);
+
+    public void visit(DefaultDirective node);
+
+    public void visit(DefaultAssocDirective node);
+
+    public void visit(DefaultPriorityDirective node);
 
     public void visit(BothDirective node);
 

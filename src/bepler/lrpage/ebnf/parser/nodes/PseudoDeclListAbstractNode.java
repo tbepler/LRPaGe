@@ -3,8 +3,8 @@ package bepler.lrpage.ebnf.parser.nodes;
 
 import bepler.lrpage.ebnf.parser.Symbols;
 import bepler.lrpage.ebnf.parser.Visitor;
+import bepler.lrpage.ebnf.parser.framework.Node;
 import bepler.lrpage.ebnf.parser.framework.Symbol;
-import bepler.lrpage.ebnf.parser.framework.Token;
 
 
 /**
@@ -14,27 +14,19 @@ import bepler.lrpage.ebnf.parser.framework.Token;
  * <P>CodeModel is available from https://codemodel.java.net/.
  * 
  */
-public class IgnoreKeywordToken
-    extends Token<Visitor>
+public abstract class PseudoDeclListAbstractNode
+    implements Node<Visitor>
 {
 
 
-    public IgnoreKeywordToken(String text, int line, int pos) {
-        super(text, line, pos);
-    }
-
-    public IgnoreKeywordToken() {
-        super();
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        //do nothing
-    }
-
     @Override
     public Symbol symbol() {
-        return Symbols.IGNOREKEYWORD;
+        return Symbols.PSEUDODECLLIST;
+    }
+
+    @Override
+    public PseudoDeclListAbstractNode replace() {
+        return this;
     }
 
     @Override

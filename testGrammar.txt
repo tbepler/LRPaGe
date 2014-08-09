@@ -17,7 +17,14 @@ exp = id
 	| "-", exp #prec UMINUS #name UMinus;
 
 #Precedence:
+default NON 150;
 LEFT 100 "+", "-";
 LEFT 90 "*", "/";
 RIGHT 80 "^";
 LEFT 70 UMINUS;
+
+#Pseudonyms:
+id = "an identifier";
+exp = "an expression";
+stmt = "a statement";
+int = "an integer";
