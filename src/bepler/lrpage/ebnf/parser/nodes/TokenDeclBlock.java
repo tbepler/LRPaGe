@@ -39,7 +39,8 @@ public class TokenDeclBlock
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (hash*(13 + tokendecllist0 .hashCode()));
+        hash = ((hash* 13)+ tokendecllist0 .hashCode());
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

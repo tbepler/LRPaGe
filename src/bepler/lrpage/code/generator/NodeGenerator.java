@@ -270,9 +270,9 @@ public class NodeGenerator {
 			toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString"));
 		}else{
 			toString.body()._return(JExpr.invoke(JExpr.invoke(type), "toString")
-					.plus(JExpr.lit("("))
+					.plus(JExpr.lit("(`"))
 					.plus(JExpr.invoke("getText"))
-					.plus(JExpr.lit(")")));
+					.plus(JExpr.lit("')")));
 		}
 		
 		return node;

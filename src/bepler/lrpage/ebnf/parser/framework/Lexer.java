@@ -13,6 +13,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The Lexer framework class. Reads tokens specified by a {@link TokenFactory}
+ * from an input stream.
+ * 
+ * <P>
+ * 
+ * Part of the LRPaGe parser generator. Available at https://github.com/tbepler/LRPaGe
+ * 
+ * @author Tristan Bepler
+ *
+ * @param <V> Visitor on which AST nodes are generified.
+ */
 public class Lexer<V> {
 
 	private final Reader r;

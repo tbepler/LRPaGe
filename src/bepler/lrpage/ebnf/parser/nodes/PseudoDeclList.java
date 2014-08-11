@@ -41,8 +41,9 @@ public class PseudoDeclList
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (hash*(13 + pseudodecllist0 .hashCode()));
-        hash = (hash*(13 + pseudodecl1 .hashCode()));
+        hash = ((hash* 13)+ pseudodecllist0 .hashCode());
+        hash = ((hash* 13)+ pseudodecl1 .hashCode());
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

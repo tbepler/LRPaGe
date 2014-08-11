@@ -39,7 +39,8 @@ public class IgnoreTokenDecl
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (hash*(13 + terminalstring0 .hashCode()));
+        hash = ((hash* 13)+ terminalstring0 .hashCode());
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

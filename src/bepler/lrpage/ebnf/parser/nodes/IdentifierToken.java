@@ -39,7 +39,7 @@ public class IdentifierToken
 
     @Override
     public String toString() {
-        return (((symbol().toString()+"(")+ getText())+")");
+        return (((symbol().toString()+"(`")+ getText())+"')");
     }
 
 }

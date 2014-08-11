@@ -3,6 +3,18 @@ package bepler.lrpage.code.generator.framework;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/**
+ * This class represents a parse stack, containing both the current
+ * {@link Node}s and states.
+ * 
+ * <P>
+ * 
+ * Part of the LRPaGe parser generator. Available at https://github.com/tbepler/LRPaGe
+ * 
+ * @author Tristan Bepler
+ *
+ * @param <V> Visitor on which AST nodes are generified.
+ */
 public class Stack<V> {
 	
 	private final Deque<Node<V>> nodeStack;

@@ -41,8 +41,9 @@ public class RuleDeclList
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (hash*(13 + ruledecllist0 .hashCode()));
-        hash = (hash*(13 + ruledecl1 .hashCode()));
+        hash = ((hash* 13)+ ruledecllist0 .hashCode());
+        hash = ((hash* 13)+ ruledecl1 .hashCode());
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

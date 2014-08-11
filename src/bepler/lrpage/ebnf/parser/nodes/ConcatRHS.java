@@ -41,8 +41,9 @@ public class ConcatRHS
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (hash*(13 + rhs0 .hashCode()));
-        hash = (hash*(13 + rhs1 .hashCode()));
+        hash = ((hash* 13)+ rhs0 .hashCode());
+        hash = ((hash* 13)+ rhs1 .hashCode());
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

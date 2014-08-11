@@ -7,6 +7,18 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * This class performs error recovery using the Burke-Fischer error
+ * repair algorithm.
+ * 
+ * <P>
+ * 
+ * Part of the LRPaGe parser generator. Available at https://github.com/tbepler/LRPaGe
+ * 
+ * @author Tristan Bepler
+ *
+ * @param <V> Visitor on which AST nodes are generified.
+ */
 public class BurkeFischerErrorRepair<V> implements ErrorRepair<V>{
 	
 	private final int k;

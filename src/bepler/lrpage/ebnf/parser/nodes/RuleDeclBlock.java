@@ -39,7 +39,8 @@ public class RuleDeclBlock
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (hash*(13 + ruledecllist0 .hashCode()));
+        hash = ((hash* 13)+ ruledecllist0 .hashCode());
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

@@ -37,6 +37,7 @@ public class EmptySymbol
     @Override
     public int hashCode() {
         int hash = 7;
+        hash = ((hash* 13)+ getClass().hashCode());
         return hash;
     }
 

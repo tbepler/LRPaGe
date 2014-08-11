@@ -3,6 +3,19 @@ package bepler.lrpage.code.generator.framework;
 
 import java.io.IOException;
 
+/**
+ * The Parser framework class. Builds abstract syntax trees (ASTs) using rules specified
+ * by the {@link ParsingEngine} by reading terminal nodes ({@link Token}s) from a {@link
+ * Lexer}.
+ * 
+ * <P>
+ * 
+ * Part of the LRPaGe parser generator. Available at https://github.com/tbepler/LRPaGe
+ * 
+ * @author Tristan Bepler
+ *
+ * @param <V> Visitor on which AST nodes are generified.
+ */
 public class Parser<V> {
 	
 	private final ParsingEngine<V> eng;
