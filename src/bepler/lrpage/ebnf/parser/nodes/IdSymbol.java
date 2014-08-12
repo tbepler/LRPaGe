@@ -46,10 +46,10 @@ public class IdSymbol
 
     @Override
     public boolean equals(Object o) {
-        if (this.equals(o)) {
+        if (this == o) {
             return true;
         }
-        if (o.equals(null)) {
+        if (null == o) {
             return false;
         }
         if (!(o instanceof IdSymbol)) {

@@ -42,11 +42,11 @@ public class EqualsGenerator {
 		JBlock jBlock = equals.body();
 		
 		//if objects are the same, return true
-		JConditional sameObj = jBlock._if(JExpr.invoke(JExpr._this(), "equals").arg(o));
+		JConditional sameObj = jBlock._if(JExpr._this().eq(o));
 		//JConditional sameObj= jBlock._if(JExpr._this().eq(o));
 		sameObj._then()._return(JExpr.lit(true));
 		//if object is null, return false
-		JConditional nullObj= jBlock._if(JExpr.invoke(o, "equals").arg(JExpr._null()));
+		JConditional nullObj= jBlock._if(JExpr._null().eq(o));
 		nullObj._then()._return(JExpr.lit(false));
 		//if object is not instance of same class, return false
 		JConditional notInstOf = jBlock._if(o._instanceof(clazz).not());
